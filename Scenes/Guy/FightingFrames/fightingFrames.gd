@@ -74,8 +74,8 @@ func _physics_process(delta: float) -> void:
 			frame_timer -= frame_period
 			_get_next_frame()		
 
-	first_frame_index = clampf(first_frame_index, 0, last_frame_index)
-	last_frame_index = clampf(last_frame_index, first_frame_index, last_frame_index)
+	first_frame_index = clampi(first_frame_index, 0, last_frame_index)
+	last_frame_index = clampi(last_frame_index, first_frame_index, last_frame_index)
 	current_frame_index = clampi(current_frame_index, first_frame_index, last_frame_index)
 	_render_current_frame()
 

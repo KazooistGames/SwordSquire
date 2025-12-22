@@ -34,3 +34,21 @@ D:\GIT\KazooistGames\Shield-Squire\.godot\mono\temp\obj\Debug\refint\Shield Squi
 D:\GIT\KazooistGames\Shield-Squire\.godot\mono\temp\obj\Debug\Shield Squire.pdb
 D:\GIT\KazooistGames\Shield-Squire\.godot\mono\temp\obj\Debug\Shield Squire.genruntimeconfig.cache
 D:\GIT\KazooistGames\Shield-Squire\.godot\mono\temp\obj\Debug\ref\Shield Squire.dll
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\bin\Debug\Shield Squire.deps.json
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\bin\Debug\Shield Squire.runtimeconfig.json
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\bin\Debug\Shield Squire.dll
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\bin\Debug\Shield Squire.pdb
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\bin\Debug\GodotSharp.dll
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\bin\Debug\GodotSharpEditor.dll
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\obj\Debug\Shield Squire.csproj.AssemblyReference.cache
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\obj\Debug\Shield Squire.GeneratedMSBuildEditorConfig.editorconfig
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\obj\Debug\Shield Squire.AssemblyInfoInputs.cache
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\obj\Debug\Shield Squire.AssemblyInfo.cs
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\obj\Debug\Shield Squire.csproj.CoreCompileInputs.cache
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\obj\Debug\Shield Squire.sourcelink.json
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\obj\Debug\Shield S.352942D1.Up2Date
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\obj\Debug\Shield Squire.dll
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\obj\Debug\refint\Shield Squire.dll
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\obj\Debug\Shield Squire.pdb
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\obj\Debug\Shield Squire.genruntimeconfig.cache
+D:\GIT\KazooistGames\SwordSquire\.godot\mono\temp\obj\Debug\ref\Shield Squire.dll

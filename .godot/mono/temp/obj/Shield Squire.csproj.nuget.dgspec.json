@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GIT\\KazooistGames\\Shield-Squire\\Shield Squire.csproj": {}
+    "D:\\GIT\\KazooistGames\\SwordSquire\\Shield Squire.csproj": {}
   },
   "projects": {
-    "D:\\GIT\\KazooistGames\\Shield-Squire\\Shield Squire.csproj": {
+    "D:\\GIT\\KazooistGames\\SwordSquire\\Shield Squire.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GIT\\KazooistGames\\Shield-Squire\\Shield Squire.csproj",
+        "projectUniqueName": "D:\\GIT\\KazooistGames\\SwordSquire\\Shield Squire.csproj",
         "projectName": "Shield Squire",
-        "projectPath": "D:\\GIT\\KazooistGames\\Shield-Squire\\Shield Squire.csproj",
+        "projectPath": "D:\\GIT\\KazooistGames\\SwordSquire\\Shield Squire.csproj",
         "packagesPath": "C:\\Users\\mikus\\.nuget\\packages\\",
-        "outputPath": "D:\\GIT\\KazooistGames\\Shield-Squire\\.godot\\mono\\temp\\obj\\",
+        "outputPath": "D:\\GIT\\KazooistGames\\SwordSquire\\.godot\\mono\\temp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

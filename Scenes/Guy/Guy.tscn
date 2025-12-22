@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://b8xpmmlbv64kh"]
+[gd_scene load_steps=5 format=3 uid="uid://b8xpmmlbv64kh"]
 
 [ext_resource type="Script" uid="uid://b8g5l11p4we4p" path="res://Scenes/Guy/Guy.gd" id="1_jkuat"]
 [ext_resource type="PackedScene" uid="uid://cj3exco8pbdh7" path="res://Scenes/Guy/FightingFrames/fightingFrames.tscn" id="2_rd74a"]
+[ext_resource type="Script" uid="uid://dpgp76gaq0d60" path="res://Scenes/Guy/debug.gd" id="3_ifsry"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rcyd8"]
 size = Vector2(6, 3)
@@ -17,12 +18,48 @@ shape = SubResource("RectangleShape2D_rcyd8")
 debug_color = Color(0.307455, 0.627115, 0, 0.42)
 
 [node name="FightingFrames" parent="." instance=ExtResource("2_rd74a")]
-region_rect = Rect2(252, 0, 36, 24)
-current_frame_index = 7
+frame_timer = 0.0166667
 
-[node name="Label" type="Label" parent="."]
-offset_left = -15.0
-offset_top = -30.0
-offset_right = 22.33
-offset_bottom = -7.0
-text = "Guy"
+[node name="Control" type="Control" parent="."]
+custom_minimum_size = Vector2(75, 75)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_ifsry")
+
+[node name="state" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0"
+
+[node name="xy" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 12
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="accel" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.66, 0, 0, 1)
+theme_override_font_sizes/font_size = 8
+text = "0.0"
+horizontal_alignment = 2
+vertical_alignment = 2

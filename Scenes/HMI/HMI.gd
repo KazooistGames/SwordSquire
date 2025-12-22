@@ -51,9 +51,9 @@ func _physics_process(delta):
 	position = position.move_toward(target_position, reposition_speed * curve * delta)
 
 
-func _update_hud(delta):
+func _update_hud(_delta):
 	hp_bar.size.x = player.HP
-	strength_bar.size.x = player.Energy
+	strength_bar.size.x = player.Energy * 100
 	
 func _update_bush_transparency():
 	var bushes : Array[Node] = get_tree().get_nodes_in_group("Bush")

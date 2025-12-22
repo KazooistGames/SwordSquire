@@ -1,13 +1,14 @@
 class_name Guy extends CharacterBody2D
 
 const duck_duration := 0.1
-const coyote_period := 0.20
-const acceleration := 240
-const top_speed := 48
+const coyote_period := 0.10
+const base_accel := 220
+const base_speed := 75
 const charge_timer_max := 1.0
 const charge_timer_min := 0.20
-const energy_recharge_rate := 25.0
-
+const cooldown_period = 0.5
+const base_energy_rate := 0.15
+const base_jump_height = 24
 
 enum State{
 	ready,
@@ -21,87 +22,91 @@ enum State{
 @export var Team := 0
 @export var state : State = State.ready
 @export var HP := 100
-@export var Energy := 100.0
+@export var Energy := 1.0
 @export var left_right := 0
 @export var Concealments : Array[Area2D] = []
 
 @onready var sprite : FightingFrames = $FightingFrames
 @onready var hitbox : Area2D = $FightingFrames/hitBox
 @onready var hurtbox : Area2D = $FightingFrames/hurtBox
-@onready var state_label : Label = $Label
 
-var speed := 60.0
+var aerial := false
+
+var real_speed := 60.0
+@export var run_accel := 0.0
 var facing_direction := 1
 var facing_locked := false
-var jump_height = 36
 var charge_timer := 0.0
 var charge_marked_for_release := false #used when guy attempts to swing before min charge is met
 var cooldown_timer := 0.0
-var cooldown_to_charge_ratio := 1.0
 var coyote_timer := 0.0
 var duck_debounce := 0.0
+var double_jump_charges : int = 1
 
 signal died
 signal jumped
 signal fell
 
 func _ready() -> void:
-	#hitbox.landed_hit.connect(_handle_hit)
-	#hitbox.parried.connect(_handle_parry)
+
 	sprite.finished.connect(_handle_animation_finished)
 	sprite.play()
 	sprite.set_state('stance')
-	state == State.ready
+	state = State.ready
 	
-func _physics_process(delta : float) -> void:
-	state_label.text = str(state)
-	
-	if not is_on_floor() or state != State.ready:
-		pass
-	elif left_right == 0:
-		Energy += delta * energy_recharge_rate
-	else:
-		Energy += delta * energy_recharge_rate / 2.0
-	Energy = clampf(Energy, 0, 100)
-	if left_right != 0 and not facing_locked:
-		facing_direction = left_right		
-	facing_locked = state != State.ready and state != State.charging
+func _physics_process(delta : float) -> void:	
+
 	if duck_debounce < duck_duration:
 		duck_debounce += delta
 		collision_mask = 1	
 	else:
 		collision_mask = 17
+		
+	_process_energy(delta)
 	_process_movement(delta)		
 	_animate_state()
 	_process_state(delta)
+	
+	facing_locked = state != State.ready and state != State.charging
+	if left_right != 0 and not facing_locked:
+		facing_direction = left_right	
+
 
 func _process_movement(delta : float) -> void:
 	
-	#jumping
-	if not is_on_floor():
-		velocity.y += 980 * delta		
-		
-	#acceleration
-	speed = top_speed * lerpf(0.5, 1.0, Energy/100)
-	cooldown_to_charge_ratio = lerpf(2.0, 1.0, Energy/100)
-	var speed_ratio: float = clamp(1.0 - abs(velocity.x/speed), 0.5, 1.0)
-	var real_accel : float = acceleration * speed_ratio
+	var target_real_speed = left_right * base_speed
 	
-	#movement
-	if state == State.ready:
-		var target_speed = left_right * speed
-		velocity.x = move_toward(velocity.x, target_speed, real_accel * delta)
-	elif is_on_floor():
-		velocity.x = move_toward(velocity.x, 0, real_accel * delta)	
+	if state == State.sliding:
+		run_accel = base_accel /2
+	elif state == State.ready:
+		var speed_ratio = clampf(abs(velocity.x)/base_speed, 0, 1)
+		var speed_nerf = max(pow(1.0 - speed_ratio, 1.5), 0.0)
+		run_accel = base_accel * speed_nerf		
+		var energy_nerf = lerpf(0.5, 1.0, Energy)
+		target_real_speed = left_right * base_speed * energy_nerf
+	else:
+		target_real_speed = 0
+		run_accel = base_accel / 2
+	
+	if aerial:
+		velocity.y += 980 * delta		
+		run_accel /= 2	
+		
+	velocity.x = move_toward(velocity.x, target_real_speed, run_accel * delta)	
 	move_and_slide()	
 	
 	#Coyote timer
 	if is_on_floor():
 		coyote_timer = 0.0
-		return
-	elif coyote_timer == 0.0:
-		fell.emit()			
-	coyote_timer += delta
+		if aerial:
+			land()		
+	else:
+		if coyote_timer == 0.0:
+			fell.emit()	
+		aerial = coyote_timer >= coyote_period
+		coyote_timer += delta
+		
+
 	
 func _animate_state():
 	if HP <= 0:
@@ -110,6 +115,10 @@ func _animate_state():
 	sprite.playback_speed = 1.0
 	match(state):
 		State.ready:
+			if facing_direction > 0:
+				sprite.flip_h
+			elif facing_direction <0:
+				sprite.flip_h = false
 			sprite.flip_h = facing_direction > 0
 			if not is_on_floor():
 				sprite.set_state('stance')
@@ -117,8 +126,8 @@ func _animate_state():
 				sprite.set_state('stance')
 			else:
 				sprite.set_state('run')
-				var speed_ratio = abs(velocity.x) / top_speed
-				sprite.playback_speed = speed_ratio
+				var real_speed_ratio = abs(velocity.x) / base_speed
+				sprite.playback_speed = real_speed_ratio
 		State.charging:
 			sprite.flip_h = facing_direction > 0
 			sprite.set_state('slash_windup')
@@ -127,13 +136,14 @@ func _animate_state():
 		State.recovering:
 			sprite.set_state('slash_recover')
 		State.sliding:
-			sprite.set_state('stance')
+			sprite.set_state('slide')
 	
 	
 func _process_state(delta : float) -> void:
 	match state:
 		State.ready:
-			pass			
+			if velocity.x != 0 and sign(velocity.x) != sign(left_right):
+				state = State.sliding						
 		State.charging:
 			charge_timer += delta	
 			if charge_timer >= charge_timer_max:
@@ -151,17 +161,43 @@ func _process_state(delta : float) -> void:
 		State.sliding:	 
 			if velocity.x == 0:
 				state = State.ready
+			elif sign(velocity.x) == sign(left_right):
+				state = State.ready
+
+
+func _process_energy(delta) -> void:
+	if state != State.ready:
+		pass
+	elif not aerial:
+		var stationary_buff = lerp(2, 1, abs(left_right))
+		var health_nerf = lerp(0.5, 1.0, HP / 100)
+		Energy += delta * base_energy_rate * stationary_buff		
+	Energy = clampf(Energy, 0.0, 1.0)
+	
 
 func jump() -> bool:
-	if coyote_timer >= coyote_period:
+	if state == State.dead:
 		return false
-	elif state == State.dead:
+	elif coyote_timer < coyote_period:
+		aerial = true
+		coyote_timer = coyote_period
+		velocity.y = -sqrt(base_jump_height * 1960)
+		jumped.emit()
+		return true
+	elif double_jump_charges > 0:
+		velocity.y = -sqrt(base_jump_height * 1960)
+		double_jump_charges -= 1
+		sap(.15)
+		jumped.emit()
+		return true
+	else:
 		return false
-	coyote_timer = coyote_period
-	sap(10)
-	velocity.y = -sqrt(jump_height * 1960)
-	jumped.emit()
-	return true
+
+func land():
+	aerial = false
+	double_jump_charges = 1
+
+		
 	
 func duck() -> bool:
 	duck_debounce = 0.0
@@ -185,9 +221,10 @@ func release() -> bool:
 	else:
 		charge_marked_for_release = false
 		state = State.attacking
-		cooldown_timer = charge_timer * cooldown_to_charge_ratio
+		var energy_nerf = lerpf(2.0, 1.0, Energy)
+		cooldown_timer = cooldown_period * energy_nerf
 		var charge_power = charge_timer / charge_timer_max
-		sap(roundi(charge_power * 20))
+		sap(charge_power * .30)
 		var impulse = Vector2(facing_direction, 0) * charge_power * 100
 		shove(impulse)
 		return true
@@ -240,6 +277,9 @@ func shove(impulse : Vector2) -> void:
 	else:
 		velocity.x = impulse.x
 			
+	if is_nan(velocity.x):
+		print("wtf")
+			
 func damage(value : int) -> void:
 	HP -= value
 	if HP <= 0:
@@ -257,12 +297,11 @@ func turn_toward(object : Node2D):
 	facing_direction = sign(x_disposition)
 	
 func sap(value : float):
-	if Energy <= 0:
-		damage(value)
-	elif value > Energy:
-		var diff = value - Energy
-		Energy = 0
-		damage(diff)
+	
+	if value > Energy:
+		#var diff = value - Energy
+		Energy = 0.0
+		#damage(diff)
 	else:
 		Energy -= value
 

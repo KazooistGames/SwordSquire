@@ -24,36 +24,27 @@ func _ready():
 		
 		
 func _grow_tree(height) -> bool:
-	
 	for segment in trunk_segments:
 		segment.queue_free()
 		
 	trunk_segments.clear()
 	
-	for index in range(height):
-			
+	for index in range(height):	
 		var top : bool = index == (height - 1)
 		var bottom : bool = index == 0
-
 		_generate_segment(top, bottom)
 	
 	return true
 	
 	
 func _generate_segment(top : bool, bottom : bool) -> bool:
-	
-	var section_index : int
-		
+	var section_index : int	
 	if top and bottom:
 		section_index = top_section_index if randf() > 0.5 else bottom_section_index
-		
-	
 	elif top:
 		section_index = top_section_index
-	
 	elif bottom:
-		section_index = bottom_section_index
-	
+		section_index = bottom_section_index	
 	else:
 		section_index = randi_range(2, 2)
 	

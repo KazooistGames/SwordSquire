@@ -1,3 +1,4 @@
+Control
 Label
 Node
 Area2D
@@ -11,5 +12,3 @@ StaticBody2D
 CanvasLayer
 ColorRect
 MarginContainer
-Node2D
-RayCast2D

@@ -5,4 +5,5 @@
 [node name="Squire" instance=ExtResource("1_umaqs")]
 
 [node name="FightingFrames" parent="." index="1"]
+frames_per_second = 18
 frame_timer = 0.0555555

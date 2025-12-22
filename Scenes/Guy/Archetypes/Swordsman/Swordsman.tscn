@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://db5fff6v2i5p7"]
+[gd_scene load_steps=9 format=3 uid="uid://db5fff6v2i5p7"]
 
 [ext_resource type="PackedScene" uid="uid://b8xpmmlbv64kh" path="res://Scenes/Guy/Guy.tscn" id="1_8rpvy"]
+[ext_resource type="Texture2D" uid="uid://jk86te33ybkf" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_slide-Sheet.png" id="2_2jugv"]
 [ext_resource type="Texture2D" uid="uid://cxobu116skjus" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_run-Sheet.png" id="2_3nu5a"]
 [ext_resource type="Texture2D" uid="uid://0tokl0nyx5r7" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_swing-Sheet.png" id="2_a8pqw"]
 [ext_resource type="Texture2D" uid="uid://bfjx4ur3gsug8" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_die-Sheet.png" id="2_cnphc"]
@@ -16,7 +17,6 @@ texture = ExtResource("4_nypsl")
 region_rect = Rect2(0, 0, 24, 24)
 sprite_sheet = ExtResource("4_nypsl")
 texture_size = Vector2i(24, 24)
-playing = false
 frames_per_second = 3
 frame_timer = 0.0
 first_frame_index = 0
@@ -41,7 +41,7 @@ hitbox_disabled = true
 [node name="run" type="Node" parent="FightingFrames" index="3"]
 script = ExtResource("2_stp78")
 sprite_sheet = ExtResource("2_3nu5a")
-frames_per_second = 12
+frames_per_second = 16
 last_frame_index = 5
 hitbox_disabled = true
 hitbox_radius = 1.5
@@ -152,3 +152,13 @@ frames_per_second = 4
 last_frame_index = 4
 looping = false
 hitbox_disabled = true
+
+[node name="slide" type="Node" parent="FightingFrames" index="11"]
+script = ExtResource("2_stp78")
+sprite_sheet = ExtResource("2_2jugv")
+last_frame_index = 2
+looping = false
+hitbox_disabled = true
+
+[node name="accel" parent="Control" index="2"]
+text = "0"

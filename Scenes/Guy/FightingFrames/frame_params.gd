@@ -41,7 +41,7 @@ func _ready():
 	copy_parent = false
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if not copy_parent:
 		pass
 	elif get_parent() == null:

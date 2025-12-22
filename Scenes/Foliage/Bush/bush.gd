@@ -18,7 +18,7 @@ func _ready():
 	area_exited.connect(_handle_area_exited)
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	
 	if Transparent:
 		sprite.modulate = inhabited_mask
@@ -31,7 +31,7 @@ func _handle_area_entered(area : Node2D):
 	if area.collision_layer & 2048 >= 1:
 		linked_bushes.append(area)
 		
-	var area_parent = area.get_parent()
+	var area_parent = area.get_parent().get_parent()
 	
 	if not area_parent is CharacterBody2D:
 		pass
@@ -47,7 +47,7 @@ func _handle_area_entered(area : Node2D):
 	
 func _handle_area_exited(area : Node2D):
 	
-	var area_parent = area.get_parent()
+	var area_parent = area.get_parent().get_parent()
 	
 	if not area_parent is CharacterBody2D:
 		pass

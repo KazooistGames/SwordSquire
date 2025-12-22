@@ -41,8 +41,7 @@ func set_section(index, first_segment := false):
 	
 	if index == Section.end:
 		$CollisionShape2D.shape.size.x = 10
-		$CollisionShape2D.position.x -= 7 * sign(Direction)
-	
+		$CollisionShape2D.position.x -= 6 * sign(Direction)	
 	else:
 		$CollisionShape2D.shape.size.x = 24
 		$CollisionShape2D.position.x = 0
@@ -59,8 +58,7 @@ func set_section(index, first_segment := false):
 	return true
 	
 
-func _attach_fruit():
-	
+func _attach_fruit():	
 	var fruit_prefab : PackedScene = load("res://Scenes/Items/Fruit/Fruit.tscn")
 	vegetation = fruit_prefab.instantiate()
 	add_child(vegetation)
@@ -68,11 +66,10 @@ func _attach_fruit():
 	vegetation.position = Vector2(-1, y_offset)
 	
 	
-func _attach_canopy():
-	
+func _attach_canopy():	
 	var canopy_prefab : PackedScene = load("res://Scenes/Foliage/Bush/Bush.tscn")
 	vegetation = canopy_prefab.instantiate()
 	add_child(vegetation)
 	var y_offset = -11
-	var x_offset = -12 * sign(Direction)
+	var x_offset = -10 * sign(Direction)
 	vegetation.position = Vector2(x_offset, y_offset)

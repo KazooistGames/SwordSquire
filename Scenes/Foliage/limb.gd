@@ -14,7 +14,6 @@ var branch_segments : Array[StaticBody2D] = []
 
 
 func _ready():
-
 	_grow_branch(randi_range(1, 2))
 		
 		
@@ -24,7 +23,6 @@ func _grow_branch(new_length) -> bool:
 		segment.queue_free()
 		
 	branch_segments.clear()
-	
 	for index in range(new_length):	
 		var base : bool = index == 0	
 		var end : bool = index == (new_length - 1)
@@ -38,8 +36,7 @@ func _generate_segment(base : bool, end : bool) -> bool:
 	var section_index : int
 	
 	if end:
-		section_index = randi_range(1, 2)
-	
+		section_index = randi_range(1, 2)	
 	else:
 		section_index = randi_range(0, 1)
 	
