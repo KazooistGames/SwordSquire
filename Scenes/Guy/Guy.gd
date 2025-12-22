@@ -30,7 +30,7 @@ enum State{
 @onready var hitbox : Area2D = $FightingFrames/hitBox
 @onready var hurtbox : Area2D = $FightingFrames/hurtBox
 
-var aerial := false
+#var aerial := false
 
 var real_speed := 60.0
 @export var run_accel := 0.0
@@ -88,7 +88,7 @@ func _process_movement(delta : float) -> void:
 		target_real_speed = 0
 		run_accel = base_accel / 2
 	
-	if aerial:
+	if not is_on_floor():
 		velocity.y += 980 * delta		
 		run_accel /= 2	
 		
@@ -97,13 +97,13 @@ func _process_movement(delta : float) -> void:
 	
 	#Coyote timer
 	if is_on_floor():
-		coyote_timer = 0.0
-		if aerial:
+		if coyote_timer >= coyote_period:
 			land()		
+		coyote_timer = 0
 	else:
 		if coyote_timer == 0.0:
 			fell.emit()	
-		aerial = coyote_timer >= coyote_period
+		#aerial = coyote_timer >= coyote_period
 		coyote_timer += delta
 		
 
@@ -168,7 +168,7 @@ func _process_state(delta : float) -> void:
 func _process_energy(delta) -> void:
 	if state != State.ready:
 		pass
-	elif not aerial:
+	elif is_on_floor():
 		var stationary_buff = lerp(2, 1, abs(left_right))
 		var health_nerf = lerp(0.5, 1.0, HP / 100)
 		Energy += delta * base_energy_rate * stationary_buff		
@@ -179,7 +179,7 @@ func jump() -> bool:
 	if state == State.dead:
 		return false
 	elif coyote_timer < coyote_period:
-		aerial = true
+		#aerial = true
 		coyote_timer = coyote_period
 		velocity.y = -sqrt(base_jump_height * 1960)
 		jumped.emit()
@@ -194,7 +194,7 @@ func jump() -> bool:
 		return false
 
 func land():
-	aerial = false
+	#aerial = false
 	double_jump_charges = 1
 
 		

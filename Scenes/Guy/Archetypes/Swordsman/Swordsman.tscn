@@ -13,24 +13,23 @@
 Team = 1
 
 [node name="FightingFrames" parent="." index="1" node_paths=PackedStringArray("param_node")]
-texture = ExtResource("4_nypsl")
-region_rect = Rect2(0, 0, 24, 24)
-sprite_sheet = ExtResource("4_nypsl")
+texture = ExtResource("2_a8pqw")
+region_rect = Rect2(264, 0, 24, 24)
+sprite_sheet = ExtResource("2_a8pqw")
 texture_size = Vector2i(24, 24)
-frames_per_second = 3
+playing = false
+frames_per_second = 18
 frame_timer = 0.0
-first_frame_index = 0
-last_frame_index = 3
-current_frame_index = 0
-hitbox_disabled = true
-hitbox_radius = 6.0
-hitbox_height = 24.0
+first_frame_index = 8
+last_frame_index = 11
+current_frame_index = 11
+looping = false
+hitbox_radius = 4.0
+hitbox_height = 18.0
 hitbox_rotation = 0.0
-hitbox_positions = Array[Vector2]([])
-hurtbox_radius = 6.0
-hurtbox_height = 24.0
-hurtbox_positions = Array[Vector2]([])
-param_node = NodePath("stance")
+hitbox_positions = Array[Vector2]([Vector2(8, 3), Vector2(1, 6), Vector2(-8, 0), Vector2(-2, -6)])
+hurtbox_positions = Array[Vector2]([Vector2(2, 2), Vector2(0, 2)])
+param_node = NodePath("slash")
 
 [node name="stance" type="Node" parent="FightingFrames" index="0"]
 script = ExtResource("2_stp78")
@@ -108,8 +107,8 @@ first_frame_index = 8
 last_frame_index = 11
 looping = false
 hitbox_radius = 4.0
-hitbox_height = 16.0
-hitbox_positions = Array[Vector2]([Vector2(8, 4), Vector2(0, 4), Vector2(-8, 4), Vector2(-8, -4)])
+hitbox_height = 18.0
+hitbox_positions = Array[Vector2]([Vector2(8, 3), Vector2(1, 6), Vector2(-8, 0), Vector2(-2, -6)])
 hurtbox_radius = 4.0
 hurtbox_height = 20.0
 hurtbox_positions = Array[Vector2]([Vector2(2, 2), Vector2(0, 2)])
