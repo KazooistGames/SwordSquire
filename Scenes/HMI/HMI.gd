@@ -39,9 +39,9 @@ func _movement_inputs(_delta : float) -> void:
 		
 
 func _combat_inputs(_delta : float) -> void:
-	if Input.is_action_just_pressed("actDown"):
+	if Input.is_action_just_pressed("smash"):
 		player.charge()
-	elif Input.is_action_just_released("actDown"):
+	elif Input.is_action_just_released("smash"):
 		player.release()
 
 		

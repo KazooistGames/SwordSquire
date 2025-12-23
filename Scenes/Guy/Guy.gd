@@ -9,7 +9,7 @@ const charge_timer_min := 0.25
 const cooldown_period = 0.5
 const base_energy_rate := 0.15
 const base_jump_height = 24
-const base_run_charge_period = 0.25
+const base_run_charge_period = 0.2
 
 enum State{
 	ready,
@@ -45,6 +45,8 @@ var duck_debounce := 0.0
 var double_jump_charges : int = 1
 var run_charge_timer := 0.0
 
+var smash_attack := false
+
 signal died
 signal jumped
 signal fell
@@ -74,8 +76,7 @@ func _physics_process(delta : float) -> void:
 
 
 func _process_movement(delta : float) -> void:
-	var energy_nerf = lerpf(0.5, 1.0, Energy)
-	var target_real_speed = left_right * base_speed	* energy_nerf
+	var target_real_speed = left_right * base_speed
 	if state != State.ready:
 		target_real_speed = 0
 		run_accel = base_accel / 2
@@ -111,7 +112,6 @@ func _animate_state():
 	if HP <= 0:
 		sprite.set_state('die')
 		return	
-	sprite.playback_speed = 1.0
 	match(state):
 		State.ready:
 			if facing_direction > 0:
@@ -133,11 +133,20 @@ func _animate_state():
 				sprite.playback_speed = real_speed_ratio
 		State.charging:
 			sprite.flip_h = facing_direction > 0
-			sprite.set_state('slash_windup')
+			if smash_attack:
+				sprite.set_state('slash_windup')
+			else:
+				sprite.set_state('stab_windup')
 		State.attacking:
-			sprite.set_state('slash')
+			if smash_attack:
+				sprite.set_state('slash')
+			else:
+				sprite.set_state('stab')
 		State.recovering:
-			sprite.set_state('slash_recover')
+			if smash_attack:
+				sprite.set_state('slash_recover')
+			else:
+				sprite.set_state('stab_recover')
 	
 	
 func _process_state(delta : float) -> void:
@@ -155,7 +164,9 @@ func _process_state(delta : float) -> void:
 			charge_timer += delta	
 			if charge_timer >= charge_timer_max:
 				charge_timer = charge_timer_max 
-				release()				
+				release()	
+			elif charge_timer < charge_timer_min:
+				pass
 			elif charge_marked_for_release:
 				release()			
 			sprite.flip_h = facing_direction > 0	
@@ -206,9 +217,11 @@ func duck() -> bool:
 	
 func charge() -> bool:
 	if state == State.ready:
+		sprite.playback_speed = 1.0
 		state = State.charging
 		cooldown_timer = 0.0
 		charge_timer = 0.0
+		smash_attack = left_right == 0
 		return true	
 	else:
 		return false
@@ -223,17 +236,24 @@ func release() -> bool:
 	else:
 		charge_marked_for_release = false
 		state = State.attacking
-		var energy_nerf = lerpf(2.0, 1.0, Energy)
-		cooldown_timer = cooldown_period * energy_nerf
-		var charge_power = charge_timer / charge_timer_max
-		sap(charge_power * .30)
-		var impulse = Vector2(facing_direction, 0) * charge_power * 100
-		shove(impulse)
+		cooldown_timer = cooldown_period
+		var charged_power = charge_timer / charge_timer_max	
+		sap(charged_power * 0.5)
+		if smash_attack:
+			sprite.playback_speed = 1.0
+			pass
+			#sap(charged_power * 0.5)
+		else:
+			sprite.playback_speed = lerpf(1.0, 0.2, charged_power)
+			var base_magnitude = base_speed * 2
+			var impulse = Vector2(facing_direction, 0) * base_magnitude * sqrt(charged_power)
+			shove(impulse)
 		return true
 
 
 func recover() -> bool:
 	if state == State.attacking:
+		sprite.playback_speed = 1.0
 		state = State.recovering
 		return true
 	else:
@@ -242,6 +262,7 @@ func recover() -> bool:
 
 func ready() -> bool:
 	if state == State.recovering:
+		sprite.playback_speed = 1.0
 		state = State.ready
 		charge_timer = 0.0
 		return true

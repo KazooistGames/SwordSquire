@@ -1,10 +1,4 @@
-res://Title.tscn
-res://Scenes/Guy/Guy.gd
 res://Scenes/Guy/Archetypes/Swordsman/Swordsman.tscn
-res://Scenes/Foliage/Trunk_Segment/trunk_segment.gd
-res://Scenes/Foliage/Limb.tscn
-res://Scenes/Foliage/limb.gd
-res://Scenes/Foliage/tree.gd
-res://Scenes/Foliage/Branch_Segment/branch_segment.gd
-res://Scenes/Foliage/Trunk_Segment/Trunk_Segment.tscn
+res://Scenes/Guy/Guy.gd
+res://Title.tscn
 res://Scenes/Guy/FightingFrames/fightingFrames.gd

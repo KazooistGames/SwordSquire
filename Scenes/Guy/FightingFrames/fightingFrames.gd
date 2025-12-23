@@ -50,6 +50,12 @@ extends Sprite2D
 			hurtbox_rotation = value.hurtbox_rotation
 			hurtbox_positions = value.hurtbox_positions
 			param_node = value
+			hitbox_collider.shape.radius = hitbox_radius
+			hitbox_collider.shape.height = hitbox_height
+			hitbox_collider.rotation_degrees = hitbox_rotation
+			hurtbox_collider.shape.radius = hurtbox_radius
+			hurtbox_collider.shape.height = hurtbox_height
+			hurtbox_collider.rotation_degrees = hurtbox_rotation
 			play()			
 				
 signal started()
@@ -58,13 +64,6 @@ signal finished()
 	
 func _physics_process(delta: float) -> void:
 	hitbox_collider.disabled = hitbox_disabled or not playing
-	hitbox_collider.shape.radius = hitbox_radius
-	hitbox_collider.shape.height = hitbox_height
-	hitbox_collider.rotation_degrees = hitbox_rotation
-	
-	hurtbox_collider.shape.radius = hurtbox_radius
-	hurtbox_collider.shape.height = hurtbox_height
-	hurtbox_collider.rotation_degrees = hurtbox_rotation
 	if not playing:
 		frame_timer = 0
 	else:
