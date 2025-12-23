@@ -15,7 +15,7 @@ enum State{
 	charging,
 	attacking,
 	recovering,
-	sliding,
+	#sliding,
 	dead
 }
 
@@ -76,17 +76,18 @@ func _process_movement(delta : float) -> void:
 	
 	var target_real_speed = left_right * base_speed
 	
-	if state == State.sliding:
-		run_accel = base_accel /2
-	elif state == State.ready:
+	if state != State.ready:
+		target_real_speed = 0
+		run_accel = base_accel / 2
+	elif left_right == 0 or sign(left_right) != sign(velocity.x):	
+		run_accel = base_accel / 2
+	else:		
 		var speed_ratio = clampf(abs(velocity.x)/base_speed, 0, 1)
 		var speed_nerf = max(pow(1.0 - speed_ratio, 1.5), 0.0)
 		run_accel = base_accel * speed_nerf		
 		var energy_nerf = lerpf(0.5, 1.0, Energy)
 		target_real_speed = left_right * base_speed * energy_nerf
-	else:
-		target_real_speed = 0
-		run_accel = base_accel / 2
+
 	
 	if not is_on_floor():
 		velocity.y += 980 * delta		
@@ -117,13 +118,15 @@ func _animate_state():
 		State.ready:
 			if facing_direction > 0:
 				sprite.flip_h
-			elif facing_direction <0:
+			elif facing_direction < 0:
 				sprite.flip_h = false
 			sprite.flip_h = facing_direction > 0
 			if not is_on_floor():
 				sprite.set_state('stance')
 			elif velocity.x == 0:
 				sprite.set_state('stance')
+			elif left_right == 0 or sign(left_right) != sign(velocity.x):
+				sprite.set_state('slide')
 			else:
 				sprite.set_state('run')
 				var real_speed_ratio = abs(velocity.x) / base_speed
@@ -135,15 +138,13 @@ func _animate_state():
 			sprite.set_state('slash')
 		State.recovering:
 			sprite.set_state('slash_recover')
-		State.sliding:
-			sprite.set_state('slide')
 	
 	
 func _process_state(delta : float) -> void:
 	match state:
-		State.ready:
-			if velocity.x != 0 and sign(velocity.x) != sign(left_right):
-				state = State.sliding						
+		#State.ready:
+			#if velocity.x != 0 and sign(velocity.x) != sign(left_right):
+				#state = State.sliding						
 		State.charging:
 			charge_timer += delta	
 			if charge_timer >= charge_timer_max:
@@ -158,11 +159,11 @@ func _process_state(delta : float) -> void:
 			cooldown_timer -= delta
 			if cooldown_timer <= 0:
 				ready()		
-		State.sliding:	 
-			if velocity.x == 0:
-				state = State.ready
-			elif sign(velocity.x) == sign(left_right):
-				state = State.ready
+		#State.sliding:	 
+			#if velocity.x == 0:
+				#state = State.ready
+			#elif sign(velocity.x) == sign(left_right):
+				#state = State.ready
 
 
 func _process_energy(delta) -> void:
