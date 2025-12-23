@@ -2,13 +2,14 @@ class_name Guy extends CharacterBody2D
 
 const duck_duration := 0.1
 const coyote_period := 0.10
-const base_accel := 220
+const base_accel := 400
 const base_speed := 75
 const charge_timer_max := 1.0
-const charge_timer_min := 0.20
+const charge_timer_min := 0.25
 const cooldown_period = 0.5
 const base_energy_rate := 0.15
 const base_jump_height = 24
+const base_run_charge_period = 0.25
 
 enum State{
 	ready,
@@ -42,6 +43,7 @@ var cooldown_timer := 0.0
 var coyote_timer := 0.0
 var duck_debounce := 0.0
 var double_jump_charges : int = 1
+var run_charge_timer := 0.0
 
 signal died
 signal jumped
@@ -66,29 +68,26 @@ func _physics_process(delta : float) -> void:
 	_process_movement(delta)		
 	_animate_state()
 	_process_state(delta)
-	
 	facing_locked = state != State.ready and state != State.charging
 	if left_right != 0 and not facing_locked:
 		facing_direction = left_right	
 
 
 func _process_movement(delta : float) -> void:
-	
-	var target_real_speed = left_right * base_speed
-	
+	var energy_nerf = lerpf(0.5, 1.0, Energy)
+	var target_real_speed = left_right * base_speed	* energy_nerf
 	if state != State.ready:
 		target_real_speed = 0
 		run_accel = base_accel / 2
 	elif left_right == 0 or sign(left_right) != sign(velocity.x):	
 		run_accel = base_accel / 2
-	else:		
-		var speed_ratio = clampf(abs(velocity.x)/base_speed, 0, 1)
-		var speed_nerf = max(pow(1.0 - speed_ratio, 1.5), 0.0)
-		run_accel = base_accel * speed_nerf		
-		var energy_nerf = lerpf(0.5, 1.0, Energy)
-		target_real_speed = left_right * base_speed * energy_nerf
-
-	
+	elif run_charge_timer >= base_run_charge_period:		
+		var speed_ratio = clampf(abs(velocity.x)/base_speed, 0.0, 1.0)
+		run_accel = lerpf(base_accel, 0, pow(speed_ratio, 2))	
+	else:
+		target_real_speed = 0
+		run_accel = 0.0
+			
 	if not is_on_floor():
 		velocity.y += 980 * delta		
 		run_accel /= 2	
@@ -104,7 +103,6 @@ func _process_movement(delta : float) -> void:
 	else:
 		if coyote_timer == 0.0:
 			fell.emit()	
-		#aerial = coyote_timer >= coyote_period
 		coyote_timer += delta
 		
 
@@ -127,6 +125,8 @@ func _animate_state():
 				sprite.set_state('stance')
 			elif left_right == 0 or sign(left_right) != sign(velocity.x):
 				sprite.set_state('slide')
+			elif run_charge_timer < base_run_charge_period:
+				sprite.set_state('slide')
 			else:
 				sprite.set_state('run')
 				var real_speed_ratio = abs(velocity.x) / base_speed
@@ -141,10 +141,16 @@ func _animate_state():
 	
 	
 func _process_state(delta : float) -> void:
-	match state:
-		#State.ready:
-			#if velocity.x != 0 and sign(velocity.x) != sign(left_right):
-				#state = State.sliding						
+	match state:		
+		State.ready:
+			if left_right == 0 and velocity.x == 0:
+				run_charge_timer = 0.0
+			elif sign(left_right) != sign(velocity.x):
+				run_charge_timer = 0.0
+			else:
+				if run_charge_timer == 0:
+					shove(Vector2.RIGHT * sign(left_right) * base_speed / 10)
+				run_charge_timer += delta
 		State.charging:
 			charge_timer += delta	
 			if charge_timer >= charge_timer_max:
@@ -159,11 +165,6 @@ func _process_state(delta : float) -> void:
 			cooldown_timer -= delta
 			if cooldown_timer <= 0:
 				ready()		
-		#State.sliding:	 
-			#if velocity.x == 0:
-				#state = State.ready
-			#elif sign(velocity.x) == sign(left_right):
-				#state = State.ready
 
 
 func _process_energy(delta) -> void:
@@ -180,8 +181,8 @@ func jump() -> bool:
 	if state == State.dead:
 		return false
 	elif coyote_timer < coyote_period:
-		#aerial = true
 		coyote_timer = coyote_period
+		run_charge_timer = base_run_charge_period
 		velocity.y = -sqrt(base_jump_height * 1960)
 		jumped.emit()
 		return true
@@ -195,14 +196,13 @@ func jump() -> bool:
 		return false
 
 func land():
-	#aerial = false
 	double_jump_charges = 1
 
-		
 	
 func duck() -> bool:
 	duck_debounce = 0.0
 	return false
+	
 	
 func charge() -> bool:
 	if state == State.ready:
@@ -212,6 +212,7 @@ func charge() -> bool:
 		return true	
 	else:
 		return false
+	
 	
 func release() -> bool:
 	if not state == State.charging:
@@ -230,12 +231,14 @@ func release() -> bool:
 		shove(impulse)
 		return true
 
+
 func recover() -> bool:
 	if state == State.attacking:
 		state = State.recovering
 		return true
 	else:
 		return false
+
 
 func ready() -> bool:
 	if state == State.recovering:
@@ -245,19 +248,23 @@ func ready() -> bool:
 	else:
 		return false
 	
+	
 func _handle_hit(guy : CharacterBody2D):
 	var power = sqrt(charge_timer/charge_timer_max) * 120
 	var impulse = Vector2(facing_direction, 0) * power
 	guy.shove(impulse)
 	guy.damage(charge_timer/charge_timer_max * 100)
 	
+	
 func _handle_parry(guy : CharacterBody2D):
 	var impulse = Vector2(facing_direction, 0) * 72
 	guy.shove(impulse)
 
+
 func _handle_animation_finished():
 	if state == State.attacking:
 		recover()	
+	
 		
 func check_sprite_collision(coordinates : Vector2, bounds : Vector2, offset : Vector2 = Vector2.ZERO) -> bool:
 	var disposition : Vector2 = coordinates - global_position
@@ -272,6 +279,7 @@ func check_sprite_collision(coordinates : Vector2, bounds : Vector2, offset : Ve
 				return true	
 	return false
 
+
 func shove(impulse : Vector2) -> void:
 	if sign(velocity.x) == sign(impulse.x):
 		velocity.x += impulse.x
@@ -280,6 +288,7 @@ func shove(impulse : Vector2) -> void:
 			
 	if is_nan(velocity.x):
 		print("wtf")
+	
 			
 func damage(value : int) -> void:
 	HP -= value
@@ -287,9 +296,11 @@ func damage(value : int) -> void:
 		died.emit()
 		state = State.dead
 
+
 func is_facing(object : Node2D) -> bool:
 	var disposition = object.global_position - global_position
 	return sign(disposition.x) == sign(facing_direction)
+	
 	
 func turn_toward(object : Node2D):
 	if left_right != 0:
@@ -297,14 +308,13 @@ func turn_toward(object : Node2D):
 	var x_disposition = object.global_position.x - global_position.x
 	facing_direction = sign(x_disposition)
 	
-func sap(value : float):
 	
+func sap(value : float):	
 	if value > Energy:
-		#var diff = value - Energy
 		Energy = 0.0
-		#damage(diff)
 	else:
 		Energy -= value
+
 
 func interact():
 	var interactable_bodies = hurtbox.get_overlapping_bodies()

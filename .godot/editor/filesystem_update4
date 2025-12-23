@@ -7,3 +7,4 @@ res://Scenes/Foliage/limb.gd
 res://Scenes/Foliage/tree.gd
 res://Scenes/Foliage/Branch_Segment/branch_segment.gd
 res://Scenes/Foliage/Trunk_Segment/Trunk_Segment.tscn
+res://Scenes/Guy/FightingFrames/fightingFrames.gd

@@ -122,11 +122,15 @@ func stop():
 	
 	
 func set_state(state_name : String):
+	if state_name == param_node.name:
+		return
+		
 	var children = get_children()
 	for child in children:
 		if not child is FrameParams:
 			pass
 		elif child.name == state_name:
+			frame_timer = 0
 			param_node = child
 	
 	
