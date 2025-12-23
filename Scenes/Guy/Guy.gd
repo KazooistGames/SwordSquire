@@ -4,7 +4,7 @@ const duck_duration := 0.1
 const coyote_period := 0.10
 const base_accel := 400
 const base_speed := 75
-const charge_timer_max := 1.0
+const charge_timer_max := 0.75
 const charge_timer_min := 0.25
 const cooldown_period = 0.5
 const base_energy_rate := 0.15
@@ -154,7 +154,7 @@ func _process_state(delta : float) -> void:
 		State.ready:
 			if left_right == 0 and velocity.x == 0:
 				run_charge_timer = 0.0
-			elif sign(left_right) != sign(velocity.x):
+			elif sign(left_right) != sign(velocity.x) and left_right != 0:
 				run_charge_timer = 0.0
 			else:
 				if run_charge_timer == 0:
@@ -240,12 +240,10 @@ func release() -> bool:
 		var charged_power = charge_timer / charge_timer_max	
 		sap(charged_power * 0.5)
 		if smash_attack:
-			sprite.playback_speed = 1.0
-			pass
-			#sap(charged_power * 0.5)
+			sprite.playback_speed = lerpf(1.0, 2.0, charged_power)
 		else:
 			sprite.playback_speed = lerpf(1.0, 0.2, charged_power)
-			var base_magnitude = base_speed * 2
+			var base_magnitude = base_speed * 2.0
 			var impulse = Vector2(facing_direction, 0) * base_magnitude * sqrt(charged_power)
 			shove(impulse)
 		return true
