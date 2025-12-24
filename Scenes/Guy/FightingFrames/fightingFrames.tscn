@@ -14,16 +14,15 @@ height = 24.0
 [node name="FightingFrames" type="Sprite2D"]
 texture = ExtResource("1_ogbdo")
 region_enabled = true
-region_rect = Rect2(180, 0, 36, 24)
+region_rect = Rect2(324, 0, 36, 24)
 script = ExtResource("2_texl7")
 sprite_sheet = ExtResource("1_ogbdo")
 texture_size = Vector2i(36, 24)
 playing = true
 frames_per_second = 48
-frame_timer = 0.00416667
 first_frame_index = 4
 last_frame_index = 10
-current_frame_index = 5
+current_frame_index = 9
 hitbox_radius = 1.5
 hitbox_height = 12.0
 hitbox_rotation = 90.0
@@ -36,12 +35,13 @@ hurtbox_positions = Array[Vector2]([Vector2(3, 1), Vector2(2, 1), Vector2(1, 1),
 input_pickable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hitBox"]
-position = Vector2(-3, -2.5)
+position = Vector2(-12, -3.5)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_drk25")
 debug_color = Color(0.982366, 0.029952, 0.33587, 0.42)
 
 [node name="hurtBox" type="Area2D" parent="."]
+collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtBox"]
 position = Vector2(2, 1)

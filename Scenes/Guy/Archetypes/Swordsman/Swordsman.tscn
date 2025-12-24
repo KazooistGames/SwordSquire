@@ -14,17 +14,17 @@ Team = 1
 
 [node name="FightingFrames" parent="." index="1" node_paths=PackedStringArray("param_node")]
 texture = ExtResource("4_nypsl")
-region_rect = Rect2(72, 0, 24, 24)
+region_rect = Rect2(24, 0, 24, 24)
 sprite_sheet = ExtResource("4_nypsl")
 texture_size = Vector2i(24, 24)
 frames_per_second = 3
-frame_timer = 0.0833334
+frame_timer = 0.266667
 first_frame_index = 0
 last_frame_index = 3
-current_frame_index = 3
+current_frame_index = 0
 hitbox_disabled = true
-hitbox_radius = 6.0
-hitbox_height = 24.0
+hitbox_radius = 1.0
+hitbox_height = 1.0
 hitbox_rotation = 0.0
 hitbox_positions = Array[Vector2]([])
 hurtbox_radius = 5.0

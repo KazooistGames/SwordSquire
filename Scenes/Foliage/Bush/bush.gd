@@ -32,7 +32,6 @@ func _handle_area_entered(area : Node2D):
 		linked_bushes.append(area)
 		
 	var area_parent = area.get_parent().get_parent()
-	print(area_parent)
 	if not area_parent is CharacterBody2D:
 		pass
 		
