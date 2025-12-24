@@ -2,3 +2,5 @@ res://Scenes/Guy/Archetypes/Swordsman/Swordsman.tscn
 res://Scenes/Guy/Guy.gd
 res://Title.tscn
 res://Scenes/Guy/FightingFrames/fightingFrames.gd
+res://Scenes/Foliage/Bush/bush.gd
+res://Scenes/Foliage/Bush/Bush.tscn

@@ -9,7 +9,7 @@ const charge_timer_min := 0.25
 const cooldown_period = 0.5
 const base_energy_rate := 0.15
 const base_jump_height = 24
-const base_run_charge_period = 0.2
+const base_run_charge_period = 0.25
 
 enum State{
 	ready,
