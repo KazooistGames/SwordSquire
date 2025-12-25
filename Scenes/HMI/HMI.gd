@@ -1,7 +1,7 @@
 extends Camera2D
 
-const base_x_speed := 5
-const base_y_speed := 3
+const base_x_speed := 0.5
+const base_y_speed := 0.25
 const y_range := 50
 
 @export var player : CharacterBody2D = null
@@ -14,6 +14,7 @@ const y_range := 50
 var x_target := 0.0
 var y_target := 0.0
 var y_deadbanded := false
+var y_deadband_timer := 0.0
 
 
 func _process(delta : float) -> void:
@@ -59,21 +60,24 @@ func _physics_process(delta):
 func _process_x(delta):
 	x_target = player.global_position.x
 	var offset_from_target : float = abs(x_target - global_position.x)
-	var curve = pow(offset_from_target / 15.0, 1.0)
-	var speed = base_x_speed * curve
-	var step_size = max(2, speed * delta) 
-	global_position.x = move_toward(global_position.x, target_position.x, step_size)
+	var speed = base_x_speed + offset_from_target / 20.0
+	global_position.x = move_toward(global_position.x, target_position.x, speed)
 
 
 func _process_y(delta):
 	var offset_from_target : float = abs(y_target - global_position.y)
-	if y_deadbanded:
+	if y_deadband_timer >= 3.0:
+		y_deadbanded = false
+		y_deadband_timer = 0.0
+	elif y_deadbanded:
 		y_target = player.global_position.y
+		y_deadband_timer += delta
 	else:
+		var speed = base_y_speed + offset_from_target/25.0
+		global_position.y = move_toward(global_position.y, y_target, speed)
 		if abs(y_target - player.global_position.y) >= y_range:
 			y_target = player.global_position.y
-		global_position.y = move_toward(global_position.y, y_target, base_y_speed)
-		
+			
 	if offset_from_target >= y_range:
 		y_deadbanded = false
 		y_target = player.global_position.y
