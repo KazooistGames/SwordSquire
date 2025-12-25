@@ -1,6 +1,6 @@
 extends Camera2D
 
-const base_x_speed := 0.5
+const base_x_speed := 0.25
 const base_y_speed := 0.25
 const y_range := 50
 
@@ -13,6 +13,7 @@ const y_range := 50
 
 var x_target := 0.0
 var y_target := 0.0
+var y_offset := -6.0
 var y_deadbanded := false
 var y_deadband_timer := 0.0
 
@@ -70,13 +71,13 @@ func _process_y(delta):
 		y_deadbanded = false
 		y_deadband_timer = 0.0
 	elif y_deadbanded:
-		y_target = player.global_position.y
+		y_target = player.global_position.y + y_offset
 		y_deadband_timer += delta
 	else:
 		var speed = base_y_speed + offset_from_target/25.0
 		global_position.y = move_toward(global_position.y, y_target, speed)
 		if abs(y_target - player.global_position.y) >= y_range:
-			y_target = player.global_position.y
+			y_target = player.global_position.y + y_offset
 			
 	if offset_from_target >= y_range:
 		y_deadbanded = false
