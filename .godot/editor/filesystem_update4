@@ -1,4 +1,4 @@
 res://Title.tscn
-res://Scenes/Guy/Archetypes/Swordsman/Swordsman.tscn
-res://Scenes/Guy/FightingFrames/fightingFrames.tscn
-res://Scenes/Foliage/Bush/Bush.tscn
+res://Test.tscn
+res://Scenes/HMI/HMI.tscn
+res://Scenes/HMI/HMI.gd

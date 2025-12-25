@@ -40,8 +40,8 @@ func set_section(index, first_segment := false):
 	$Sprite2D.flip_h = Direction == -1
 	
 	if index == Section.end:
-		$CollisionShape2D.shape.size.x = 12
-		$CollisionShape2D.position.x -= 4 * sign(Direction)	
+		$CollisionShape2D.shape.size.x = 8
+		$CollisionShape2D.position.x -= 8 * sign(Direction)	
 	else:
 		$CollisionShape2D.shape.size.x = 24
 		$CollisionShape2D.position.x = 0
@@ -70,6 +70,6 @@ func _attach_canopy():
 	var canopy_prefab : PackedScene = load("res://Scenes/Foliage/Bush/Bush.tscn")
 	vegetation = canopy_prefab.instantiate()
 	add_child(vegetation)
-	var y_offset = -11
-	var x_offset = -10 * sign(Direction)
+	var y_offset = -12
+	var x_offset = 0.0#-10 * sign(Direction)
 	vegetation.position = Vector2(x_offset, y_offset)
