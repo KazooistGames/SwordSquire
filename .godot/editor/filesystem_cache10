@@ -1,9 +1,9 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1766698431
+::res://::1766709542
 icon.svg::CompressedTexture2D/CompressedTexture2D::5924297756986210548::1750986713::1750986729::1::::<><><>0<>0<>115f5ab0fcee273ae551e9140e533ef3<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 README.md::TextFile/TextFile::-1::1750987501::0::1::::<><><>0<>0<><>::
-Test.tscn::PackedScene::9024748324252063576::1766697178::0::1::::<><><>0<>0<><>::uid://cmigagy8anvbt::::res://Scenes/Wallpaper/wallpaper.tscn<>uid://db5fff6v2i5p7::::res://Scenes/Guy/Archetypes/Swordsman/Swordsman.tscn<>uid://cvoldq46v0xyn::::res://Scenes/HMI/HMI.tscn<>uid://6g65nfclhdfm::::res://Scenes/Foliage/Tree.tscn
-Title.tscn::PackedScene::5196781830951433978::1766697178::0::1::::<><><>0<>0<><>::uid://cmigagy8anvbt::::res://Scenes/Wallpaper/wallpaper.tscn<>uid://db5fff6v2i5p7::::res://Scenes/Guy/Archetypes/Swordsman/Swordsman.tscn<>uid://cvoldq46v0xyn::::res://Scenes/HMI/HMI.tscn<>uid://6g65nfclhdfm::::res://Scenes/Foliage/Tree.tscn
+Test.tscn::PackedScene::9024748324252063576::1766709542::0::1::::<><><>0<>0<><>::uid://cmigagy8anvbt::::res://Scenes/Wallpaper/wallpaper.tscn<>uid://db5fff6v2i5p7::::res://Scenes/Guy/Archetypes/Swordsman/Swordsman.tscn<>uid://cvoldq46v0xyn::::res://Scenes/HMI/HMI.tscn<>uid://6g65nfclhdfm::::res://Scenes/Foliage/Tree.tscn
+Title.tscn::PackedScene::5196781830951433978::1766709542::0::1::::<><><>0<>0<><>::uid://cmigagy8anvbt::::res://Scenes/Wallpaper/wallpaper.tscn<>uid://db5fff6v2i5p7::::res://Scenes/Guy/Archetypes/Swordsman/Swordsman.tscn<>uid://cvoldq46v0xyn::::res://Scenes/HMI/HMI.tscn<>uid://6g65nfclhdfm::::res://Scenes/Foliage/Tree.tscn
 ::res://Custom_Types/::1766688178
 attribute.gd::GDScript/GDScript::4831322747356899994::1766688178::0::1::::<>Node<><>0<>0<><>::
 ::res://Scenes/::1761663111
@@ -20,8 +20,8 @@ limb.gd::GDScript/GDScript::3287016700950742529::1766688178::0::1::::<>Node2D<><
 Limb.tscn::PackedScene/PackedScene::7587545358768368338::1751585393::0::1::::<><><>0<>0<><>::uid://bm3ixjwm8l026::::res://Scenes/Foliage/limb.gd
 tree.gd::GDScript/GDScript::3592321507689642638::1766688178::0::1::::<>Node2D<><>0<>0<><>::
 Tree.tscn::PackedScene/PackedScene::2190176910529693098::1751585393::0::1::::<><><>0<>0<><>::uid://brgfamains5m5::::res://Scenes/Foliage/tree.gd
-::res://Scenes/Foliage/Branch_Segment/::1766694773
-branch_1.png::CompressedTexture2D/CompressedTexture2D::1117986412219667561::1751645080::1751645098::1::::<><><>0<>0<>fdc7f39e447bfdbcb49c011fb898c119<>res://.godot/imported/branch_1.png-3150f863a3c8746c0d00fdc33aeab24a.ctex::
+::res://Scenes/Foliage/Branch_Segment/::1766709541
+branch_1.png::CompressedTexture2D/CompressedTexture2D::1117986412219667561::1766709538::1766709541::1::::<><><>0<>0<>fdc7f39e447bfdbcb49c011fb898c119<>res://.godot/imported/branch_1.png-3150f863a3c8746c0d00fdc33aeab24a.ctex::
 branch_segment.gd::GDScript::8378185413028917416::1766694773::0::1::::<>StaticBody2D<><>0<>1<><>::
 Branch_Segment.tscn::PackedScene/PackedScene::5780285392718562889::1751645152::0::1::::<><><>0<>0<><>::uid://p6tcqicabhhx::::res://Scenes/Foliage/Branch_Segment/branch_1.png<>uid://drmpqwcs4l5u7::::res://Scenes/Foliage/Branch_Segment/branch_segment.gd
 ::res://Scenes/Foliage/Bush/::1766688294
@@ -29,7 +29,7 @@ bush.gd::GDScript::8712370391975608717::1766688294::0::1::::<>Area2D<><>0<>0<><>
 Bush.tscn::PackedScene/PackedScene::2797614509910145706::1766688294::0::1::::<><><>0<>0<><>::uid://dwelp5nfdfenl::::res://Scenes/Foliage/Bush/bush.gd<>uid://brlfthysl0xly::::res://Scenes/Foliage/Bush/leaves_01.png
 leaves_01.png::CompressedTexture2D/CompressedTexture2D::3602677101454638370::1766688294::1751660809::1::::<><><>0<>0<>8295fbeba15e1b894d89595cf79ea41c<>res://.godot/imported/leaves_01.png-6167198f178899805b828f3d0faa564b.ctex::
 ::res://Scenes/Foliage/Trunk_Segment/::1766688178
-tree_1.png::CompressedTexture2D/CompressedTexture2D::5780526619591896172::1751644094::1751644141::1::::<><><>0<>0<>73e33b6e5c222ec3143a7b490adf8562<>res://.godot/imported/tree_1.png-5cba9698ad378578794221a389479629.ctex::
+tree_1.png::CompressedTexture2D/CompressedTexture2D::5780526619591896172::1766709756::1766709777::1::::<><><>0<>0<>73e33b6e5c222ec3143a7b490adf8562<>res://.godot/imported/tree_1.png-5cba9698ad378578794221a389479629.ctex::
 trunk_segment.gd::GDScript/GDScript::6438579547259940337::1766688178::0::1::::<>StaticBody2D<><>0<>1<><>::
 Trunk_Segment.tscn::PackedScene/PackedScene::7602841784808877644::1751645106::0::1::::<><><>0<>0<><>::uid://comeot1ww6vaa::::res://Scenes/Foliage/Trunk_Segment/tree_1.png<>uid://cxy5p157duw7j::::res://Scenes/Foliage/Trunk_Segment/trunk_segment.gd
 ::res://Scenes/Guy/::1766688294
@@ -82,9 +82,9 @@ hurt_box.tscn::PackedScene/PackedScene::1767092572681931092::1761585166::0::1:::
 fightingFrames.gd::GDScript::6574373844491754860::1766688294::0::1::::FightingFrames<>Sprite2D<><>0<>1<><>::
 fightingFrames.tscn::PackedScene::5462627606666464946::1766688294::0::1::::<><><>0<>0<><>::uid://tmo3ijcibewl::::res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_stab-Sheet.png<>uid://c0ww8hb384pwm::::res://Scenes/Guy/FightingFrames/fightingFrames.gd
 frame_params.gd::GDScript/GDScript::5429423476355627739::1766688178::0::1::::FrameParams<>Node<><>0<>1<><>::
-::res://Scenes/HMI/::1766698357
-HMI.gd::GDScript::5398665332297802219::1766698357::0::1::::<>Camera2D<><>0<>0<><>::
-HMI.tscn::PackedScene::6276382503254366417::1766698357::0::1::::<><><>0<>0<><>::uid://ci6fh2bff5v1d::::res://Scenes/HMI/HMI.gd
+::res://Scenes/HMI/::1766709542
+HMI.gd::GDScript::5398665332297802219::1766701494::0::1::::<>Camera2D<><>0<>0<><>::
+HMI.tscn::PackedScene::6276382503254366417::1766709542::0::1::::<><><>0<>0<><>::uid://ci6fh2bff5v1d::::res://Scenes/HMI/HMI.gd
 ::res://Scenes/Items/::1751663150
 ::res://Scenes/Items/Fruit/::1766688178
 fruit.gd::GDScript/GDScript::1203373162745166900::1766688178::0::1::::<>RigidBody2D<><>0<>0<><>::
