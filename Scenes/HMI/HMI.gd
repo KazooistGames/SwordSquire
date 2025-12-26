@@ -82,7 +82,8 @@ func _process_y(delta):
 	if offset_from_target >= y_range:
 		y_deadbanded = false
 		y_target = player.global_position.y
-	elif offset_from_target == 0:
+	elif offset_from_target <= 0.01:
+		y_deadband_timer = 0.0
 		y_deadbanded = true
 
 
