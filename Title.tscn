@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cgbmicstbteog"]
 
-[ext_resource type="PackedScene" uid="uid://cmigagy8anvbt" path="res://Scenes/Wallpaper/wallpaper.tscn" id="1_ax32a"]
+[ext_resource type="PackedScene" uid="uid://cmigagy8anvbt" path="res://Scenes/Map/map.tscn" id="1_ax32a"]
 [ext_resource type="PackedScene" uid="uid://db5fff6v2i5p7" path="res://Scenes/Guy/Archetypes/Swordsman/Swordsman.tscn" id="2_quvj1"]
 [ext_resource type="PackedScene" uid="uid://cvoldq46v0xyn" path="res://Scenes/HMI/HMI.tscn" id="3_quvj1"]
 [ext_resource type="PackedScene" uid="uid://6g65nfclhdfm" path="res://Scenes/Foliage/Tree.tscn" id="5_rg4ux"]
@@ -10,7 +10,7 @@
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
 color = Color(0.881937, 0.881937, 0.881936, 1)
 
-[node name="Wallpaper" parent="." instance=ExtResource("1_ax32a")]
+[node name="map" parent="." instance=ExtResource("1_ax32a")]
 
 [node name="Hmi" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_quvj1")]
 player = NodePath("../Swordsman")

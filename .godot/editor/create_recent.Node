@@ -1,14 +1,14 @@
+StaticBody2D
+CollisionShape2D
 Control
 Label
 Node
 Area2D
-CollisionShape2D
 Sprite2D
 LightOccluder2D
 PointLight2D
 CanvasModulate
 RigidBody2D
-StaticBody2D
 CanvasLayer
 ColorRect
 MarginContainer

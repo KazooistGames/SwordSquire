@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bvvh4ayx4v5y7"
-path="res://.godot/imported/atmosphere.png-84eebccd68cd48175fd221fce11e10fb.ctex"
+path="res://.godot/imported/atmosphere.png-02b7ae37d4ccb0432e326c952bf05218.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Scenes/Wallpaper/atmosphere.png"
-dest_files=["res://.godot/imported/atmosphere.png-84eebccd68cd48175fd221fce11e10fb.ctex"]
+source_file="res://Scenes/Map/atmosphere.png"
+dest_files=["res://.godot/imported/atmosphere.png-02b7ae37d4ccb0432e326c952bf05218.ctex"]
 
 [params]
 

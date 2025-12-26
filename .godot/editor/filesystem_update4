@@ -1,4 +1,8 @@
+res://Scenes/Wallpaper/wallpaper.tscn
+res://Scenes/Wallpaper/wallpaper.gd
 res://Title.tscn
-res://Test.tscn
-res://Scenes/HMI/HMI.tscn
-res://Scenes/HMI/HMI.gd
+res://Scenes/Paralax/wallpaper.tscn
+res://Scenes/Paralax/wallpaper.gd
+res://Scenes/Map/map.tscn
+res://Scenes/Map/map.gd
+res://Scenes/Guy/Guy.gd

@@ -21,10 +21,10 @@ var y_deadband_timer := 0.0
 func _process(delta : float) -> void:
 	if player:
 		target_position = player.global_position
+		fov_light.global_position = player.global_position
 		_movement_inputs(delta)
 		_combat_inputs(delta)
 		_update_hud(delta)
-		fov_light.global_position = player.global_position
 		_update_bush_transparency()
 		_update_guy_hidden()	
 	if Input.is_action_just_pressed("Interact"):

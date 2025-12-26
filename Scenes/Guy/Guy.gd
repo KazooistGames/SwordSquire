@@ -16,7 +16,6 @@ enum State{
 	charging,
 	attacking,
 	recovering,
-	#sliding,
 	dead
 }
 
@@ -242,7 +241,7 @@ func release() -> bool:
 		if smash_attack:
 			sprite.playback_speed = lerpf(1.0, 2.0, charged_power)
 		else:
-			sprite.playback_speed = lerpf(1.0, 0.2, charged_power)
+			sprite.playback_speed = lerpf(1.0, 0.25, charged_power)
 			var base_magnitude = base_speed * 2.0
 			var impulse = Vector2(facing_direction, 0) * base_magnitude * sqrt(charged_power)
 			shove(impulse)

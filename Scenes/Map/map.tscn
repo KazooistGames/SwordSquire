@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://cmigagy8anvbt"]
+
+[ext_resource type="Script" uid="uid://csqmqtvy1fpk8" path="res://Scenes/Map/map.gd" id="1_xnqu7"]
+[ext_resource type="Texture2D" uid="uid://c74j1tg6rnviq" path="res://Scenes/Map/dirt.png" id="2_o6oeg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jolfa"]
+size = Vector2(1280, 58)
+
+[node name="Map" type="StaticBody2D"]
+z_index = -1
+script = ExtResource("1_xnqu7")
+
+[node name="floorSprite" type="Sprite2D" parent="."]
+texture_repeat = 2
+texture = ExtResource("2_o6oeg")
+region_enabled = true
+region_rect = Rect2(0, 0, 1280, 64)
+
+[node name="floorCollider" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_jolfa")
