@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Shield Squire")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+badfad4717bcd6eddd741ca9588442ecc7aab478")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+581e3fdd068ee40577aee511913ff3bff80aa0ec")]
 [assembly: System.Reflection.AssemblyProductAttribute("Shield Squire")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Shield Squire")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
