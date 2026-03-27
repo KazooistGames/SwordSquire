@@ -11,7 +11,7 @@ var propagation_queue : Array[Vector2i] = []
 var grid_sockets : Dictionary[Vector2i, SocketRule]
 var grid_candidates : Dictionary[Vector2i, Array]
 
-var cell_templates : Dictionary[SocketRule.SocketType, SocketRule]
+var cell_templates : Array[SocketRule]
 var random = RandomNumberGenerator.new()
 
 
@@ -38,9 +38,9 @@ func _process(_delta):
 				best_coords.append(coord)
 
 		if not best_coords.is_empty():
-			var pick = best_coords.pick_random()
-			var type = grid_candidates[pick].pick_random()
-			collapse_cell(pick, cell_templates[type])
+			var random_cell = best_coords.pick_random()
+			var random_candidate = grid_candidates[random_cell].pick_random()
+			collapse_cell(random_cell, cell_templates[random_candidate])
 
 
 func initialize_map():
@@ -48,19 +48,14 @@ func initialize_map():
 	for x in range(grid_size.x):
 		for y in range(grid_size.y):
 			grid_sockets[Vector2i(x, y)] = null
-			grid_candidates[Vector2i(x, y)] = [1,2,3,4]
+			grid_candidates[Vector2i(x, y)] = range(cell_templates.size())
 	
 	
 func seed_map():
-	var x = random.randi_range(0, grid_size.x-1)
-	var y = random.randi_range(0, grid_size.y-1)
-	collapse_cell(Vector2i(x,y), cell_templates[SocketRule.SocketType.air])
-	x = random.randi_range(0, grid_size.x-1)
-	y = random.randi_range(0, grid_size.y-1)
-	collapse_cell(Vector2i(x,y), cell_templates[SocketRule.SocketType.grass])
-	x = random.randi_range(0, grid_size.x-1)
-	y = random.randi_range(0, grid_size.y-1)
-	collapse_cell(Vector2i(x,y), cell_templates[SocketRule.SocketType.dirt])
+	for i in range(1):
+		var x = random.randi_range(0, grid_size.x-1)
+		var y = random.randi_range(0, grid_size.y-1)
+		collapse_cell(Vector2i(x,y), cell_templates.pick_random())
 			
 
 func valid_neighbors(coordinates : Vector2i) -> Array[Vector2i]:
@@ -122,8 +117,8 @@ func propagate_entropy(coordinates : Vector2i):
 		var neighbor_rule = grid_sockets[relative_position + coordinates]
 		if neighbor_rule == null:
 			continue
-		for candidate_type : SocketRule.SocketType in grid_candidates[coordinates]:
-			var candidate_rule : SocketRule = cell_templates[candidate_type]
+		for template_index : int in grid_candidates[coordinates]:
+			var candidate_rule : SocketRule = cell_templates[template_index]
 			var acceptable = false
 			match relative_position:
 				Vector2i.UP:
@@ -143,7 +138,7 @@ func propagate_entropy(coordinates : Vector2i):
 						if socket in neighbor_rule.LeftSockets:
 							acceptable = true
 			if not acceptable:
-				valid_candidates.erase(candidate_type)	
+				valid_candidates.erase(template_index)	
 	
 	print(coordinates, ' can be ', valid_candidates)
 	#no change to candidates, no propagation needed
@@ -157,7 +152,7 @@ func propagate_entropy(coordinates : Vector2i):
 		var neighbor_coords = coordinates + relative_position
 		if neighbor_coords not in grid_candidates:
 			continue
-		if neighbor_coords not in propagation_queue:
+		if neighbor_coords not in propagation_queue and neighbor_coords in grid_candidates:
 			propagation_queue.append(neighbor_coords)
 			print('propagating ', neighbor_coords)
 			
@@ -172,8 +167,8 @@ func propagate_entropy(coordinates : Vector2i):
 	# After filtering candidates, build virtual sockets for this cell
 	var virtual_rules = SocketRule.new()
 	virtual_rules.Type = SocketRule.SocketType.wildcard
-	for type in grid_candidates[coordinates]:
-		var template = cell_templates[type]
+	for template_index in grid_candidates[coordinates]:
+		var template = cell_templates[template_index]
 		for s in template.UpSockets:
 			if s not in virtual_rules.UpSockets:
 				virtual_rules.UpSockets.append(s)
@@ -189,14 +184,14 @@ func propagate_entropy(coordinates : Vector2i):
 	grid_sockets[coordinates] = virtual_rules
 		
 	
-func load_cell_templates(subfolder_name: String) -> Dictionary[SocketRule.SocketType, SocketRule]:
-	var results: Dictionary[SocketRule.SocketType, SocketRule] = {}
+func load_cell_templates(subfolder_name: String) -> Array[SocketRule]:
+	var results: Array[SocketRule] = []
 	var script_dir = get_script().resource_path.get_base_dir()
 	var target_path = script_dir.path_join(subfolder_name)
 	var dir = DirAccess.open(target_path)
 	if not dir:
 		push_error("Could not open path: " + target_path)
-		return {}
+		return []
 		
 	dir.list_dir_begin()
 	var file_name = dir.get_next()
@@ -213,7 +208,7 @@ func load_cell_templates(subfolder_name: String) -> Dictionary[SocketRule.Socket
 			
 		var res = load(full_path)
 		if res:
-			results[res.Type] = res
+			results.append(res)
 			
 		file_name = dir.get_next()
 		
