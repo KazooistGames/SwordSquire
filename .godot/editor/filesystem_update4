@@ -1,4 +1,13 @@
-res://Title.tscn
 res://Scenes/wave_function_collapse/map.tscn
+res://Scenes/wave_function_collapse/rules/grass.tres
 res://Scenes/wave_function_collapse/rules/hole.tres
+res://Title.tscn
+res://Scenes/wave_function_collapse/map.gd
 res://Scenes/wave_function_collapse/rules/tunnel.tres
+res://Scenes/wave_function_collapse/rules/cave.tres
+res://Scenes/wave_function_collapse/rules/hole_L.tres
+res://Scenes/wave_function_collapse/rules/tunnel_H.tres
+res://Scenes/wave_function_collapse/rules/tunnel_V.tres
+res://Scenes/wave_function_collapse/rules/hole_R.tres
+res://Scenes/wave_function_collapse/rules/Cave_R.tres
+res://Scenes/wave_function_collapse/rules/cave_L.tres

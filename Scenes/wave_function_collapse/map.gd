@@ -14,18 +14,20 @@ var grid_candidates : Dictionary[Vector2i, Array]
 var cell_templates : Array[SocketRule]
 var random = RandomNumberGenerator.new()
 
+var grid_labels : Dictionary[Vector2i, Label] = {}
 
 func _ready():
 	cell_templates = load_cell_templates('rules')
 	initialize_map()
 	seed_map()
 	#calculate_grid_entropy()
+#
+#func _unhandled_input(event):
+	#if event.is_action_pressed("Enter"):
+		#perform_wave_collapse_round()
 
-
-func _process(_delta):
-	if not propagation_queue.is_empty():
-		propagate_entropy(propagation_queue.pop_front())
-	elif not grid_candidates.is_empty():
+func perform_wave_collapse_round():
+	if not grid_candidates.is_empty():
 		# Find the uncollapsed cell with the fewest candidates
 		var best_entropy = SocketRule.SocketType.size()
 		var best_coords : Array[Vector2i] = []
@@ -40,15 +42,29 @@ func _process(_delta):
 		if not best_coords.is_empty():
 			var random_cell = best_coords.pick_random()
 			var random_candidate = grid_candidates[random_cell].pick_random()
-			collapse_cell(random_cell, cell_templates[random_candidate])
+			collapse_cell(random_cell, cell_templates[random_candidate])		
+	while not propagation_queue.is_empty():
+		propagate_entropy(propagation_queue.pop_front())
+		
+func _process(_delta):
+	#return
+	#return # REMOVE THIS FOR AUTO GENERATION
+	perform_wave_collapse_round()
 
 
 func initialize_map():
 	container.size = grid_size * cell_size
 	for x in range(grid_size.x):
 		for y in range(grid_size.y):
-			grid_sockets[Vector2i(x, y)] = null
-			grid_candidates[Vector2i(x, y)] = range(cell_templates.size())
+			var coordinates = Vector2i(x,y)
+			grid_sockets[coordinates] = null
+			grid_candidates[coordinates] = range(cell_templates.size())
+			var new_label := Label.new()
+			grid_labels[coordinates] = new_label
+			subviewport.add_child(new_label)
+			new_label.position = coordinates * cell_size
+			new_label.text = str(cell_templates.size())
+			new_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	
 	
 func seed_map():
@@ -146,7 +162,7 @@ func propagate_entropy(coordinates : Vector2i):
 		return
 		
 	grid_candidates[coordinates] = valid_candidates
-		
+	grid_labels[coordinates].text = str(valid_candidates.size())
 	#propagate changes to neighbors
 	for relative_position in neighbors:
 		var neighbor_coords = coordinates + relative_position
@@ -180,7 +196,8 @@ func propagate_entropy(coordinates : Vector2i):
 				virtual_rules.LeftSockets.append(s)
 		for s in template.RightSockets:
 			if s not in virtual_rules.RightSockets:
-				virtual_rules.RightSockets.append(s)							
+				virtual_rules.RightSockets.append(s)
+											
 	grid_sockets[coordinates] = virtual_rules
 		
 	

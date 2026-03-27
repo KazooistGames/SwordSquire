@@ -1,13 +1,13 @@
-[gd_resource type="Resource" script_class="SocketRule" load_steps=2 format=3 uid="uid://bofdsps0inin1"]
+[gd_resource type="Resource" script_class="SocketRule" load_steps=2 format=3 uid="uid://c6iaokyvpf2mv"]
 
-[ext_resource type="Script" uid="uid://du8bcv31sep5o" path="res://Scenes/wave_function_collapse/SocketRule.gd" id="1_coqfk"]
+[ext_resource type="Script" uid="uid://du8bcv31sep5o" path="res://Scenes/wave_function_collapse/SocketRule.gd" id="1_ycncq"]
 
 [resource]
-script = ExtResource("1_coqfk")
+script = ExtResource("1_ycncq")
 Type = 4
-_up = Array[int]([4, 1])
+_up = Array[int]([1])
 _down = Array[int]([3, 4])
-_left = Array[int]([4, 3])
+_left = Array[int]([3])
 _right = Array[int]([])
 HorizontallySymmetrical = true
 VerticallySymmeyrical = false
