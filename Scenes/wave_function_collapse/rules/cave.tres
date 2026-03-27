@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="CellRule" load_steps=2 format=3 uid="uid://bxh5byauqjsgy"]
+
+[ext_resource type="Script" uid="uid://du8bcv31sep5o" path="res://Scenes/wave_function_collapse/SocketRule.gd" id="1_fa4cd"]
+
+[resource]
+script = ExtResource("1_fa4cd")
+Type = 4
+UpWeights = Dictionary[int, int]({
+0: 1,
+2: 1,
+3: 1
+})
+DownWeights = Dictionary[int, int]({
+2: 1,
+3: 1
+})
+LateralWeights = Dictionary[int, int]({
+0: 0,
+1: 0,
+2: 0,
+3: 1
+})

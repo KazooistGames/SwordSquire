@@ -58,7 +58,6 @@ func _ready() -> void:
 	state = State.ready
 	
 func _physics_process(delta : float) -> void:	
-
 	if duck_debounce < duck_duration:
 		duck_debounce += delta
 		collision_mask = 1	

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dc0sb5rwkpk25"
-path="res://.godot/imported/fog.png-f338685f26bf3c89ff38404394876c29.ctex"
+uid="uid://bvvh4ayx4v5y7"
+path="res://.godot/imported/atmosphere.png-09e2c0b9bcb74702eceb078d09660e0c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Scenes/Map/fog.png"
-dest_files=["res://.godot/imported/fog.png-f338685f26bf3c89ff38404394876c29.ctex"]
+source_file="res://Scenes/Background/atmosphere.png"
+dest_files=["res://.godot/imported/atmosphere.png-09e2c0b9bcb74702eceb078d09660e0c.ctex"]
 
 [params]
 

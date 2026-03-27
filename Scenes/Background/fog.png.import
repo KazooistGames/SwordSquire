@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cvxjdxnqsuaf4"
-path="res://.godot/imported/dirt_grid.png-59b5c8b24063cfe1ddd18562272b7308.ctex"
+uid="uid://dc0sb5rwkpk25"
+path="res://.godot/imported/fog.png-84b70ef11dc66b30834ebe09bd1ef473.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Scenes/Map/dirt_grid.png"
-dest_files=["res://.godot/imported/dirt_grid.png-59b5c8b24063cfe1ddd18562272b7308.ctex"]
+source_file="res://Scenes/Background/fog.png"
+dest_files=["res://.godot/imported/fog.png-84b70ef11dc66b30834ebe09bd1ef473.ctex"]
 
 [params]
 

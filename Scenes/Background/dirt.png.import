@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bvvh4ayx4v5y7"
-path="res://.godot/imported/atmosphere.png-02b7ae37d4ccb0432e326c952bf05218.ctex"
+uid="uid://c74j1tg6rnviq"
+path="res://.godot/imported/dirt.png-cebde592d9d8264db92b111f211cace3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Scenes/Map/atmosphere.png"
-dest_files=["res://.godot/imported/atmosphere.png-02b7ae37d4ccb0432e326c952bf05218.ctex"]
+source_file="res://Scenes/Background/dirt.png"
+dest_files=["res://.godot/imported/dirt.png-cebde592d9d8264db92b111f211cace3.ctex"]
 
 [params]
 
