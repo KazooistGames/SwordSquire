@@ -14,8 +14,6 @@ var grid_candidates : Dictionary[Vector2i, Array]
 var cell_templates : Dictionary[SocketRule.SocketType, SocketRule]
 var random = RandomNumberGenerator.new()
 
-var lowest_entropy = SocketRule.SocketType.size()
-var collapsible_coords = []
 
 func _ready():
 	cell_templates = load_cell_templates('rules')
@@ -27,13 +25,6 @@ func _ready():
 func _process(_delta):
 	if not propagation_queue.is_empty():
 		propagate_entropy(propagation_queue.pop_front())
-	elif not collapsible_coords.is_empty():
-		var collapse_coords = collapsible_coords.pick_random()
-		var type = grid_candidates[collapse_coords].pick_random()
-		collapsible_coords.erase(collapse_coords)		
-		if collapsible_coords.is_empty(): #reset entropy counter since we cleared this flight
-			lowest_entropy = SocketRule.SocketType.size()
-		collapse_cell(collapse_coords, cell_templates[type])
 	elif not grid_candidates.is_empty():
 		# Find the uncollapsed cell with the fewest candidates
 		var best_entropy = SocketRule.SocketType.size()
@@ -57,7 +48,7 @@ func initialize_map():
 	for x in range(grid_size.x):
 		for y in range(grid_size.y):
 			grid_sockets[Vector2i(x, y)] = null
-			grid_candidates[Vector2i(x, y)] = [1,2,3]
+			grid_candidates[Vector2i(x, y)] = [1,2,3,4]
 	
 	
 func seed_map():
@@ -196,13 +187,6 @@ func propagate_entropy(coordinates : Vector2i):
 			if s not in virtual_rules.RightSockets:
 				virtual_rules.RightSockets.append(s)							
 	grid_sockets[coordinates] = virtual_rules
-	
-	if valid_candidates.size() < lowest_entropy:
-		lowest_entropy = valid_candidates.size()
-		collapsible_coords.clear()
-		collapsible_coords.append(coordinates)
-	elif valid_candidates.size() == lowest_entropy:
-		collapsible_coords.append(coordinates)
 		
 	
 func load_cell_templates(subfolder_name: String) -> Dictionary[SocketRule.SocketType, SocketRule]:
