@@ -1,4 +1,5 @@
-res://Scenes/wave_function_collapse/rules
+res://Scenes/wave_function_collapse/cells
+res://Scenes/wave_function_collapse/Tiles
 res://Scenes/Guy/FightingFrames
 res://Scenes/Guy/Archetypes/Swordsman/Sheets
 res://Scenes/Guy/Archetypes/Swordsman/States

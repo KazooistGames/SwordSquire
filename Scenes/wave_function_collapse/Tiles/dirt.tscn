@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://tuceygq1lyea"]
+
+[ext_resource type="PackedScene" uid="uid://1at18pscgfmk" path="res://Scenes/wave_function_collapse/Tiles/_tile.tscn" id="1_8ji26"]
+
+[node name="Tile" instance=ExtResource("1_8ji26")]
+color = Color(0, 0.490196, 0, 1)
+_up = Array[int]([0])
+_down = Array[int]([1])
+_left = Array[int]([1, 2])
+_right = Array[int]([1, 2])
