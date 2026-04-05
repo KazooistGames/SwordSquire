@@ -1,10 +1,6 @@
-res://Scenes/Map/cells/grass.tscn
-res://Scenes/Map/_cell.gd
 res://Scenes/Map/cells/air.tscn
-res://Scenes/Map/tiles/grass.tscn
-res://Scenes/Map/tiles/air.tscn
-res://Scenes/Map/_cell_sockets.gd
-res://Scenes/Map/cells/ground.tscn
 res://Scenes/Map/map.gd
-res://Scenes/Map/CellRules.gd
 res://Scenes/Map/cell.gd
+res://Scenes/Map/cells/air.tres
+res://Scenes/Map/cells/ground.tres
+res://Scenes/Map/cells/sky.tres

@@ -1,15 +1,15 @@
 extends Node2D
 
 @export var cell_size := 32
-@export var grid_size := Vector2i(32,16)
+@export var grid_size := Vector2i(4,4)
 
 @onready var container = $SubViewportContainer
 @onready var subviewport = $SubViewportContainer/SubViewport
 
 var propagation_queue : Array[Vector2i] = []
 
-var collapsed_cells : Dictionary[Vector2i, Cell]
-var virtual_cells : Dictionary[Vector2i, Array]
+var grid_cells : Dictionary[Vector2i, Cell]
+var grid_candidates : Dictionary[Vector2i, Array]
 
 var cell_templates : Array[Cell]
 var random = RandomNumberGenerator.new()
@@ -35,8 +35,7 @@ func initialize_map():
 	for x in range(grid_size.x):
 		for y in range(grid_size.y):
 			var coordinates = Vector2i(x,y)
-			collapsed_cells[coordinates] = null
-			virtual_cells[coordinates] = cell_templates.duplicate()
+			grid_candidates[coordinates] = cell_templates.duplicate()
 			#for debugging purposes, render the entropy of each cell
 			var new_label := Label.new()
 			grid_labels[coordinates] = new_label
@@ -47,25 +46,27 @@ func initialize_map():
 	
 
 func perform_wave_collapse_round():
-	if virtual_cells.is_empty():
-		return	
+	if grid_cells.size() == grid_candidates.size():
+		return
 	# Find the uncollapsed cells with the fewest candidates
 	var collapse_options = lowest_entropy_coordinates()
 	# collapse one of them
 	collapse_cell(collapse_options.pick_random())
 	# recalculate grid entropy
 	while not propagation_queue.is_empty():
-		propagate_entropy(propagation_queue.pop_front())			
+		calculate_entropy(propagation_queue.pop_front())			
 
 
 func lowest_entropy_coordinates() -> Array[Vector2i]:
 	var results : Array[Vector2i] = []
-	if not virtual_cells.is_empty():	
+	if not grid_candidates.is_empty():	
 		#init search with no-entropy size
 		var best_entropy : int = cell_templates.size()
 		# iterate all uncollapsed tiles
-		for coord in virtual_cells:
-			var count = virtual_cells[coord].size()
+		for coord in grid_candidates:
+			if coord in grid_cells:
+				continue
+			var count = grid_candidates[coord].size()
 			if count < best_entropy:
 				best_entropy = count
 				results = [coord]
@@ -77,109 +78,82 @@ func lowest_entropy_coordinates() -> Array[Vector2i]:
 
 func collapse_cell(coordinates : Vector2i):
 	
-	if coordinates not in virtual_cells:
+	if grid_candidates[coordinates].size() == 0:
 		push_error(coordinates, ' cannot be collapsed: options not present')
 		return
-	elif coordinates in collapsed_cells:
-		push_error(coordinates, ' cannot be collapsed: already collapsed')
-		return
-		
+
 	#pick a random viable template from virtual cells
-	var cell_options = virtual_cells[coordinates]
+	var cell_options = grid_candidates[coordinates]
 	var chosen_template : Cell = cell_options.pick_random()
-	collapsed_cells[coordinates] = chosen_template
+	grid_cells[coordinates] = chosen_template
+	grid_candidates[coordinates] = [chosen_template]
 	
-	#collapse it into a tile
-	print('Collapsing ', coordinates, ' into ', str(chosen_template.resource_name))	
+	#convert it into a tile
+	print('Collapsing ', coordinates, ' into ', chosen_template.Tag as Cell.Socket)	
 	var tile : Node = chosen_template.collapse()
-	
-	virtual_cells.erase(coordinates)	
-	for neighbor_offset in valid_neighbors(coordinates):
-		propagation_queue.push_back(coordinates + neighbor_offset)
-	
+	tile.size = Vector2(cell_size, cell_size)
 	subviewport.add_child(tile)
 	tile.position = Vector2(coordinates.x, coordinates.y) * cell_size
-			
 	
-func propagate_entropy(coordinates : Vector2i):
+	for neighbor_offset in valid_neighbor_offsets(coordinates):
+		propagation_queue.push_back(coordinates + neighbor_offset)
+		
+	
+func calculate_entropy(coordinates : Vector2i):
 	# if this is already collapsed or calculated, skip
-	if coordinates not in virtual_cells:
+	if coordinates not in grid_candidates:
 		print(coordinates, ' already collapsed')
 		return
 		
-	var valid_candidates = virtual_cells[coordinates].duplicate()
+	var needs_removed = []
+	var neighbor_offsets = valid_neighbor_offsets(coordinates)
+	for candidate : Cell in grid_candidates[coordinates]:
+		for offset in neighbor_offsets:
+			var has_a_match = false
+			for neighbor_option in grid_candidates[coordinates + offset]:
+				if neighbor_option == null:
+					continue
+				elif candidate.fits(neighbor_option, offset):
+					has_a_match = true
+					break
+			if has_a_match:
+				pass
+			elif candidate in needs_removed:
+				pass
+			else:
+				needs_removed.append(candidate)
+				break
 	
-	var neighbors = valid_neighbors(coordinates)
-	for relative_position in neighbors:
-		var neighbor = collapsed_cells[relative_position + coordinates]
-		if neighbor == null:
-			continue
-		for candidate : Cell in virtual_cells[coordinates]:
-			var acceptable = false
-			match relative_position:
-				Vector2i.UP:
-					for socket in candidate.Up:
-						if socket in neighbor.Down:
-							acceptable = true
-				Vector2i.DOWN:
-					for socket in candidate.Down:
-						if socket in neighbor.Up:
-							acceptable = true
-				Vector2i.LEFT:
-					for socket in candidate.Left:
-						if socket in neighbor.Right:
-							acceptable = true
-				Vector2i.RIGHT:
-					for socket in candidate.Right:
-						if socket in neighbor.Left:
-							acceptable = true
-			if not acceptable:
-				valid_candidates.erase(candidate)	
+	print(coordinates, ' can be ', grid_candidates[coordinates].size(), ' things')
 	
-	print(coordinates, ' can be ', valid_candidates)
 	#no change to candidates, no propagation needed
-	if virtual_cells[coordinates].size() == valid_candidates.size():
+	if needs_removed.size() == 0:
 		return
 		
-	virtual_cells[coordinates] = valid_candidates
-	grid_labels[coordinates].text = str(valid_candidates.size())
+	for candidate in needs_removed:
+		grid_candidates[coordinates].erase(candidate)
+		
+	grid_labels[coordinates].text = str(grid_candidates[coordinates])
+	
+	#determine socket rules, collapse if we can
+	if grid_candidates[coordinates].size() == 1:
+		collapse_cell(coordinates)
+	elif grid_candidates[coordinates].size() == 0:
+		push_error("Contradiction at ", coordinates)
+		return
+	
 	#propagate changes to neighbors
-	for relative_position in neighbors:
+	for relative_position in neighbor_offsets:
 		var neighbor_coords = coordinates + relative_position
-		if neighbor_coords not in virtual_cells:
+		if neighbor_coords not in grid_candidates:
 			continue
-		if neighbor_coords not in propagation_queue and neighbor_coords in virtual_cells:
+		if neighbor_coords not in propagation_queue and neighbor_coords in grid_candidates:
 			propagation_queue.append(neighbor_coords)
 			print('propagating ', neighbor_coords)
 			
-	#determine socket rules, collapse if we can
-	if virtual_cells[coordinates].size() == 1:
-		collapse_cell(coordinates)
-		return
-	elif virtual_cells[coordinates].size() == 0:
-		push_error("Contradiction at ", coordinates)
-		return
-		
-	# After filtering candidates, build virtual sockets for this cell
-	var virtual_rules = Cell.new()
-	for template : Cell in virtual_cells[coordinates]:
-		for s in template.UpSockets:
-			if s not in virtual_rules.UpSockets:
-				virtual_rules.UpSockets.append(s)
-		for s in template.DownSockets:
-			if s not in virtual_rules.DownSockets:
-				virtual_rules.DownSockets.append(s)
-		for s in template.LeftSockets:
-			if s not in virtual_rules.LeftSockets:
-				virtual_rules.LeftSockets.append(s)
-		for s in template.RightSockets:
-			if s not in virtual_rules.RightSockets:
-				virtual_rules.RightSockets.append(s)
-											
-	collapsed_cells[coordinates] = virtual_rules
-		
+
 	
-func valid_neighbors(coordinates : Vector2i) -> Array[Vector2i]:
+func valid_neighbor_offsets(coordinates : Vector2i) -> Array[Vector2i]:
 	var results : Array[Vector2i] = []
 	if coordinates.x > 0:
 		results.append(Vector2i.LEFT)
