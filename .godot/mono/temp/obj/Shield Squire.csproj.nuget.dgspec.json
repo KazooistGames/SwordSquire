@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\git\\swordsquire\\Shield Squire.csproj": {}
+    "D:\\GIT\\KazooistGames\\SwordSquire\\Shield Squire.csproj": {}
   },
   "projects": {
-    "C:\\git\\swordsquire\\Shield Squire.csproj": {
+    "D:\\GIT\\KazooistGames\\SwordSquire\\Shield Squire.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\git\\swordsquire\\Shield Squire.csproj",
+        "projectUniqueName": "D:\\GIT\\KazooistGames\\SwordSquire\\Shield Squire.csproj",
         "projectName": "Shield Squire",
-        "projectPath": "C:\\git\\swordsquire\\Shield Squire.csproj",
-        "packagesPath": "C:\\Users\\nulsenb\\.nuget\\packages\\",
-        "outputPath": "C:\\git\\swordsquire\\.godot\\mono\\temp\\obj\\",
+        "projectPath": "D:\\GIT\\KazooistGames\\SwordSquire\\Shield Squire.csproj",
+        "packagesPath": "C:\\Users\\mikus\\.nuget\\packages\\",
+        "outputPath": "D:\\GIT\\KazooistGames\\SwordSquire\\.godot\\mono\\temp\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\nulsenb\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mikus\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

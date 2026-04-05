@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "0OuXIdW6o70=",
+  "dgSpecHash": "QPhk/oKlMRg=",
   "success": true,
-  "projectFilePath": "C:\\git\\swordsquire\\Shield Squire.csproj",
+  "projectFilePath": "D:\\GIT\\KazooistGames\\SwordSquire\\Shield Squire.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\nulsenb\\.nuget\\packages\\godot.sourcegenerators\\4.4.1\\godot.sourcegenerators.4.4.1.nupkg.sha512",
-    "C:\\Users\\nulsenb\\.nuget\\packages\\godotsharp\\4.4.1\\godotsharp.4.4.1.nupkg.sha512",
-    "C:\\Users\\nulsenb\\.nuget\\packages\\godotsharpeditor\\4.4.1\\godotsharpeditor.4.4.1.nupkg.sha512"
+    "C:\\Users\\mikus\\.nuget\\packages\\godot.sourcegenerators\\4.4.1\\godot.sourcegenerators.4.4.1.nupkg.sha512",
+    "C:\\Users\\mikus\\.nuget\\packages\\godotsharp\\4.4.1\\godotsharp.4.4.1.nupkg.sha512",
+    "C:\\Users\\mikus\\.nuget\\packages\\godotsharpeditor\\4.4.1\\godotsharpeditor.4.4.1.nupkg.sha512"
   ],
   "logs": []
 }

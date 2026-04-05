@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cgbmicstbteog"]
 
-[ext_resource type="PackedScene" uid="uid://cmigagy8anvbt" path="res://Scenes/wave_function_collapse/map.tscn" id="1_ax32a"]
+[ext_resource type="PackedScene" uid="uid://cmigagy8anvbt" path="res://Scenes/Map/map.tscn" id="1_ax32a"]
 
 [node name="Title" type="Node2D"]
 

@@ -1,9 +1,9 @@
+ColorRect
 Node2D
 CenterContainer
 SubViewport
 SubViewportContainer
 Camera2D
-ColorRect
 StaticBody2D
 CollisionShape2D
 Control
