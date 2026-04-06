@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Cell" load_steps=2 format=3 uid="uid://chuviclxgwwh3"]
+
+[ext_resource type="Script" uid="uid://du8bcv31sep5o" path="res://Scenes/Map/cell.gd" id="1_xpvn3"]
+
+[resource]
+resource_name = "cave"
+script = ExtResource("1_xpvn3")
+Tag = 3
+Sockets = Dictionary[int, int]({
+0: 3,
+1: 3,
+2: 2,
+3: 2
+})
+metadata/_custom_type_script = "uid://du8bcv31sep5o"

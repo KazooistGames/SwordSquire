@@ -1,11 +1,11 @@
 ColorRect
+CollisionShape2D
+StaticBody2D
 Node2D
 CenterContainer
 SubViewport
 SubViewportContainer
 Camera2D
-StaticBody2D
-CollisionShape2D
 Control
 Label
 Node

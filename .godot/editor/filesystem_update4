@@ -1,6 +1,8 @@
-res://Scenes/Map/cells/air.tscn
+res://Scenes/Map/map.tscn
 res://Scenes/Map/map.gd
+res://Scenes/Map/cells/_archive/tunnel.tres
+res://Scenes/Map/cells/cave.tres
+res://Scenes/Map/cells/hole.tres
 res://Scenes/Map/cell.gd
-res://Scenes/Map/cells/air.tres
-res://Scenes/Map/cells/ground.tres
-res://Scenes/Map/cells/sky.tres
+res://Scenes/Map/_archive/test.tscn
+res://Title.tscn

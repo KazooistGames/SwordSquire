@@ -1,96 +1,116 @@
 class_name Cell extends Resource
 
-enum Socket{
-	wildcard,
-	sky,
-	ground,
-	cave
+const Size := 32
+
+enum Biomes{
+	wildcard = 0,
+	sky = 1,
+	ground = 2,
+	underground = 3
 	}
 	
-@export var Tag : Socket
+@export var Tag : Biomes
 
-enum Cardinal{
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT
+enum Cardinals{
+	UP = 0,
+	RIGHT = 1,
+	DOWN = 2,
+	LEFT = 3
 }
 
-@export var Sockets : Dictionary[Cardinal, Socket] ={
-	Cardinal.UP : Socket.wildcard,
-	Cardinal.RIGHT :Socket.wildcard,
-	Cardinal.DOWN : Socket.wildcard,
-	Cardinal.LEFT : Socket.wildcard
+@export var Sockets : Dictionary[Cardinals, Biomes] ={
+	Cardinals.UP : Biomes.wildcard,
+	Cardinals.RIGHT :Biomes.wildcard,
+	Cardinals.DOWN : Biomes.wildcard,
+	Cardinals.LEFT : Biomes.wildcard
 }
 
-enum Orientation{
+enum Configuration{
 	default,
-	flipped_h,
-	flipped_v,
-	rotated_cw,
-	rotated_ccw
+	cw,
+	ccw
 }
+var orientation : Configuration = Configuration.default
 
-var orientation : Orientation
-
+var is_flipped = false
 
 func collapse():
-	var tile := ColorRect.new()
+	
+	var color := ColorRect.new()
+	color.size = Vector2(Size, Size)
+	var tile : CollisionObject2D
 	match Tag:
-		Socket.sky:
-			tile.color = Color.DARK_CYAN
-		Socket.ground:
-			tile.color = Color.SADDLE_BROWN
-		Socket.cave:
-			tile.color = Color.DARK_SLATE_GRAY
+		Biomes.sky:
+			tile = Area2D.new()
+			color.color = Color.DARK_CYAN
+		Biomes.ground:
+			tile = StaticBody2D.new()
+			color.color = Color.SADDLE_BROWN
+			#var collider := CollisionShape2D.new()
+			#collider.shape = RectangleShape2D.new()
+			#collider.shape.size = Vector2(Size, Size)		
+			#tile.add_child(collider)
+			#collider.position = Vector2(Size, Size)	/ 2.0
+		Biomes.underground:
+			tile = Area2D.new()
+			color.color = Color.DARK_SLATE_GRAY
+			
+	tile.add_child(color)		
+
 	return tile
 	
 	
 func fits(other : Cell, direction : Vector2i):
 	var dir = _translate_vector_to_cardinal(direction)
 	
-	# Debug: show the relationship being tested with enum casts
-	print("Checking fit: ", Tag as Socket, " → ", other.Tag as Socket, " in direction ", dir)
-
-	# do they fit my socket?
+	var my_socket = Sockets[dir]
+	var their_socket = other.Sockets[_mirrored(dir)]
+	
 	var they_fit = false
-	if other.Tag == Socket.wildcard: # they are a wildcard
+	if my_socket == other.Tag or my_socket == Biomes.wildcard or other.Tag == Biomes.wildcard:
 		they_fit = true
-		print("  they_fit: other is wildcard → TRUE")
-	elif Sockets[dir] == Socket.wildcard: # I will take anything
-		they_fit = true
-		print("  they_fit: my socket is wildcard → TRUE")
-	elif other.Tag == Sockets[dir]: # perfect match
-		they_fit = true
-		print("  they_fit: other.Tag matches my socket → TRUE")
-	else:
-		print("  they_fit: FAIL")
 		
 	var i_fit = false
-	if Tag == Socket.wildcard: # I am a wildcard
+	if their_socket == Tag or their_socket == Biomes.wildcard or Tag == Biomes.wildcard:
 		i_fit = true
-		print("  i_fit: I am wildcard → TRUE")
-	elif other.Sockets[_mirrored(dir)] == Socket.wildcard: # they will take anything
-		i_fit = true
-		print("  i_fit: other socket is wildcard → TRUE")
-	elif other.Sockets[_mirrored(dir)] == Tag: # perfect match
-		i_fit = true
-		print("  i_fit: other socket matches my tag → TRUE")
-	else:
-		print("  i_fit: FAIL")
+	
+	return i_fit and they_fit
+
 		
-	var result = i_fit and they_fit
-	print("  Result: ", result)
-	return result
+func rotated_cw():
+	var rotated_cell : Cell = self.duplicate(true) 
+	for dir in Cardinals.values():
+		rotated_cell.Sockets[(dir + 1) % 4] = Sockets[dir]		
+	rotated_cell.orientation = Cell.Configuration.cw
+	return rotated_cell
+	
+func rotated_ccw():
+	var rotated_cell : Cell = self.duplicate(true) 
+	for dir in Cardinals.values():
+		rotated_cell.Sockets[(dir + 3) % 4] = Sockets[dir]		
+	rotated_cell.orientation = Cell.Configuration.ccw
+	return rotated_cell	
+	
+func flipped():
+	var flipped_cell : Cell = self.duplicate(true) 
+	flipped_cell.Sockets[Cardinals.LEFT] = Sockets[Cardinals.RIGHT]
+	flipped_cell.Sockets[Cardinals.RIGHT] = Sockets[Cardinals.LEFT]
+	flipped_cell.is_flipped = true
+	return flipped_cell	
+	
+	
+
+func is_assymmetrical():
+	return Sockets[Cardinals.LEFT] != Sockets[Cardinals.RIGHT]
 		
-func _mirrored(direction : Cardinal):
+func _mirrored(direction : Cardinals):
 	return (direction + 2) % 4
 	
 			
-func _translate_vector_to_cardinal(direction : Vector2i) -> Cardinal:
+func _translate_vector_to_cardinal(direction : Vector2i) -> Cardinals:
 	match direction:
-		Vector2i.UP: return Cardinal.UP
-		Vector2i.DOWN: return Cardinal.DOWN
-		Vector2i.LEFT: return Cardinal.LEFT
-		Vector2i.RIGHT: return Cardinal.RIGHT
-		_: return Cardinal.UP
+		Vector2i.UP: return Cardinals.UP
+		Vector2i.DOWN: return Cardinals.DOWN
+		Vector2i.LEFT: return Cardinals.LEFT
+		Vector2i.RIGHT: return Cardinals.RIGHT
+		_: return Cardinals.UP
