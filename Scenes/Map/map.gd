@@ -1,7 +1,6 @@
 extends Node2D
 
 
-@export var guy	: CharacterBody2D
 
 @export var grid_size := Vector2i(32,16)
 
@@ -33,7 +32,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _process(_delta):
-	perform_wave_collapse_round()
+	if grid_cells.size() < grid_candidates.size():
+		perform_wave_collapse_round()
 
 
 	
@@ -75,9 +75,7 @@ func load_cell_templates(subfolder_name: String) -> Array[Cell]:
 		file_name = dir.get_next()
 		
 	return results
-
 	
-
 
 func initialize_map():
 	# Set container size
@@ -105,8 +103,6 @@ func initialize_map():
 	initialized.emit()			
 	
 func perform_wave_collapse_round():
-	if grid_cells.size() == grid_candidates.size():
-		return
 	# Find the uncollapsed cells with the fewest candidates
 	var collapse_options = lowest_entropy_coordinates()
 	# collapse one of them
@@ -149,11 +145,11 @@ func collapse_cell(coordinates : Vector2i):
 	grid_candidates[coordinates] = [chosen]
 	
 	#convert it into a tile
-	print(
-		'Collapsing ', coordinates, 
-		' into ', chosen.resource_name, ' ', 
-		Cell.Configuration.find_key(chosen.orientation)
-		)	
+	#print(
+		#'Collapsing ', coordinates, 
+		#' into ', chosen.resource_name, ' ', 
+		#Cell.Configuration.find_key(chosen.orientation)
+		#)	
 	var tile : Node = chosen.collapse()
 	subviewport.add_child(tile)
 	tile.position = Vector2(coordinates.x, coordinates.y) * Cell.Size
@@ -165,7 +161,6 @@ func collapse_cell(coordinates : Vector2i):
 		
 	if grid_cells.size() == grid_candidates.size():
 		generated.emit()
-		guy.position
 		
 	
 	

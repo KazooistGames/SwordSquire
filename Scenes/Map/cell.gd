@@ -46,11 +46,11 @@ func collapse():
 		Biomes.ground:
 			tile = StaticBody2D.new()
 			color.color = Color.SADDLE_BROWN
-			#var collider := CollisionShape2D.new()
-			#collider.shape = RectangleShape2D.new()
-			#collider.shape.size = Vector2(Size, Size)		
-			#tile.add_child(collider)
-			#collider.position = Vector2(Size, Size)	/ 2.0
+			var collider := CollisionShape2D.new()
+			collider.shape = RectangleShape2D.new()
+			collider.shape.size = Vector2(Size, Size)		
+			tile.add_child(collider)
+			collider.position = Vector2(Size, Size)	/ 2.0
 		Biomes.underground:
 			tile = Area2D.new()
 			color.color = Color.DARK_SLATE_GRAY
