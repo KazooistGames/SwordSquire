@@ -1,14 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://cmigagy8anvbt"]
+[gd_scene format=3 uid="uid://bcfrcuphoj0oi"]
 
-[ext_resource type="Script" uid="uid://csqmqtvy1fpk8" path="res://Scenes/Map/map.gd" id="1_qrdcc"]
+[ext_resource type="Script" uid="uid://63fdnbh4ct6f" path="res://Scenes/Map/map.gd" id="1_qrdcc"]
 
-[node name="Map" type="Node2D"]
+[node name="Map" type="Node2D" unique_id=695253540]
 script = ExtResource("1_qrdcc")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1851426716]
 stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=615079511]
 handle_input_locally = false
 size = Vector2i(2, 2)
 render_target_update_mode = 4

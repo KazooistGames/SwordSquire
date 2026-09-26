@@ -1,15 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://jyqjc6brwrvl"]
+[gd_scene format=3 uid="uid://jyqjc6brwrvl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5asmm"]
 size = Vector2(32, 32)
 
-[node name="Test" type="StaticBody2D"]
+[node name="Test" type="StaticBody2D" unique_id=533127509]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1838333919]
 position = Vector2(16, 16)
 shape = SubResource("RectangleShape2D_5asmm")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=252402098]
 custom_minimum_size = Vector2(32, 32)
 offset_right = 32.0
 offset_bottom = 32.0

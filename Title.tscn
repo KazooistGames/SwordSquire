@@ -1,10 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://cgbmicstbteog"]
+[gd_scene format=3 uid="uid://cgbmicstbteog"]
 
-[ext_resource type="PackedScene" uid="uid://cmigagy8anvbt" path="res://Scenes/Map/map.tscn" id="1_ax32a"]
+[ext_resource type="PackedScene" uid="uid://bcfrcuphoj0oi" path="res://Scenes/Map/map.tscn" id="1_ax32a"]
 
-[node name="Title" type="Node2D"]
+[node name="Title" type="Node2D" unique_id=1581021325]
 
-[node name="CanvasModulate" type="CanvasModulate" parent="."]
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=210356166]
 color = Color(0.881937, 0.881937, 0.881936, 1)
 
-[node name="map" parent="." instance=ExtResource("1_ax32a")]
+[node name="Map" parent="." unique_id=695253540 instance=ExtResource("1_ax32a")]

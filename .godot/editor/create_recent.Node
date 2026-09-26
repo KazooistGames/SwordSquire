@@ -1,3 +1,4 @@
+Camera2D
 ColorRect
 CollisionShape2D
 StaticBody2D
@@ -5,7 +6,6 @@ Node2D
 CenterContainer
 SubViewport
 SubViewportContainer
-Camera2D
 Control
 Label
 Node
