@@ -9,8 +9,6 @@ var chunks : Dictionary[Vector2i, Chunk] = {}
 
 func _ready():
 	spawn_chunk(Vector2i.ZERO)
-	spawn_chunk(Vector2i.RIGHT)
-	spawn_chunk(Vector2i.DOWN)
 	
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("Enter"):
@@ -27,6 +25,16 @@ func spawn_chunk(coordinates : Vector2i) -> Chunk:
 	return new_chunk
 	
 func bounding_container(chunk_coordinates : Array[Vector2i]) -> Vector2:
-	var range := Vector2i.ONE * 2
-	
+	var min_x := 0; var max_x := 0; var min_y := 0; var max_y := 0
+	for coord : Vector2i in chunk_coordinates:
+		if coord.x < min_x:
+			min_x = coord.x
+		elif coord.x > max_x:
+			max_x = coord.x
+		if coord.y < min_y:
+			min_y = coord.y
+		elif coord.y > max_y	:
+			max_y = coord.y
+			
+	var range := Vector2i(max_x-min_x + 1, max_y-min_y + 1)
 	return range * Chunk.GRID_SIZE * Cell.SIZE

@@ -22,11 +22,8 @@ var contradiction_coordinates := Vector2i.ZERO
 signal generated
 signal initialized
 
-func _process(_delta):
-	if grid_cells.size() < grid_candidates.size():
-		perform_wave_collapse_round()
 
-	
+
 static func load_Cell_Templates() -> Array[Cell]:
 	var results: Array[Cell] = []
 	var target_path = "res://Scenes/Cell/prototypes/"
@@ -66,6 +63,11 @@ static func load_Cell_Templates() -> Array[Cell]:
 	return results
 	
 
+func _process(_delta):
+	if grid_cells.size() < grid_candidates.size():
+		perform_wave_collapse_round()
+
+	
 func build():
 	# Set container size
 	
@@ -122,10 +124,10 @@ func lowest_entropy_coordinates() -> Array[Vector2i]:
 
 
 func collapse_cell(coordinates : Vector2i):
-	
 	if grid_candidates[coordinates].size() == 0:
 		push_error(coordinates, ' cannot be collapsed: options not present')
-		if coordinates == contradiction_coordinates:
+		if coordinates == contradiction_coordinates: 
+			#if we start getting stuck again, remove this check and always + contradictions, only reset when re-initing
 			contradictions += 1
 		else:
 			contradiction_coordinates = coordinates
@@ -232,7 +234,22 @@ func backtrack_cell_neighbors(coordinates, depth=0):
 				backtrack_cell_neighbors(neighbor_coordinates, depth+1)
 	grid_candidates[coordinates] = Cell_Templates.duplicate()
 			
-
-	
-
 			
+func get_cell_row(y_index : int) -> Array[Cell]:
+	if y_index > GRID_SIZE.y or y_index < 0:
+		return []
+	var results : Array[Cell] = []
+	var coordinates := Vector2i(0, y_index)
+	for x in range(GRID_SIZE.x):
+		results.append(grid_cells[coordinates])
+	return results
+	
+	
+func get_cell_column(x_index : int) -> Array[Cell]:
+	if x_index > GRID_SIZE.x or x_index < 0:
+		return []
+	var results : Array[Cell] = []
+	var coordinates := Vector2i(x_index, 0)
+	for y in range(GRID_SIZE.y):
+		results.append(grid_cells[coordinates])
+	return results
