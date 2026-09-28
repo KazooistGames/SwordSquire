@@ -19,9 +19,9 @@ var grid_labels : Dictionary[Vector2i, Label] = {}
 var contradictions := 0
 var contradiction_coordinates := Vector2i.ZERO
 
-signal generated
+signal collapsed_cell
 signal initialized
-
+signal built
 
 
 static func load_Cell_Templates() -> Array[Cell]:
@@ -63,14 +63,15 @@ static func load_Cell_Templates() -> Array[Cell]:
 	return results
 	
 
-func _process(_delta):
-	if grid_cells.size() < grid_candidates.size():
-		perform_wave_collapse_round()
-
-	
 func build():
-	# Set container size
+	initialize()
+	while grid_cells.size() < grid_candidates.size():
+		perform_wave_collapse_round()
+		await get_tree().process_frame
+	built.emit()
 	
+	
+func initialize():
 	# Clear previous data
 	grid_cells.clear()
 	for child in get_children():
@@ -90,8 +91,7 @@ func build():
 			# Save label and add to viewport
 			grid_labels[coordinates] = new_label
 			add_child(new_label)		
-			
-	initialized.emit()			
+	initialized.emit()
 	
 	
 func perform_wave_collapse_round():
@@ -102,7 +102,7 @@ func perform_wave_collapse_round():
 	# recalculate grid entropy
 	while not entropy_propagation_queue.is_empty():
 		calculate_entropy(entropy_propagation_queue.pop_front())			
-
+	
 
 func lowest_entropy_coordinates() -> Array[Vector2i]:
 	var results : Array[Vector2i] = []
@@ -157,7 +157,7 @@ func collapse_cell(coordinates : Vector2i):
 			entropy_propagation_queue.push_back(coordinates + neighbor_offset)
 		
 	if grid_cells.size() == grid_candidates.size():
-		generated.emit()
+		collapsed_cell.emit()
 		
 	
 	
@@ -236,20 +236,20 @@ func backtrack_cell_neighbors(coordinates, depth=0):
 			
 			
 func get_cell_row(y_index : int) -> Array[Cell]:
-	if y_index > GRID_SIZE.y or y_index < 0:
+	if y_index > GRID_SIZE.y-1 or y_index < 0:
 		return []
 	var results : Array[Cell] = []
 	var coordinates := Vector2i(0, y_index)
-	for x in range(GRID_SIZE.x):
+	for x in range(GRID_SIZE.x-1):
 		results.append(grid_cells[coordinates])
 	return results
 	
 	
 func get_cell_column(x_index : int) -> Array[Cell]:
-	if x_index > GRID_SIZE.x or x_index < 0:
+	if x_index > GRID_SIZE.x-1 or x_index < 0:
 		return []
 	var results : Array[Cell] = []
 	var coordinates := Vector2i(x_index, 0)
-	for y in range(GRID_SIZE.y):
+	for y in range(GRID_SIZE.y-1):
 		results.append(grid_cells[coordinates])
 	return results
