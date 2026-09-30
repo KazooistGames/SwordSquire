@@ -1,2 +1,5 @@
 res://test.tscn
 res://Scenes/Chunk/chunk.gd
+res://Scenes/Map/map.gd
+res://Scenes/Map/map.tscn
+res://Scenes/Cell/cell.gd

@@ -1,6 +1,6 @@
 class_name Cell extends Resource
 
-const SIZE := Vector2i(32, 32)
+const SIZE := Vector2i(48, 48)
 
 enum Biomes{
 	wildcard = 0,
