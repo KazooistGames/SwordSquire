@@ -1,12 +1,12 @@
 class_name Chunk extends Node2D
 
-const GRID_SIZE := Vector2i(32,16)
+const GRID_SIZE := Vector2i(16,16)
 
-static var Cell_Templates : Array[Cell] = []:
+static var Default_Templates : Array[Cell] = []:
 	get():
-		if Cell_Templates.is_empty():
-			Cell_Templates = load_Cell_Templates()
-		return Cell_Templates
+		if Default_Templates.is_empty():
+			Default_Templates = load_Default_Templates("res://Scenes/Cell/prototypes/")
+		return Default_Templates
 
 var entropy_propagation_queue : Array[Vector2i] = []
 
@@ -24,9 +24,8 @@ signal initialized
 signal built
 
 
-static func load_Cell_Templates() -> Array[Cell]:
+static func load_Default_Templates(target_path) -> Array[Cell]:
 	var results: Array[Cell] = []
-	var target_path = "res://Scenes/Cell/prototypes/"
 	var dir = DirAccess.open(target_path)
 	if not dir:
 		push_error("Could not open path: " + target_path)
@@ -36,39 +35,43 @@ static func load_Cell_Templates() -> Array[Cell]:
 	var file_name = dir.get_next()
 	while file_name != "":
 		if dir.current_is_dir():
+			file_name = dir.get_next()
 			continue
 		if file_name.ends_with(".import"):
+			file_name = dir.get_next()
 			continue
 			
 		var full_path = target_path.path_join(file_name)
-		# Fix for .remap files in exported builds
-		if full_path.ends_with(".remap"):
-			full_path = full_path.replace(".remap", "")	
-			
-		var template : Cell = load(full_path)
-		var template_cw = template.rotated_cw()
-		var template_ccw = template.rotated_ccw()
-		var permuations = [template, template_cw, template_ccw]
-		
-		results.append_array(permuations)
-		
-		for cell : Cell in permuations:
-			if cell.is_assymmetrical():
-				results.append(cell.flipped())
-
-		if template.is_assymmetrical():
-			results.append(template.flipped())
+		var variants = load_cell_template(full_path)
+		results.append_array(variants)
 		file_name = dir.get_next()
 		
 	return results
-	
 
-func build():
+
+#loads a cell template and procedurally generates all of its variants
+static func load_cell_template(full_path) -> Array[Cell]:
+
+	# Fix for .remap files in exported builds
+	if full_path.ends_with(".remap"):
+		full_path = full_path.get_basename()
+		
+	#get orientation varieties
+	var results: Array[Cell] = []
+	var template : Cell = load(full_path)
+	var orientations = [template, template.rotated_cw(), template.rotated_ccw()]
+	results.append_array(orientations)
+	#flipped versions of all orientations
+	for cell : Cell in orientations:
+		if cell.is_assymmetrical():
+			results.append(cell.flipped())
+			
+	return results
+	
+	
+func _ready():
 	initialize()
-	while grid_cells.size() < grid_candidates.size():
-		perform_wave_collapse_round()
-		await get_tree().process_frame
-	built.emit()
+
 	
 	
 func initialize():
@@ -82,10 +85,10 @@ func initialize():
 		for y in range(GRID_SIZE.y):
 			var coordinates = Vector2i(x, y)
 			# Duplicate the full template list for this cell
-			grid_candidates[coordinates] = Cell_Templates.duplicate()
+			grid_candidates[coordinates] = Default_Templates.duplicate()
 			# For debugging: show entropy (number of candidates)
 			var new_label := Label.new()
-			new_label.text = str(Cell_Templates.size())
+			new_label.text = str(Default_Templates.size())
 			new_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			new_label.position = coordinates * Cell.SIZE
 			# Save label and add to viewport
@@ -93,12 +96,32 @@ func initialize():
 			add_child(new_label)		
 	initialized.emit()
 	
+
+func build():
+	while grid_cells.size() < grid_candidates.size():
+		perform_wave_collapse_round()
+		await get_tree().process_frame
+	built.emit()	
+	
 	
 func perform_wave_collapse_round():
-	# Find the uncollapsed cells with the fewest candidates
-	var collapse_options = lowest_entropy_coordinates()
-	# collapse one of them
-	collapse_cell(collapse_options.pick_random())
+	# Find the uncollapsed cells with the fewest candidates and pick one at random
+	var collapse_coordinates = lowest_entropy_coordinates().pick_random()
+	
+	if grid_candidates[collapse_coordinates].size() == 0:
+		push_error(collapse_coordinates, ' cannot be collapsed: options not present')
+		if collapse_coordinates == contradiction_coordinates: 
+			#if we start getting stuck again, remove this check and always + contradictions, only reset when re-initing
+			contradictions += 1
+		else:
+			contradiction_coordinates = collapse_coordinates
+			contradictions = 0
+		backtrack_cell_neighbors(collapse_coordinates)
+		return
+
+	#pick a random viable template from virtual cells
+	var chosen_template = grid_candidates[collapse_coordinates].pick_random()
+	collapse_cell(collapse_coordinates, chosen_template)
 	# recalculate grid entropy
 	while not entropy_propagation_queue.is_empty():
 		calculate_entropy(entropy_propagation_queue.pop_front())			
@@ -108,7 +131,7 @@ func lowest_entropy_coordinates() -> Array[Vector2i]:
 	var results : Array[Vector2i] = []
 	if not grid_candidates.is_empty():	
 		#init search with no-entropy size
-		var best_entropy : int = Cell_Templates.size()
+		var best_entropy : int = Default_Templates.size()
 		# iterate all uncollapsed tiles
 		for coord in grid_candidates:
 			if coord in grid_cells:
@@ -123,30 +146,11 @@ func lowest_entropy_coordinates() -> Array[Vector2i]:
 	return results
 
 
-func collapse_cell(coordinates : Vector2i):
-	if grid_candidates[coordinates].size() == 0:
-		push_error(coordinates, ' cannot be collapsed: options not present')
-		if coordinates == contradiction_coordinates: 
-			#if we start getting stuck again, remove this check and always + contradictions, only reset when re-initing
-			contradictions += 1
-		else:
-			contradiction_coordinates = coordinates
-			contradictions = 0
-		backtrack_cell_neighbors(coordinates)
-		return
+func collapse_cell(coordinates : Vector2i, chosen : Cell):
 
-	#pick a random viable template from virtual cells
-	var cell_options = grid_candidates[coordinates]
-	var chosen : Cell = cell_options.pick_random()
 	grid_cells[coordinates] = chosen
 	grid_candidates[coordinates] = [chosen]
 	
-	#convert it into a tile
-	#print(
-		#'Collapsing ', coordinates, 
-		#' into ', chosen.resource_name, ' ', 
-		#Cell.Configuration.find_key(chosen.orientation)
-		#)	
 	var tile : Node = chosen.collapse()
 	add_child(tile)
 	tile.position = coordinates * Cell.SIZE
@@ -210,7 +214,7 @@ func calculate_entropy(coordinates : Vector2i):
 	
 	#determine socket rules, collapse if we can
 	if grid_candidates[coordinates].size() == 1:
-		collapse_cell(coordinates)
+		collapse_cell(coordinates, grid_candidates[coordinates][0])
 	elif grid_candidates[coordinates].size() == 0:
 		push_error("Contradiction at %s, depth %s" % [coordinates, contradictions])
 		return
@@ -228,11 +232,11 @@ func backtrack_cell_neighbors(coordinates, depth=0):
 		var neighbor_coordinates = coordinates + offset
 		if neighbor_coordinates in grid_cells:
 			grid_cells.erase(neighbor_coordinates)
-			grid_candidates[neighbor_coordinates] = Cell_Templates.duplicate()
+			grid_candidates[neighbor_coordinates] = Default_Templates.duplicate()
 			entropy_propagation_queue.push_back(coordinates)
 			if depth < contradictions:
 				backtrack_cell_neighbors(neighbor_coordinates, depth+1)
-	grid_candidates[coordinates] = Cell_Templates.duplicate()
+	grid_candidates[coordinates] = Default_Templates.duplicate()
 			
 			
 func get_cell_row(y_index : int) -> Array[Cell]:
@@ -240,7 +244,8 @@ func get_cell_row(y_index : int) -> Array[Cell]:
 		return []
 	var results : Array[Cell] = []
 	var coordinates := Vector2i(0, y_index)
-	for x in range(GRID_SIZE.x-1):
+	for x in range(GRID_SIZE.x):
+		coordinates.x = x
 		results.append(grid_cells[coordinates])
 	return results
 	
@@ -250,6 +255,7 @@ func get_cell_column(x_index : int) -> Array[Cell]:
 		return []
 	var results : Array[Cell] = []
 	var coordinates := Vector2i(x_index, 0)
-	for y in range(GRID_SIZE.y-1):
+	for y in range(GRID_SIZE.y):
+		coordinates.y = y
 		results.append(grid_cells[coordinates])
 	return results

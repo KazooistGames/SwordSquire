@@ -11,17 +11,27 @@ func _ready():
 	base_chunk = spawn_chunk(Vector2i.ZERO)
 	base_chunk.built.connect(build_wing_chunks)
 	
+	
 func build_wing_chunks():
-	var top : Array[Cell] = base_chunk.get_cell_row(0)
-	var bottom : Array[Cell] = base_chunk.get_cell_row(Chunk.GRID_SIZE.y-1)
-	var left : Array[Cell] = base_chunk.get_cell_column(0)
-	var right : Array[Cell] = base_chunk.get_cell_column(Chunk.GRID_SIZE.x-1)
+	var right_chunk = spawn_chunk(Vector2i.RIGHT)
+	var right_border : Array[Cell] = base_chunk.get_cell_column(Chunk.GRID_SIZE.x-1)
+	for index in range(right_border.size()):
+		var coordinates := Vector2i(0, index)
+		var cell : Cell = right_border[index]
+		right_chunk.collapse_cell(coordinates, cell)
+	right_chunk.build()
 	return
+	
 	
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("Enter"):
 		for chunk : Chunk in chunks.values():
-			chunk.build()
+			if chunk == base_chunk:
+				chunk.initialize()
+			else: 
+				chunk.queue_free()
+			#chunk.build()
+		base_chunk.build()
 		
 	
 func spawn_chunk(coordinates : Vector2i) -> Chunk:

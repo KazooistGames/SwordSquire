@@ -31,11 +31,9 @@ enum Configuration{
 	ccw
 }
 var orientation : Configuration = Configuration.default
-
 var is_flipped = false
 
 func collapse():
-	
 	var color := ColorRect.new()
 	color.size = SIZE
 	var tile : CollisionObject2D
@@ -56,13 +54,11 @@ func collapse():
 			color.color = Color.DARK_SLATE_GRAY
 			
 	tile.add_child(color)		
-
 	return tile
-	
 	
 func fits(other : Cell, direction : Vector2i):
 	var dir = _translate_vector_to_cardinal(direction)
-	
+
 	var my_socket = Sockets[dir]
 	var their_socket = other.Sockets[_mirrored(dir)]
 	
@@ -97,7 +93,6 @@ func flipped():
 	flipped_cell.Sockets[Cardinals.RIGHT] = Sockets[Cardinals.LEFT]
 	flipped_cell.is_flipped = true
 	return flipped_cell	
-	
 	
 
 func is_assymmetrical():
