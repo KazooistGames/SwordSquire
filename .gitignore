@@ -1,0 +1,63 @@
+# ==========================================
+# Godot 4.x Core Ignores
+# ==========================================
+# The main local cache directory containing imported assets, 
+# editor metadata, and uid caches. Do not commit this.
+.godot/
+.nomedia
+
+# Legacy or general Godot temporary files
+*.tmp
+*.translation
+
+# ==========================================
+# Export & Build Outputs
+# ==========================================
+# Prevent your compiled game binaries from bloating the repository
+*.exe
+*.desktop
+*.apk
+*.aab
+*.pck
+*.dmg
+*.app/
+/android/
+
+# ==========================================
+# Platform / C# (Mono) Ignores
+# ==========================================
+.mono/
+data_*/
+mono_crash.*.json
+
+# ==========================================
+# IDEs and Code Editors
+# ==========================================
+# Visual Studio Code
+.vscode/
+
+# Visual Studio (if using C#)
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+
+# JetBrains Rider / CLion
+.idea/
+
+# ==========================================
+# OS-Specific Garbage
+# ==========================================
+# Windows
+Thumbs.db
+desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+*~
+.nfs*
