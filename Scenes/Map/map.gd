@@ -1,6 +1,6 @@
 class_name Map extends Node2D
 
-var chunks : Dictionary[Vector2i, Chunk] = {}
+var all_chunks : Dictionary[Vector2i, Chunk] = {}
 var root_chunk : Chunk
 
 @onready var chunk_prefab = preload("res://Scenes/Chunk/chunk.tscn")
@@ -18,34 +18,37 @@ func _unhandled_input(event: InputEvent) -> void:
 		build_map()
 		
 func build_map():
-	for chunk : Chunk in chunks.values():
+	for chunk : Chunk in all_chunks.values():
 		if chunk == root_chunk:
 			chunk.initialize()
 		else: 
 			chunk.queue_free()
-			chunks.erase(chunks.find_key(chunk))
+			all_chunks.erase(all_chunks.find_key(chunk))
 	update_viewport_container_bounds()
 	root_chunk.build()
 	
 func propagate_wing_chunks():
-	extend_chunk(Vector2i.ZERO, Vector2i.LEFT)
-	extend_chunk(Vector2i.ZERO, Vector2i.RIGHT)
-
+	var left = extrude_chunk(Vector2i.ZERO, Vector2i.LEFT)
+	var right = extrude_chunk(Vector2i.ZERO, Vector2i.RIGHT)
+	
+	
+func _absorb_into_root(new_chunk : Chunk):
+	absorb_chunk(root_chunk, new_chunk)
 	
 func spawn_chunk(coordinates : Vector2i) -> Chunk:
 	var new_chunk : Chunk = chunk_prefab.instantiate()
 	chunk_box.add_child(new_chunk)
 	new_chunk.position = coordinates * Chunk.GRID_SIZE * Cell.SIZE
-	chunks[coordinates] = new_chunk
+	all_chunks[coordinates] = new_chunk
 	update_viewport_container_bounds()
 	
 	return new_chunk
 	
 
-func extend_chunk(origin : Vector2i, direction : Vector2i):
-	assert(chunks.has(origin))
+func extrude_chunk(origin : Vector2i, direction : Vector2i) -> Chunk:
+	assert(all_chunks.has(origin))
 	assert([Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT].has(direction))
-	var base = chunks[origin]
+	var base = all_chunks[origin]
 	var border : Array[Cell]
 	var start : Vector2i
 	var increment : Vector2i
@@ -73,17 +76,23 @@ func extend_chunk(origin : Vector2i, direction : Vector2i):
 		new_chunk.collapse_cell(coordinates, cell)
 		coordinates += increment
 	new_chunk.build()
-	return
+	return new_chunk
 	
 	
-func absorb_chunk(base : Chunk, victim : Chunk):
-	
+func absorb_chunk(target : Chunk, victim : Chunk):
+	var target_coord : Vector2i = all_chunks.find_key(target)
+	var vore_coord : Vector2i = all_chunks.find_key(victim)
+	var offset := (vore_coord - target_coord) * Chunk.GRID_SIZE
+	for coord in victim.grid_cells:
+		target.collapse_cell(coord + offset, victim.grid_cells[coord])
+	victim.queue_free()
+	all_chunks.erase(vore_coord)
 	return
 	
 	
 func update_viewport_container_bounds() -> void:
 	var min_x := 0; var max_x := 0; var min_y := 0; var max_y := 0
-	for coord : Vector2i in chunks.keys():
+	for coord : Vector2i in all_chunks.keys():
 		if coord.x < min_x:
 			min_x = coord.x
 		elif coord.x > max_x:

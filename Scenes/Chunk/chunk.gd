@@ -15,22 +15,18 @@ var contradiction_coordinates := Vector2i.ZERO
 
 var corner_min : Vector2i :
 	get():
-		var min_x := 0; var min_y := 0
+		var min_x := INF; var min_y := INF
 		for coord : Vector2i in grid_candidates.keys():
-			if coord.x < min_x:
-				min_x = coord.x
-			if coord.y < min_y:
-				min_y = coord.y
+			min_x = min(min_x, coord.x)
+			min_y = min(min_y, coord.y)
 		return Vector2i(min_x, min_y)
 
 var corner_max : Vector2i :
 	get():
-		var max_x := 0; var max_y := 0
+		var max_x := -INF; var max_y := -INF
 		for coord : Vector2i in grid_candidates.keys():
-			if coord.x > max_x:
-				max_x = coord.x
-			if coord.y > max_y:
-				max_y = coord.y
+			max_x = max(max_x, coord.x)
+			max_y = max(max_y, coord.y)
 		return Vector2i(max_x, max_y)
 
 signal collapsed_cell
