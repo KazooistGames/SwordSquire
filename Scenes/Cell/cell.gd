@@ -2,6 +2,7 @@ class_name Cell extends Resource
 
 const SIZE := Vector2i(48, 48)
 
+
 enum Biomes{
 	wildcard = 0,
 	sky = 1,
@@ -109,3 +110,66 @@ func _translate_vector_to_cardinal(direction : Vector2i) -> Cardinals:
 		Vector2i.LEFT: return Cardinals.LEFT
 		Vector2i.RIGHT: return Cardinals.RIGHT
 		_: return Cardinals.UP
+		
+		
+
+static var Default_Templates : Array[Cell] = []:
+	get():
+		if Default_Templates.is_empty():
+			Default_Templates = load_Default_Templates("res://Scenes/Cell/prototypes/")
+		return Default_Templates
+
+
+static var Underground_Template_Set : Array[Cell]:
+	get():
+		var results = []
+		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/ground.tres')))
+		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/cave.tres')))
+		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/hole.tres')))
+		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/tunnel.tres')))
+		return results
+						
+
+static func load_Default_Templates(target_path) -> Array[Cell]:
+	var results: Array[Cell] = []
+	var dir = DirAccess.open(target_path)
+	if not dir:
+		push_error("Could not open path: " + target_path)
+		return []
+		
+	dir.list_dir_begin()
+	var file_name = dir.get_next()
+	while file_name != "":
+		if dir.current_is_dir():
+			file_name = dir.get_next()
+			continue
+		if file_name.ends_with(".import"):
+			file_name = dir.get_next()
+			continue
+			
+		var full_path = target_path.path_join(file_name)
+		var variants = load_cell_template(full_path)
+		results.append_array(variants)
+		file_name = dir.get_next()
+		
+	return results
+
+
+#loads a cell template and procedurally generates all of its variants
+static func load_cell_template(full_path) -> Array[Cell]:
+
+	# Fix for .remap files in exported builds
+	if full_path.ends_with(".remap"):
+		full_path = full_path.get_basename()
+		
+	#get orientation varieties
+	var results: Array[Cell] = []
+	var template : Cell = load(full_path)
+	var orientations = [template, template.rotated_cw(), template.rotated_ccw()]
+	results.append_array(orientations)
+	#flipped versions of all orientations
+	for cell : Cell in orientations:
+		if cell.is_assymmetrical():
+			results.append(cell.flipped())
+			
+	return results

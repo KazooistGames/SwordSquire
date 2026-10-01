@@ -76,6 +76,11 @@ func extend_chunk(origin : Vector2i, direction : Vector2i):
 	return
 	
 	
+func absorb_chunk(base : Chunk, victim : Chunk):
+	
+	return
+	
+	
 func update_viewport_container_bounds() -> void:
 	var min_x := 0; var max_x := 0; var min_y := 0; var max_y := 0
 	for coord : Vector2i in chunks.keys():
@@ -89,7 +94,7 @@ func update_viewport_container_bounds() -> void:
 			max_y = coord.y
 			
 	var range := Vector2i(max_x-min_x, max_y-min_y)
-	subviewport_container.size = (range + Vector2i.ONE) * Chunk.GRID_SIZE * Cell.SIZE
+	subviewport_container.size = (range + Vector2i.ONE) * Chunk.GRID_SIZE * Cell.SIZE * 2
 	chunk_box.position = range * Chunk.GRID_SIZE * Cell.SIZE / 2
 	
 	'''THIS NEEDS DELETED BEFORE MAKING REAL GAMEPLAY'''
