@@ -16,6 +16,9 @@ func _ready():
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("Enter"):
 		build_map()
+	if event.is_action_pressed("Interact"):
+		root_chunk.extend(Vector2i.UP)
+		
 		
 func build_map():
 	for chunk : Chunk in all_chunks.values():
@@ -27,6 +30,7 @@ func build_map():
 	update_viewport_container_bounds()
 	root_chunk.build()
 	
+	
 func propagate_wing_chunks():
 	var left = extrude_chunk(Vector2i.ZERO, Vector2i.LEFT)
 	var right = extrude_chunk(Vector2i.ZERO, Vector2i.RIGHT)
@@ -34,6 +38,7 @@ func propagate_wing_chunks():
 	
 func _absorb_into_root(new_chunk : Chunk):
 	absorb_chunk(root_chunk, new_chunk)
+	
 	
 func spawn_chunk(coordinates : Vector2i) -> Chunk:
 	var new_chunk : Chunk = chunk_prefab.instantiate()
@@ -76,6 +81,7 @@ func extrude_chunk(origin : Vector2i, direction : Vector2i) -> Chunk:
 		new_chunk.collapse_cell(coordinates, cell)
 		coordinates += increment
 	new_chunk.build()
+	new_chunk.built.connect(func(): absorb_chunk(root_chunk, new_chunk))
 	return new_chunk
 	
 	

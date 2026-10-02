@@ -237,24 +237,25 @@ func extend(direction : Vector2i):
 	var range : int
 	match direction:
 		Vector2i.UP:
-			start = Vector2i(0, corner_max.y + 1)
+			start = Vector2i(corner_min.x, corner_max.y + 1)
 			increment = Vector2i(1, 0)
-			range = GRID_SIZE.x
+			range = corner_max.x - corner_min.x
+			
 		Vector2i.DOWN:
-			start = Vector2i(0, corner_min.y - 1)
+			start = Vector2i(corner_min.x, corner_min.y - 1)
 			increment = Vector2i(1, 0)
-			range = GRID_SIZE.x
+			range = corner_max.x - corner_min.x
 		Vector2i.LEFT:
-			start = Vector2i(corner_max.x + 1, 0)
+			start = Vector2i(corner_max.x + 1, corner_min.y)
 			increment = Vector2i(0, 1)
-			range = GRID_SIZE.y
+			range = corner_max.y - corner_min.y
 		Vector2i.RIGHT:
-			start = Vector2i(corner_min.x - 1, 0)
+			start = Vector2i(corner_min.x - 1, corner_min.y)
 			increment = Vector2i(0, 1)
-			range = GRID_SIZE.y
+			range = corner_max.y - corner_min.y 
 						
 	var coordinates := start			
-	for i in range:
+	for i in (range+1):
 		init_cell(coordinates)
 		coordinates += increment
 	
