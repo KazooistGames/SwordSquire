@@ -29,6 +29,10 @@ var corner_max : Vector2i :
 			max_y = max(max_y, coord.y)
 		return Vector2i(max_x, max_y)
 
+var actual_size : Vector2i :
+	get():
+		return Vector2i(corner_max.x - corner_min.x, corner_max.y - corner_min.y)
+
 signal collapsed_cell
 signal initialized
 signal built
@@ -230,8 +234,9 @@ func get_cell_column(x_index : int) -> Array[Cell]:
 	return results
 
 
-func extend(direction : Vector2i):
+func extend(direction : Vector2i, count : int = 1, fill : Cell = null):
 	assert([Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT].has(direction))
+	assert(count >= 1)
 	var start : Vector2i
 	var increment : Vector2i
 	var range : int
@@ -254,11 +259,15 @@ func extend(direction : Vector2i):
 			increment = Vector2i(0, 1)
 			range = corner_max.y - corner_min.y 
 						
-	var coordinates := start			
+	var coordinates := start		
 	for i in (range+1):
 		init_cell(coordinates)
+		if fill != null:
+			collapse_cell(coordinates, fill)
 		coordinates += increment
-	
+		
+	if count > 1:
+		extend(direction, count-1, fill)
 	
 	
 	

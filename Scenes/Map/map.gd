@@ -8,32 +8,31 @@ var root_chunk : Chunk
 @onready var subviewport = $SubViewportContainer/SubViewport
 @onready var chunk_box = $SubViewportContainer/SubViewport/Chunks
 
-func _ready():
-	root_chunk = spawn_chunk(Vector2i.ZERO)
-	root_chunk.built.connect(propagate_wing_chunks)
-	
 	
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("Enter"):
 		build_map()
-	if event.is_action_pressed("Interact"):
-		root_chunk.extend(Vector2i.UP)
-		
+
 		
 func build_map():
 	for chunk : Chunk in all_chunks.values():
-		if chunk == root_chunk:
-			chunk.initialize()
-		else: 
 			chunk.queue_free()
 			all_chunks.erase(all_chunks.find_key(chunk))
+	root_chunk = spawn_chunk(Vector2i.ZERO)		
 	update_viewport_container_bounds()
 	root_chunk.build()
-	
-	
-func propagate_wing_chunks():
+	await root_chunk.built
 	var left = extrude_chunk(Vector2i.ZERO, Vector2i.LEFT)
+	left.build()
+	await left.built 
+	absorb_chunk(root_chunk, left)
 	var right = extrude_chunk(Vector2i.ZERO, Vector2i.RIGHT)
+	right.build()
+	await right.built  
+	absorb_chunk(root_chunk, right)
+	
+	root_chunk.extend(Vector2i.DOWN, 3, Cell.Sky_Templates.pick_random())
+	update_viewport_container_bounds()
 	
 	
 func _absorb_into_root(new_chunk : Chunk):
@@ -45,8 +44,6 @@ func spawn_chunk(coordinates : Vector2i) -> Chunk:
 	chunk_box.add_child(new_chunk)
 	new_chunk.position = coordinates * Chunk.GRID_SIZE * Cell.SIZE
 	all_chunks[coordinates] = new_chunk
-	update_viewport_container_bounds()
-	
 	return new_chunk
 	
 
@@ -80,8 +77,6 @@ func extrude_chunk(origin : Vector2i, direction : Vector2i) -> Chunk:
 	for cell in border:
 		new_chunk.collapse_cell(coordinates, cell)
 		coordinates += increment
-	new_chunk.build()
-	new_chunk.built.connect(func(): absorb_chunk(root_chunk, new_chunk))
 	return new_chunk
 	
 	
@@ -109,8 +104,8 @@ func update_viewport_container_bounds() -> void:
 			max_y = coord.y
 			
 	var range := Vector2i(max_x-min_x, max_y-min_y)
-	subviewport_container.size = (range + Vector2i.ONE) * Chunk.GRID_SIZE * Cell.SIZE * 2
-	chunk_box.position = range * Chunk.GRID_SIZE * Cell.SIZE / 2
+	subviewport_container.size = (range + Vector2i.ONE) * root_chunk.actual_size * Cell.SIZE
+	chunk_box.position = range * root_chunk.actual_size * Cell.SIZE / 2
 	
 	'''THIS NEEDS DELETED BEFORE MAKING REAL GAMEPLAY'''
 	get_window().content_scale_size = subviewport_container.size

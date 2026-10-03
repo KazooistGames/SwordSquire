@@ -1,3 +1,4 @@
 res://Scenes/Map/map.tscn
 res://Scenes/Map/map.gd
 res://Scenes/Chunk/chunk.gd
+res://Scenes/Cell/cell.gd

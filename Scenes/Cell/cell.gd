@@ -122,13 +122,18 @@ static var Default_Templates : Array[Cell] = []:
 
 static var Underground_Template_Set : Array[Cell]:
 	get():
-		var results = []
+		var results : Array[Cell] = []
 		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/ground.tres')))
 		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/cave.tres')))
 		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/hole.tres')))
 		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/tunnel.tres')))
 		return results
-						
+
+static var Sky_Templates : Array[Cell]:
+	get():
+		var results : Array[Cell] = []
+		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/sky.tres')))
+		return results	
 
 static func load_Default_Templates(target_path) -> Array[Cell]:
 	var results: Array[Cell] = []
