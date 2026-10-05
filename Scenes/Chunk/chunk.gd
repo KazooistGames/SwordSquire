@@ -1,6 +1,6 @@
 class_name Chunk extends Node2D
 
-const GRID_SIZE := Vector2i(12,12)
+const DEFAULT_SIZE := Vector2i(12,12)
 
 var entropy_propagation_queue : Array[Vector2i] = []
 
@@ -31,27 +31,21 @@ var corner_max : Vector2i :
 
 var actual_size : Vector2i :
 	get():
-		return Vector2i(corner_max.x - corner_min.x, corner_max.y - corner_min.y)
+		return Vector2i(corner_max.x - corner_min.x + 1, corner_max.y - corner_min.y + 1)
 
 signal collapsed_cell
 signal initialized
 signal built
 
 	
-func _ready():
-	initialize()
-
-	
-	
-func initialize():
-	# Clear previous data
+func initialize(bottom_right : Vector2i, top_left := Vector2i.ZERO):
 	grid_cells.clear()
 	for child in get_children():
 		child.queue_free()
 	grid_labels.clear()
 	grid_candidates.clear()
-	for x in range(GRID_SIZE.x):
-		for y in range(GRID_SIZE.y):
+	for x in range(top_left.x, bottom_right.x):
+		for y in range(top_left.y, bottom_right.y):
 			init_cell(Vector2i(x, y))
 					
 	initialized.emit()
@@ -140,13 +134,13 @@ func collapse_cell(coordinates : Vector2i, chosen : Cell):
 	
 func valid_neighbor_offsets(coordinates : Vector2i) -> Array[Vector2i]:
 	var results : Array[Vector2i] = []
-	if coordinates.x > 0:
+	if coordinates.x > corner_min.x:
 		results.append(Vector2i.LEFT)
-	if coordinates.x < GRID_SIZE.x-1:
+	if coordinates.x < corner_max.x:
 		results.append(Vector2i.RIGHT)
-	if coordinates.y > 0:
+	if coordinates.y > corner_min.y:
 		results.append(Vector2i.UP)
-	if coordinates.y < GRID_SIZE.y-1:
+	if coordinates.y < corner_max.y:
 		results.append(Vector2i.DOWN)
 	return results	
 		
@@ -213,22 +207,24 @@ func backtrack_cell_neighbors(coordinates, depth=0):
 			
 			
 func get_cell_row(y_index : int) -> Array[Cell]:
-	if y_index > GRID_SIZE.y-1 or y_index < 0:
+	if y_index > corner_max.y or y_index < corner_min.y:
+		push_warning("invalid chunk row index")
 		return []
 	var results : Array[Cell] = []
 	var coordinates := Vector2i(0, y_index)
-	for x in range(GRID_SIZE.x):
+	for x in range(corner_min.x, corner_max.x):
 		coordinates.x = x
 		results.append(grid_cells[coordinates])
 	return results
 	
 	
 func get_cell_column(x_index : int) -> Array[Cell]:
-	if x_index > GRID_SIZE.x-1 or x_index < 0:
+	if x_index > corner_max.x or x_index < corner_min.x:
+		push_warning("invalid chunk column index")
 		return []
 	var results : Array[Cell] = []
 	var coordinates := Vector2i(x_index, 0)
-	for y in range(GRID_SIZE.y):
+	for y in range(corner_min.y, corner_max.y):
 		coordinates.y = y
 		results.append(grid_cells[coordinates])
 	return results
@@ -237,30 +233,29 @@ func get_cell_column(x_index : int) -> Array[Cell]:
 func extend(direction : Vector2i, count : int = 1, fill : Cell = null):
 	assert([Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT].has(direction))
 	assert(count >= 1)
-	var start : Vector2i
+	var edge : Vector2i
 	var increment : Vector2i
 	var range : int
 	match direction:
 		Vector2i.UP:
-			start = Vector2i(corner_min.x, corner_max.y + 1)
+			edge = Vector2i(corner_min.x, corner_max.y)
 			increment = Vector2i(1, 0)
-			range = corner_max.x - corner_min.x
-			
+			range = corner_max.x - corner_min.x	+ 1
 		Vector2i.DOWN:
-			start = Vector2i(corner_min.x, corner_min.y - 1)
+			edge = Vector2i(corner_min.x, corner_min.y)
 			increment = Vector2i(1, 0)
-			range = corner_max.x - corner_min.x
+			range = corner_max.x - corner_min.x + 1
 		Vector2i.LEFT:
-			start = Vector2i(corner_max.x + 1, corner_min.y)
+			edge = Vector2i(corner_max.x, corner_min.y)
 			increment = Vector2i(0, 1)
-			range = corner_max.y - corner_min.y
+			range = corner_max.y - corner_min.y + 1
 		Vector2i.RIGHT:
-			start = Vector2i(corner_min.x - 1, corner_min.y)
+			edge = Vector2i(corner_min.x, corner_min.y)
 			increment = Vector2i(0, 1)
-			range = corner_max.y - corner_min.y 
+			range = corner_max.y - corner_min.y + 1
 						
-	var coordinates := start		
-	for i in (range+1):
+	var coordinates := edge - direction	
+	for i in (range):
 		init_cell(coordinates)
 		if fill != null:
 			collapse_cell(coordinates, fill)
