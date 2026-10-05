@@ -38,14 +38,14 @@ signal initialized
 signal built
 
 	
-func initialize(bottom_right : Vector2i, top_left := Vector2i.ZERO):
+func initialize(size : Vector2i, offset := Vector2i.ZERO):
 	grid_cells.clear()
 	for child in get_children():
 		child.queue_free()
 	grid_labels.clear()
 	grid_candidates.clear()
-	for x in range(top_left.x, bottom_right.x):
-		for y in range(top_left.y, bottom_right.y):
+	for x in range(offset.x, size.x + offset.x):
+		for y in range(offset.x, size.x + offset.x):
 			init_cell(Vector2i(x, y))
 					
 	initialized.emit()

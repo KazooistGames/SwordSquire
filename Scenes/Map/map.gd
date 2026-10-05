@@ -56,11 +56,11 @@ func _absorb_into_root(new_chunk : Chunk):
 	absorb_chunk(root_chunk, new_chunk)
 	
 	
-func spawn_chunk(coordinates : Vector2i, bottom_right : Vector2i, top_left := Vector2i.ZERO) -> Chunk:
+func spawn_chunk(coordinates : Vector2i, size : Vector2i, offset := Vector2i.ZERO) -> Chunk:
 	var new_chunk : Chunk = chunk_prefab.instantiate()
 	chunk_box.add_child(new_chunk)
-	new_chunk.initialize(bottom_right, top_left)	
-	new_chunk.position = coordinates * (bottom_right - top_left) * Cell.SIZE
+	new_chunk.initialize(size, offset)	
+	new_chunk.position = coordinates * (size + offset) * Cell.SIZE
 	all_chunks[coordinates] = new_chunk
 	return new_chunk
 	
@@ -90,7 +90,7 @@ func extrude_chunk(origin : Vector2i, direction : Vector2i) -> Chunk:
 			start = Vector2i(base.corner_min.x, base.corner_min.y)
 			increment = Vector2i(0, 1)
 			
-	var new_chunk = spawn_chunk(origin + direction, base.corner_max, base.corner_min)	
+	var new_chunk = spawn_chunk(origin + direction, base.actual_size, base.corner_min)	
 	var coordinates := start			
 	for cell in border:
 		new_chunk.collapse_cell(coordinates, cell)
