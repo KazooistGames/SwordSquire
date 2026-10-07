@@ -15,7 +15,7 @@ var contradiction_coordinates := Vector2i.ZERO
 
 var corner_min : Vector2i :
 	get():
-		var min_x := INF; var min_y := INF
+		var min_x := int(INF); var min_y := int(INF)
 		for coord : Vector2i in grid_candidates.keys():
 			min_x = min(min_x, coord.x)
 			min_y = min(min_y, coord.y)
@@ -23,7 +23,7 @@ var corner_min : Vector2i :
 
 var corner_max : Vector2i :
 	get():
-		var max_x := -INF; var max_y := -INF
+		var max_x := int(-INF); var max_y := int(-INF)
 		for coord : Vector2i in grid_candidates.keys():
 			max_x = max(max_x, coord.x)
 			max_y = max(max_y, coord.y)
