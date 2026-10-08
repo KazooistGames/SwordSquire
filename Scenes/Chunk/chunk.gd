@@ -15,11 +15,12 @@ var contradiction_coordinates := Vector2i.ZERO
 
 var corner_min : Vector2i :
 	get():
-		var min_x := int(INF); var min_y := int(INF)
+		var min_x := (INF); var min_y := (INF)
 		for coord : Vector2i in grid_candidates.keys():
 			min_x = min(min_x, coord.x)
 			min_y = min(min_y, coord.y)
-		return Vector2i(min_x, min_y)
+		corner_min = Vector2i(min_x, min_y)
+		return corner_min
 
 var corner_max : Vector2i :
 	get():
@@ -27,17 +28,21 @@ var corner_max : Vector2i :
 		for coord : Vector2i in grid_candidates.keys():
 			max_x = max(max_x, coord.x)
 			max_y = max(max_y, coord.y)
-		return Vector2i(max_x, max_y)
+		corner_max = Vector2i(max_x, max_y)
+		return corner_max
 
 var actual_size : Vector2i :
 	get():
-		return Vector2i(corner_max.x - corner_min.x + 1, corner_max.y - corner_min.y + 1)
-
+		actual_size =  Vector2i(corner_max.x - corner_min.x + 1, corner_max.y - corner_min.y + 1)
+		return actual_size
+		
+var cell_templates : Array[Cell] = Cell.Default_Templates
+		
 signal collapsed_cell
 signal initialized
 signal built
 
-	
+
 func initialize(size : Vector2i, offset := Vector2i.ZERO):
 	grid_cells.clear()
 	for child in get_children():
@@ -102,10 +107,10 @@ func lowest_entropy_coordinates() -> Array[Vector2i]:
 
 func init_cell(coordinates):	
 	# Duplicate the full template list for this cell
-	grid_candidates[coordinates] = Cell.Default_Templates.duplicate()
+	grid_candidates[coordinates] = cell_templates.duplicate()
 	# For debugging: show entropy (number of candidates)
 	var new_label := Label.new()
-	new_label.text = str(Cell.Default_Templates.size())
+	new_label.text = str(cell_templates.size())
 	new_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	new_label.position = coordinates * Cell.SIZE
 	# Save label and add to viewport

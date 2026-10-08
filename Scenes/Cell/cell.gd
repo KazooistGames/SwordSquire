@@ -125,8 +125,8 @@ static var Underground_Template_Set : Array[Cell]:
 		var results : Array[Cell] = []
 		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/ground.tres')))
 		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/cave.tres')))
-		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/hole.tres')))
 		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/tunnel.tres')))
+		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/labyrinth.tres')))
 		return results
 
 static var Sky_Templates : Array[Cell]:

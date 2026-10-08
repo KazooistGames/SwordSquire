@@ -32,43 +32,42 @@ func build_map():
 
 	right.build()
 	await right.built  
+
+
 	
-	absorb_chunk(root_chunk, left)
-	absorb_chunk(root_chunk, right)
-	
-	#var bottom_row := root_chunk.get_cell_row(root_chunk.corner_max.y)
-	#if bottom_row.any(func(cell : Cell) : return cell.Tag == Cell.Biomes.underground):
-		#var new_chunk := extrude_chunk(Vector2i.ZERO, Vector2i.DOWN)
-		#new_chunk.build()
-		#await new_chunk.built
-			
+	# FINAL COLLAPSE INTO ONE GRID/CHUNK
 	var temp_chunk_iterator : Array[Chunk] = all_chunks.values().duplicate()
 	for chunk : Chunk in temp_chunk_iterator:
 		if chunk != root_chunk:
-			absorb_chunk(root_chunk, chunk)	
-
+			absorb_chunk(root_chunk, chunk)
+		
+	for chunk : Chunk in all_chunks.values():
+		var bottom_row := chunk.get_cell_row(chunk.corner_max.y)
+		if bottom_row.any(func(cell : Cell) : return cell.Tag == Cell.Biomes.underground):
+			var chunk_coords = all_chunks.find_key(chunk)
+			var new_chunk := extrude_chunk(chunk_coords, Vector2i.DOWN, Cell.Underground_Template_Set)
+			new_chunk.build()
+			await new_chunk.built
+		
+	update_viewport_container_bounds()	
 	root_chunk.extend(Vector2i.DOWN, 3, Cell.Sky_Templates.pick_random())
 	update_viewport_container_bounds()
 
 	
-	
-func _absorb_into_root(new_chunk : Chunk):
-	absorb_chunk(root_chunk, new_chunk)
-	
-	
-func spawn_chunk(coordinates : Vector2i, size : Vector2i, offset := Vector2i.ZERO) -> Chunk:
+func spawn_chunk(chunk_coordinates : Vector2i, chunk_size : Vector2i, coordinate_offset := Vector2i.ZERO, cell_templates := Cell.Default_Templates) -> Chunk:
 	var new_chunk : Chunk = chunk_prefab.instantiate()
 	chunk_box.add_child(new_chunk)
-	new_chunk.initialize(size, offset)	
-	new_chunk.position = coordinates * (size + offset) * Cell.SIZE
-	all_chunks[coordinates] = new_chunk
+	new_chunk.cell_templates = cell_templates
+	new_chunk.initialize(chunk_size, coordinate_offset)	
+	new_chunk.position = chunk_coordinates * (chunk_size + coordinate_offset) * Cell.SIZE
+	all_chunks[chunk_coordinates] = new_chunk
 	return new_chunk
 	
 
-func extrude_chunk(origin : Vector2i, direction : Vector2i) -> Chunk:
-	assert(all_chunks.has(origin))
+func extrude_chunk(origin_chunk_coords : Vector2i, direction : Vector2i, cell_templates := Cell.Default_Templates) -> Chunk:
+	assert(all_chunks.has(origin_chunk_coords))
 	assert([Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT].has(direction))
-	var base = all_chunks[origin]
+	var base = all_chunks[origin_chunk_coords]
 	var border : Array[Cell]
 	var start : Vector2i
 	var increment : Vector2i
@@ -90,24 +89,27 @@ func extrude_chunk(origin : Vector2i, direction : Vector2i) -> Chunk:
 			start = Vector2i(base.corner_min.x, base.corner_min.y)
 			increment = Vector2i(0, 1)
 			
-	var new_chunk = spawn_chunk(origin + direction, base.actual_size, base.corner_min)	
-	var coordinates := start			
+	var new_coords := origin_chunk_coords + direction		
+	var new_chunk = spawn_chunk(new_coords, base.actual_size, base.corner_min, cell_templates)	
+	var cell_coordinates := start			
 	for cell in border:
-		new_chunk.collapse_cell(coordinates, cell)
-		coordinates += increment
+		new_chunk.collapse_cell(cell_coordinates, cell)
+		cell_coordinates += increment
 	return new_chunk
 	
 	
-func absorb_chunk(target : Chunk, victim : Chunk):
-	var target_coord : Vector2i = all_chunks.find_key(target)
-	var vore_coord : Vector2i = all_chunks.find_key(victim)
-	var offset := (vore_coord - target_coord) * Chunk.DEFAULT_SIZE
-	for coord in victim.grid_cells:
-		target.collapse_cell(coord + offset, victim.grid_cells[coord])
-	victim.queue_free()
-	all_chunks.erase(vore_coord)
-	return
 	
+func absorb_chunk(target : Chunk, victim : Chunk):
+	#var target_chunk_coord : Vector2i = all_chunks.find_key(target)
+	var vore_chunk_coord : Vector2i = all_chunks.find_key(victim)
+	var cell_coordinate_offset := Vector2i(victim.position - target.position) / Cell.SIZE
+	for coord in victim.grid_cells:
+		target.collapse_cell(coord + cell_coordinate_offset, victim.grid_cells[coord])
+	victim.queue_free()
+	all_chunks.erase(vore_chunk_coord)
+	return
+		
+
 	
 func update_viewport_container_bounds() -> void:
 
