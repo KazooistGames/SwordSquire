@@ -1,6 +1,6 @@
 class_name Chunk extends Node2D
 
-const DEFAULT_SIZE := Vector2i(12,12)
+const DEFAULT_SIZE := Vector2i(8,8)
 
 var entropy_propagation_queue : Array[Vector2i] = []
 

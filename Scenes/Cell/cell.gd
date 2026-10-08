@@ -116,26 +116,26 @@ func _translate_vector_to_cardinal(direction : Vector2i) -> Cardinals:
 static var Default_Templates : Array[Cell] = []:
 	get():
 		if Default_Templates.is_empty():
-			Default_Templates = load_Default_Templates("res://Scenes/Cell/prototypes/")
+			Default_Templates = load_Template_Folder("res://Scenes/Cell/prototypes/")
 		return Default_Templates
 
 
 static var Underground_Template_Set : Array[Cell]:
 	get():
 		var results : Array[Cell] = []
-		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/ground.tres')))
-		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/cave.tres')))
-		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/tunnel.tres')))
-		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/labyrinth.tres')))
+		results.append_array((load_Template('res://Scenes/Cell/prototypes/ground.tres')))
+		results.append_array((load_Template('res://Scenes/Cell/prototypes/cave.tres')))
+		results.append_array((load_Template('res://Scenes/Cell/prototypes/tunnel.tres')))
+		results.append_array((load_Template('res://Scenes/Cell/special/labyrinth.tres')))
 		return results
 
 static var Sky_Templates : Array[Cell]:
 	get():
 		var results : Array[Cell] = []
-		results.append_array((load_cell_template('res://Scenes/Cell/prototypes/sky.tres')))
+		results.append_array((load_Template('res://Scenes/Cell/prototypes/sky.tres')))
 		return results	
 
-static func load_Default_Templates(target_path) -> Array[Cell]:
+static func load_Template_Folder(target_path) -> Array[Cell]:
 	var results: Array[Cell] = []
 	var dir = DirAccess.open(target_path)
 	if not dir:
@@ -153,7 +153,7 @@ static func load_Default_Templates(target_path) -> Array[Cell]:
 			continue
 			
 		var full_path = target_path.path_join(file_name)
-		var variants = load_cell_template(full_path)
+		var variants = load_Template(full_path)
 		results.append_array(variants)
 		file_name = dir.get_next()
 		
@@ -161,7 +161,7 @@ static func load_Default_Templates(target_path) -> Array[Cell]:
 
 
 #loads a cell template and procedurally generates all of its variants
-static func load_cell_template(full_path) -> Array[Cell]:
+static func load_Template(full_path) -> Array[Cell]:
 
 	# Fix for .remap files in exported builds
 	if full_path.ends_with(".remap"):

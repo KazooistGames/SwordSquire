@@ -19,7 +19,7 @@ func build_map():
 			all_chunks.erase(all_chunks.find_key(chunk))
 
 			
-	root_chunk = spawn_chunk(Vector2i.ZERO, Chunk.DEFAULT_SIZE * .5)	
+	root_chunk = spawn_chunk(Vector2i.ZERO, Chunk.DEFAULT_SIZE )	
 	root_chunk.build()
 	update_viewport_container_bounds()
 	
@@ -33,23 +33,27 @@ func build_map():
 	right.build()
 	await right.built  
 
-
+	#for chunk : Chunk in all_chunks.values():
+		#var chunk_coords = all_chunks.find_key(chunk)
+		#var new_chunk := extrude_chunk(chunk_coords, Vector2i.DOWN, Cell.Underground_Template_Set)
+		#new_chunk.build()
+		#await new_chunk.built
+		
+	update_viewport_container_bounds()	
 	
 	# FINAL COLLAPSE INTO ONE GRID/CHUNK
 	var temp_chunk_iterator : Array[Chunk] = all_chunks.values().duplicate()
 	for chunk : Chunk in temp_chunk_iterator:
 		if chunk != root_chunk:
 			absorb_chunk(root_chunk, chunk)
-		
-	for chunk : Chunk in all_chunks.values():
-		var bottom_row := chunk.get_cell_row(chunk.corner_max.y)
-		if bottom_row.any(func(cell : Cell) : return cell.Tag == Cell.Biomes.underground):
-			var chunk_coords = all_chunks.find_key(chunk)
-			var new_chunk := extrude_chunk(chunk_coords, Vector2i.DOWN, Cell.Underground_Template_Set)
-			new_chunk.build()
-			await new_chunk.built
-		
-	update_viewport_container_bounds()	
+			
+	var bottom_row := root_chunk.get_cell_row(root_chunk.corner_max.y)
+	if bottom_row.any(func(cell : Cell) : return cell.Tag == Cell.Biomes.underground):
+		root_chunk.extend(Vector2i.UP, 1, Cell.Underground_Template_Set.pick_random())
+
+	#TODO: check for actual need to extend wings to improve intentionality of map
+	root_chunk.extend(Vector2i.LEFT, 2, Cell.Sky_Templates.pick_random())
+	root_chunk.extend(Vector2i.RIGHT, 2, Cell.Sky_Templates.pick_random())
 	root_chunk.extend(Vector2i.DOWN, 3, Cell.Sky_Templates.pick_random())
 	update_viewport_container_bounds()
 
