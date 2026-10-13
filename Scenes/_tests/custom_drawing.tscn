@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://draauy7fmtw3p"]
+
+[ext_resource type="Script" uid="uid://dfu8uixcvbwd1" path="res://Scenes/_tests/custom_drawing.gd" id="1_xihtn"]
+
+[node name="CustomDrawing" type="Node2D" unique_id=451020679]
+script = ExtResource("1_xihtn")
