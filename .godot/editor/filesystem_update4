@@ -1,10 +1,2 @@
-res://Scenes/Map/map.tscn
-res://Scenes/Map/map.gd
-res://Scenes/Chunk/chunk.gd
-res://Scenes/Cell/cell.gd
-res://Scenes/Cell/prototypes/labrynth.tres
-res://Scenes/Cell/prototypes/hole.tres
-res://Scenes/Cell/prototypes/cave.tres
-res://Scenes/Cell/prototypes/tunnel.tres
-res://Scenes/Cell/prototypes/sky.tres
-res://Scenes/Cell/prototypes/ground.tres
+res://Scenes/Tile/tile.tscn
+res://Scenes/Tile/tile.gd

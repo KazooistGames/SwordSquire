@@ -1,3 +1,4 @@
+Sprite2D
 Node2D
 Camera2D
 ColorRect
@@ -10,5 +11,4 @@ Control
 Label
 Node
 Area2D
-Sprite2D
 LightOccluder2D
