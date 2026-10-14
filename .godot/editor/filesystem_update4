@@ -1,2 +1,3 @@
-res://Scenes/Map/map.tscn
-res://Scenes/Map/map.gd
+res://Scenes/Tile/tile.tscn
+res://Scenes/Tile/tile.gd
+res://Scenes/Chunk/chunk.gd

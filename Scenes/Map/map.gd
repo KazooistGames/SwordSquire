@@ -56,7 +56,8 @@ func build_map():
 	root_chunk.extend(Vector2i.RIGHT, 2, Cell.Sky_Templates.pick_random())
 	root_chunk.extend(Vector2i.DOWN, 3, Cell.Sky_Templates.pick_random())
 	update_viewport_container_bounds()
-
+	root_chunk.tile_over()
+	
 	
 func spawn_chunk(chunk_coordinates : Vector2i, chunk_size : Vector2i, coordinate_offset := Vector2i.ZERO, cell_templates := Cell.Default_Templates) -> Chunk:
 	var new_chunk : Chunk = chunk_prefab.instantiate()

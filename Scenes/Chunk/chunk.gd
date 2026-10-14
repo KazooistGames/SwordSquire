@@ -61,8 +61,19 @@ func build():
 		perform_wave_collapse_round()
 		await get_tree().process_frame
 	built.emit()	
-	
-	
+
+func tile_over():
+	var tile_prefab := load("res://Scenes/Tile/tile.tscn")
+	for coord : Vector2i in grid_cells.keys():
+		# TODO: stop skipping the tiles on the edge 
+		if coord.x == corner_min.x or coord.y == corner_min.y:
+			continue
+		elif coord.x == corner_max.x or coord.y == corner_max.y:
+			continue
+		var new_tile : Tile = tile_prefab.instantiate()
+		new_tile.apply(self, coord)
+		await get_tree().process_frame
+		
 func perform_wave_collapse_round():
 	# Find the uncollapsed cells with the fewest candidates and pick one at random
 	var collapse_coordinates = lowest_entropy_coordinates().pick_random()
