@@ -34,29 +34,24 @@ enum Configuration{
 var orientation : Configuration = Configuration.default
 var is_flipped = false
 
+var color : ColorRect
+
 func collapse():
-	var color := ColorRect.new()
+	color = ColorRect.new()
 	color.size = SIZE
-	var tile : CollisionObject2D
 	match Tag:
 		Biomes.sky:
-			tile = Area2D.new()
 			color.color = Color.DARK_CYAN
 		Biomes.ground:
-			tile = StaticBody2D.new()
 			color.color = Color.SADDLE_BROWN
-			var collider := CollisionShape2D.new()
-			collider.shape = RectangleShape2D.new()
-			collider.shape.size = SIZE		
-			tile.add_child(collider)
-			collider.position = SIZE	/ 2.0
 		Biomes.underground:
-			tile = Area2D.new()
-			color.color = Color.DARK_SLATE_GRAY
-			
-	tile.add_child(color)		
-	return tile
+			color.color = Color.DARK_SLATE_GRAY				
+	return color
 	
+func erase():
+	if color != null:
+		color.queue_free()
+
 func fits(other : Cell, direction : Vector2i):
 	var dir = _translate_vector_to_cardinal(direction)
 
@@ -178,3 +173,4 @@ static func load_Template(full_path) -> Array[Cell]:
 			results.append(cell.flipped())
 			
 	return results
+	

@@ -54,7 +54,7 @@ func build_map():
 	#TODO: check for actual need to extend wings to improve intentionality of map
 	root_chunk.extend(Vector2i.LEFT, 2, Cell.Sky_Templates.pick_random())
 	root_chunk.extend(Vector2i.RIGHT, 2, Cell.Sky_Templates.pick_random())
-	root_chunk.extend(Vector2i.DOWN, 3, Cell.Sky_Templates.pick_random())
+	root_chunk.extend(Vector2i.DOWN, 5, Cell.Sky_Templates.pick_random())
 	update_viewport_container_bounds()
 	root_chunk.tile_over()
 	

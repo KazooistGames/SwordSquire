@@ -8,7 +8,7 @@ var grid_cells : Dictionary[Vector2i, Cell]
 var grid_candidates : Dictionary[Vector2i, Array]
 
 var random = RandomNumberGenerator.new()
-var grid_labels : Dictionary[Vector2i, Label] = {}
+#var grid_labels : Dictionary[Vector2i, Label] = {}
 
 var contradictions := 0
 var contradiction_coordinates := Vector2i.ZERO
@@ -47,7 +47,7 @@ func initialize(size : Vector2i, offset := Vector2i.ZERO):
 	grid_cells.clear()
 	for child in get_children():
 		child.queue_free()
-	grid_labels.clear()
+	#grid_labels.clear()
 	grid_candidates.clear()
 	for x in range(offset.x, size.x + offset.x):
 		for y in range(offset.x, size.x + offset.x):
@@ -66,7 +66,7 @@ func tile_over():
 	var tile_prefab := load("res://Scenes/Tile/tile.tscn")
 	for coord : Vector2i in grid_cells.keys():
 		# TODO: stop skipping the tiles on the edge 
-		if coord.x == corner_min.x or coord.y == corner_min.y:
+		if coord.x == corner_min.x-1 or coord.y == corner_min.y-1:
 			continue
 		elif coord.x == corner_max.x or coord.y == corner_max.y:
 			continue
@@ -119,14 +119,15 @@ func lowest_entropy_coordinates() -> Array[Vector2i]:
 func init_cell(coordinates):	
 	# Duplicate the full template list for this cell
 	grid_candidates[coordinates] = cell_templates.duplicate()
+	
 	# For debugging: show entropy (number of candidates)
-	var new_label := Label.new()
-	new_label.text = str(cell_templates.size())
-	new_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	new_label.position = coordinates * Cell.SIZE
-	# Save label and add to viewport
-	grid_labels[coordinates] = new_label
-	add_child(new_label)
+	#var new_label := Label.new()
+	#new_label.text = str(cell_templates.size())
+	#new_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	#new_label.position = coordinates * Cell.SIZE
+	## Save label and add to viewport
+	#grid_labels[coordinates] = new_label
+	#add_child(new_label)
 
 
 func collapse_cell(coordinates : Vector2i, chosen : Cell):
@@ -134,9 +135,9 @@ func collapse_cell(coordinates : Vector2i, chosen : Cell):
 	grid_cells[coordinates] = chosen
 	grid_candidates[coordinates] = [chosen]
 
-	var tile : Node = chosen.collapse()
-	add_child(tile)
-	tile.position = coordinates * Cell.SIZE
+	#var tile : Node = chosen.collapse()
+	#add_child(tile)
+	#tile.position = coordinates * Cell.SIZE
 	
 	for neighbor_offset in valid_neighbor_offsets(coordinates):
 		var neighbor_coordinates = coordinates + neighbor_offset
@@ -193,7 +194,7 @@ func calculate_entropy(coordinates : Vector2i):
 	# make entropy updates
 	for candidate in needs_removed:
 		grid_candidates[coordinates].erase(candidate)
-	grid_labels[coordinates].text = str(grid_candidates[coordinates].size())
+	#grid_labels[coordinates].text = str(grid_candidates[coordinates].size())
 	
 	#determine socket rules, collapse if we can
 	if grid_candidates[coordinates].size() == 1:

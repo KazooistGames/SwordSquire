@@ -1,3 +1,7 @@
 res://Scenes/Tile/tile.tscn
 res://Scenes/Tile/tile.gd
 res://Scenes/Chunk/chunk.gd
+res://Scenes/Map/map.gd
+res://Scenes/Cell/cell.gd
+res://Scenes/_tests/custom_drawing.tscn
+res://Scenes/_tests/custom_drawing.gd

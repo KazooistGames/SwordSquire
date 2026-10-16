@@ -1,9 +1,0 @@
-[gd_scene format=3 uid="uid://cuxihd7nl41iy"]
-
-[ext_resource type="Script" uid="uid://desxae88o4myk" path="res://Scenes/Tile/subtiles/subtile.gd" id="1_ew2rr"]
-[ext_resource type="Texture2D" uid="uid://ceajyh70h71vs" path="res://Scenes/Tile/subtiles/foregrounds/textures/floor_transition.png" id="1_rrjbl"]
-
-[node name="FloorTransition" type="Sprite2D" unique_id=431219976]
-texture = ExtResource("1_rrjbl")
-script = ExtResource("1_ew2rr")
-bottom_left = 2

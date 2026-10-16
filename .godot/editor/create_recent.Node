@@ -1,9 +1,10 @@
 Sprite2D
 Node2D
+StaticBody2D
+CollisionPolygon2D
 Camera2D
 ColorRect
 CollisionShape2D
-StaticBody2D
 CenterContainer
 SubViewport
 SubViewportContainer
@@ -11,4 +12,3 @@ Control
 Label
 Node
 Area2D
-LightOccluder2D
