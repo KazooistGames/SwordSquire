@@ -50,13 +50,12 @@ func apply(chunk : Chunk, top_left_coord : Vector2i):
 	
 func calculate_signature(chunk : Chunk, top_left_coord : Vector2i):
 	signature = ''
-	signature += harvest_cell(chunk, top_left_coord)
-	signature += harvest_cell(chunk, top_left_coord + Vector2i.RIGHT)
-	signature += harvest_cell(chunk, top_left_coord + Vector2i.DOWN)
-	signature += harvest_cell(chunk, top_left_coord + Vector2i.RIGHT + Vector2i.DOWN)
+	signature += correlate_cell_code(chunk, top_left_coord)
+	signature += correlate_cell_code(chunk, top_left_coord + Vector2i.RIGHT)
+	signature += correlate_cell_code(chunk, top_left_coord + Vector2i.DOWN)
+	signature += correlate_cell_code(chunk, top_left_coord + Vector2i.RIGHT + Vector2i.DOWN)
 	
-func harvest_cell(chunk : Chunk, coord : Vector2i) -> String: 
-	chunk.grid_cells[coord].erase()
+func correlate_cell_code(chunk : Chunk, coord : Vector2i) -> String: 
 	var tag : Cell.Biomes = chunk.grid_cells[coord].Tag
 	match tag:
 		Cell.Biomes.sky:
@@ -106,5 +105,16 @@ func build_polys_from_sprite(sprite : Sprite2D):
 	return bitmap.opaque_to_polygons(Rect2(Vector2.ZERO, image.get_size()), 0.0)
 
 
-	
+func toggle_visibility():
+	if foreground.visible and background.visible:
+		background.visible = false
+	elif foreground.visible and not background.visible:
+		background.visible = true
+		foreground.visible = false
+	elif not foreground.visible and background.visible:
+		background.visible = false
+	else:
+		background.visible = true
+		foreground.visible = true
+
 	

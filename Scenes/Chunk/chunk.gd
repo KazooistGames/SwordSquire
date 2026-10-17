@@ -1,17 +1,15 @@
 class_name Chunk extends Node2D
 
 const DEFAULT_SIZE := Vector2i(8,8)
+var random = RandomNumberGenerator.new()
 
 var entropy_propagation_queue : Array[Vector2i] = []
-
 var grid_cells : Dictionary[Vector2i, Cell]
 var grid_candidates : Dictionary[Vector2i, Array]
-
-var random = RandomNumberGenerator.new()
-#var grid_labels : Dictionary[Vector2i, Label] = {}
-
 var contradictions := 0
 var contradiction_coordinates := Vector2i.ZERO
+
+var grid_tiles : Dictionary[Vector2i, Tile]
 
 var corner_min : Vector2i :
 	get():
@@ -72,7 +70,16 @@ func tile_over():
 			continue
 		var new_tile : Tile = tile_prefab.instantiate()
 		new_tile.apply(self, coord)
+		grid_tiles[coord] = new_tile
+		#grid_cells[coord].toggle_block(false)
 		await get_tree().process_frame
+
+
+func toggle_tiles():
+	for coord : Vector2i in grid_cells.keys():
+		if not grid_tiles.has(coord):
+			continue
+		grid_tiles[coord].toggle_visibility()
 		
 func perform_wave_collapse_round():
 	# Find the uncollapsed cells with the fewest candidates and pick one at random
@@ -135,9 +142,9 @@ func collapse_cell(coordinates : Vector2i, chosen : Cell):
 	grid_cells[coordinates] = chosen
 	grid_candidates[coordinates] = [chosen]
 
-	#var tile : Node = chosen.collapse()
-	#add_child(tile)
-	#tile.position = coordinates * Cell.SIZE
+	var tile : Node = chosen.collapse()
+	add_child(tile)
+	tile.position = coordinates * Cell.SIZE
 	
 	for neighbor_offset in valid_neighbor_offsets(coordinates):
 		var neighbor_coordinates = coordinates + neighbor_offset

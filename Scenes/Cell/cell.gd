@@ -39,6 +39,7 @@ var color : ColorRect
 func collapse():
 	color = ColorRect.new()
 	color.size = SIZE
+	color.visibility_layer = -100
 	match Tag:
 		Biomes.sky:
 			color.color = Color.DARK_CYAN
@@ -48,9 +49,9 @@ func collapse():
 			color.color = Color.DARK_SLATE_GRAY				
 	return color
 	
-func erase():
+func toggle_block(value : bool):
 	if color != null:
-		color.queue_free()
+		color.visible = value
 
 func fits(other : Cell, direction : Vector2i):
 	var dir = _translate_vector_to_cardinal(direction)

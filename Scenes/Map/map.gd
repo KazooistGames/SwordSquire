@@ -12,6 +12,9 @@ var root_chunk : Chunk
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("Enter"):
 		build_map()
+	if event.is_action_pressed("Interact"):
+		if root_chunk:
+			root_chunk.toggle_tiles()
 
 func build_map():
 	for chunk : Chunk in all_chunks.values():
