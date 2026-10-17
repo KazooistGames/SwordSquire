@@ -13,3 +13,12 @@ res://Scenes/GUI/GUI.gd
 res://title.gd
 res://Scenes/HMI/HMI.tscn
 res://Scenes/HMI/HMI.gd
+res://Scenes/Menu/Menu.tscn
+res://Scenes/GUI/HMI/HMI.tscn
+res://Scenes/GUI/Menu/Menu.gd
+res://Scenes/GUI/HUD/HUD.tscn
+res://Scenes/GUI/Menu/Menu.tscn
+res://Scenes/HMI/Menu/Menu.tscn
+res://Scenes/HMI/Menu/Menu.gd
+res://Scenes/Map/map.tscn
+res://Scenes/HMI/HUD/HUD.gd

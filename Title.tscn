@@ -4,6 +4,3 @@
 
 [node name="Title" type="Node2D" unique_id=1042914758]
 script = ExtResource("1_c0dwi")
-
-[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=489958441]
-color = Color(0.881937, 0.881937, 0.881936, 1)

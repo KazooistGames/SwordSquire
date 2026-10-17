@@ -53,9 +53,9 @@ func load_scene(scene_path : String) -> void:
 	var scene_prefab = load(scene_path)
 	assert(scene_prefab != null)
 	
-	GUI.fade_out()
+	HMI.fade_out()
 	game_state = GameState.loading
-	await GUI.faded_out	
+	await HMI.faded_out	
 	
 	#should we free the old scene first instead of spawning new scene first?
 	var new_map = scene_prefab.instantiate()
@@ -70,7 +70,7 @@ func load_scene(scene_path : String) -> void:
 	else:
 		game_state = GameState.session
 		
-	GUI.fade_in()
+	HMI.fade_in()
 
 
 func quit() -> void:
