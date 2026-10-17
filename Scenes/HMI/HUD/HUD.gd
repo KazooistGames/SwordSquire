@@ -17,6 +17,7 @@ var y_offset := -6.0
 var y_deadbanded := false
 var y_deadband_timer := 0.0
 
+#TODO rename to not be "HUD" because this is more than a HUD. 
 
 func _process(delta : float) -> void:
 	if guy:

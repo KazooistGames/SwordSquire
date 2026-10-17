@@ -14,6 +14,8 @@ signal faded_out
 @onready var hud = $HUD
 @onready var curtains : ColorRect = $Curtains
 
+#TODO: disable gameplay controls object when not playing. collapse menu/session control flow into this locus here.
+
 
 func _ready():
 	fade_in()
