@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://b8xpmmlbv64kh"]
+[gd_scene format=3 uid="uid://b8xpmmlbv64kh"]
 
 [ext_resource type="Script" uid="uid://b8g5l11p4we4p" path="res://Scenes/Guy/Guy.gd" id="1_jkuat"]
 [ext_resource type="PackedScene" uid="uid://cj3exco8pbdh7" path="res://Scenes/Guy/FightingFrames/fightingFrames.tscn" id="2_rd74a"]
@@ -7,20 +7,22 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rcyd8"]
 size = Vector2(6, 3)
 
-[node name="Guy" type="CharacterBody2D" groups=["Guy"]]
+[node name="Guy" type="CharacterBody2D" unique_id=1110990232 groups=["Guy"]]
 collision_layer = 2
 collision_mask = 17
 script = ExtResource("1_jkuat")
 
-[node name="feet" type="CollisionShape2D" parent="."]
+[node name="feet" type="CollisionShape2D" parent="." unique_id=1704436786]
 position = Vector2(0, 10)
 shape = SubResource("RectangleShape2D_rcyd8")
 debug_color = Color(0.307455, 0.627115, 0, 0.42)
 
-[node name="FightingFrames" parent="." instance=ExtResource("2_rd74a")]
-frame_timer = 0.0166667
+[node name="FightingFrames" parent="." unique_id=1050928777 instance=ExtResource("2_rd74a")]
+region_rect = Rect2(288, 0, 36, 24)
+frame_timer = 0.016666700000000007
+current_frame_index = 8
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=831230734]
 custom_minimum_size = Vector2(75, 75)
 layout_mode = 3
 anchors_preset = 15
@@ -30,7 +32,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("3_ifsry")
 
-[node name="state" type="Label" parent="Control"]
+[node name="state" type="Label" parent="Control" unique_id=1719382625]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -39,7 +41,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "0"
 
-[node name="xy" type="Label" parent="Control"]
+[node name="xy" type="Label" parent="Control" unique_id=848941204]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -51,7 +53,7 @@ text = "0"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="accel" type="Label" parent="Control"]
+[node name="accel" type="Label" parent="Control" unique_id=1255215658]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -60,6 +62,6 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.66, 0, 0, 1)
 theme_override_font_sizes/font_size = 8
-text = "0.0"
+text = "0"
 horizontal_alignment = 2
 vertical_alignment = 2

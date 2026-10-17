@@ -19,6 +19,11 @@ run/main_scene="uid://cgbmicstbteog"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+SwordSquire="*uid://b143xsdphes5r"
+GUI="*uid://q1gkvwik1xei"
+
 [display]
 
 window/stretch/mode="viewport"

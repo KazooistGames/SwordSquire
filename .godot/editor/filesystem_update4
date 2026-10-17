@@ -5,3 +5,11 @@ res://Scenes/Map/map.gd
 res://Scenes/Cell/cell.gd
 res://Scenes/_tests/custom_drawing.tscn
 res://Scenes/_tests/custom_drawing.gd
+res://Scenes/Guy/Guy.tscn
+res://SwordSquire.gd
+res://Scenes/GUI/GUI.tscn
+res://Title.tscn
+res://Scenes/GUI/GUI.gd
+res://title.gd
+res://Scenes/HMI/HMI.tscn
+res://Scenes/HMI/HMI.gd

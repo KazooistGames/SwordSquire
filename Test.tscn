@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://qdslrpdgtsl1"]
+[gd_scene format=3 uid="uid://dre0i4r0lodl3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5asmm"]
 size = Vector2(32, 32)
@@ -8,8 +8,3 @@ size = Vector2(32, 32)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1310643423]
 position = Vector2(16, 16)
 shape = SubResource("RectangleShape2D_5asmm")
-
-[node name="ColorRect" type="ColorRect" parent="." unique_id=145970604]
-custom_minimum_size = Vector2(32, 32)
-offset_right = 32.0
-offset_bottom = 32.0

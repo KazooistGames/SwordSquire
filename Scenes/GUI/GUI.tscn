@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://q1gkvwik1xei"]
+
+[ext_resource type="Script" uid="uid://cs24ribrvp1d5" path="res://Scenes/GUI/GUI.gd" id="1_ylr0r"]
+
+[node name="UI" type="CanvasLayer" unique_id=350530485]
+script = ExtResource("1_ylr0r")
+
+[node name="Menu" type="MarginContainer" parent="." unique_id=157503619]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu" unique_id=1092072455]
+layout_mode = 2
+
+[node name="Header" type="Label" parent="Menu/VBoxContainer" unique_id=376184567]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 72
+text = "Sword Squire"
+horizontal_alignment = 1
+
+[node name="Logo" type="Label" parent="Menu/VBoxContainer" unique_id=1694840004]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 72
+text = "⚔️"
+horizontal_alignment = 1
+
+[node name="Buttons" type="VBoxContainer" parent="Menu" unique_id=20299118]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_constants/separation = 20
+
+[node name="Fight" type="Button" parent="Menu/Buttons" unique_id=1859652190]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+theme_override_colors/font_hover_color = Color(0.9490196, 0.9490196, 0.11372549, 1)
+theme_override_font_sizes/font_size = 32
+text = "Fight"
+
+[node name="quit" type="Button" parent="Menu/Buttons" unique_id=1441443313]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+theme_override_colors/font_hover_color = Color(0.9490196, 0.9490196, 0.11372549, 1)
+theme_override_font_sizes/font_size = 32
+text = "quit"
+
+[node name="Curtains" type="ColorRect" parent="." unique_id=731496304]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[connection signal="pressed" from="Menu/Buttons/Fight" to="." method="_on_fight_pressed"]
+[connection signal="pressed" from="Menu/Buttons/quit" to="." method="_on_quit_pressed"]

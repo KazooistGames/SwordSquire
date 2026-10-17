@@ -1,10 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://cgbmicstbteog"]
+[gd_scene format=3 uid="uid://cgbmicstbteog"]
 
-[ext_resource type="PackedScene" uid="uid://cmigagy8anvbt" path="res://Scenes/Map/map.tscn" id="1_ax32a"]
+[ext_resource type="Script" uid="uid://bi6rf4pm4os1k" path="res://title.gd" id="1_c0dwi"]
 
-[node name="Title" type="Node2D"]
+[node name="Title" type="Node2D" unique_id=1042914758]
+script = ExtResource("1_c0dwi")
 
-[node name="CanvasModulate" type="CanvasModulate" parent="."]
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=489958441]
 color = Color(0.881937, 0.881937, 0.881936, 1)
-
-[node name="Map" parent="." instance=ExtResource("1_ax32a")]
