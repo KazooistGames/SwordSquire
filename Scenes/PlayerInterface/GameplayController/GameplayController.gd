@@ -7,8 +7,8 @@ const y_range := 50
 @export var guy : Guy = null
 @export var target_position := Vector2(0, 0)
 
-@onready var hp_bar : ColorRect = $CanvasLayer/hp_bar
-@onready var strength_bar : ColorRect = $CanvasLayer/strength_bar
+@onready var hp_bar : ColorRect = $HUD/hp_bar
+@onready var strength_bar : ColorRect = $HUD/strength_bar
 @onready var fov_light : PointLight2D = $PointLight2D
 
 var x_target := 0.0
@@ -17,7 +17,6 @@ var y_offset := -6.0
 var y_deadbanded := false
 var y_deadband_timer := 0.0
 
-#TODO rename to not be "HUD" because this is more than a HUD. 
 
 func _process(delta : float) -> void:
 	if guy:
@@ -28,9 +27,9 @@ func _process(delta : float) -> void:
 		_update_hud(delta)
 		_update_bush_transparency()
 		_update_guy_hidden()	
-	if Input.is_action_just_pressed("Interact"):
-		guy.interact()
-		
+		if Input.is_action_just_pressed("Interact"):
+			guy.interact()
+			
 
 func _movement_inputs(_delta : float) -> void:
 	if Input.is_action_pressed("moveLeft") and Input.is_action_pressed("moveRight"):

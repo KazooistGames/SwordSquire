@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://q1gkvwik1xei"]
 
-[ext_resource type="Script" uid="uid://cs24ribrvp1d5" path="res://Scenes/HMI/Menu/Menu.gd" id="1_ylr0r"]
+[ext_resource type="Script" uid="uid://cs24ribrvp1d5" path="res://Scenes/PlayerInterface/Menu/Menu.gd" id="1_ylr0r"]
 
 [node name="Menu" type="MarginContainer" unique_id=157503619]
 anchors_preset = 15

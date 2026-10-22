@@ -17,12 +17,12 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 config/name="Shield Squire"
 run/main_scene="uid://cgbmicstbteog"
 config/features=PackedStringArray("4.6", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://_archive/icon.svg"
 
 [autoload]
 
 SwordSquire="*uid://b143xsdphes5r"
-HMI="*uid://b45v2xnp3sfqs"
+PlayerInterface="*uid://b45v2xnp3sfqs"
 
 [display]
 

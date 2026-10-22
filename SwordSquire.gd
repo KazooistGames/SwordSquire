@@ -48,14 +48,14 @@ func load_scene(scene_path : String) -> void:
 	if active_scene == null:
 		pass
 	elif active_scene.scene_file_path == scene_path:
-		push_warning('scene already loaded: ', scene_path)
+		push_warning('scene already loaded, reloading: ', scene_path)
 		
 	var scene_prefab = load(scene_path)
 	assert(scene_prefab != null)
 	
-	HMI.fade_out()
+	PlayerInterface.fade_out()
 	game_state = GameState.loading
-	await HMI.faded_out	
+	await PlayerInterface.faded_out	
 	
 	#should we free the old scene first instead of spawning new scene first?
 	var new_map = scene_prefab.instantiate()
@@ -70,7 +70,7 @@ func load_scene(scene_path : String) -> void:
 	else:
 		game_state = GameState.session
 		
-	HMI.fade_in()
+	PlayerInterface.fade_in()
 
 
 func quit() -> void:

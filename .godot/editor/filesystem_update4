@@ -22,3 +22,16 @@ res://Scenes/HMI/Menu/Menu.tscn
 res://Scenes/HMI/Menu/Menu.gd
 res://Scenes/Map/map.tscn
 res://Scenes/HMI/HUD/HUD.gd
+res://Scenes/HMI/HUD/HUD.tscn
+res://Scenes/HMI/GameplayInput/HUD.tscn
+res://Scenes/HMI/PlayerInterface.tscn
+res://Scenes/HMI/GameplayInput/GameplayInput.tscn
+res://Scenes/PlayerInterface/PlayerInterface.tscn
+res://Scenes/PlayerInterface/PlayerInterface.gd
+res://Scenes/PlayerInterface/GameplayInput/GameplayInput.tscn
+res://Scenes/PlayerInterface/Menu/Menu.gd
+res://Scenes/PlayerInterface/GameplayInput/GameplayInput.gd
+res://Scenes/Session/Session.tscn
+res://Scenes/PlayerInterface/GameplayController/GameplayInput.tscn
+res://Scenes/PlayerInterface/GameplayController/GameplayController.tscn
+res://duel.tscn

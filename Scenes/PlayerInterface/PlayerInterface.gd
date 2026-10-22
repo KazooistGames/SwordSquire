@@ -11,14 +11,20 @@ signal faded_in
 signal faded_out
 
 @onready var menu = $Menu
-@onready var hud = $HUD
+@onready var gameplay = $GameplayInput
 @onready var curtains : ColorRect = $Curtains
 
 #TODO: disable gameplay controls object when not playing. collapse menu/session control flow into this locus here.
 
 
 func _ready():
+	menu.toggle(true)
 	fade_in()
+
+# always processed
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed('Escape'):
+		menu.toggle()
 
 
 func fade_in():
@@ -31,7 +37,6 @@ func fade_in():
 		curtains.visible = false 
 		faded_in.emit()
 		)
-
 
 func fade_out():
 	curtains.visible = true

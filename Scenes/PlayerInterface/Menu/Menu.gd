@@ -5,13 +5,7 @@ extends MarginContainer
 '''
 
 
-
-func _ready():
-	toggle_menu(true)
-
-
-
-func toggle_menu(value = null):
+func toggle(value = null):
 	if value == null:
 		visible = not visible
 	else:
