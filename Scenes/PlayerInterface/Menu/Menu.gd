@@ -1,4 +1,4 @@
-extends MarginContainer
+class_name MainMenu extends MarginContainer
 
 '''
 	used by the player interface global to handle scene transitions and other generic menu items.
@@ -19,5 +19,5 @@ func _on_quit_pressed() -> void:
 	SwordSquire.quit()
 
 
-func _on_fight_pressed() -> void:
-	SwordSquire.load_scene("res://Scenes/Map/map.tscn")
+func _on_duel_pressed() -> void:
+	SwordSquire.load_scene("res://Duel.tscn")

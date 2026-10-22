@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://cvoldq46v0xyn"]
+
+[ext_resource type="Script" uid="uid://ci6fh2bff5v1d" path="res://Scenes/PlayerInterface/GameplayHarness/GameplayHarness.gd" id="1_5eip2"]
+
+[sub_resource type="Gradient" id="Gradient_8tn2x"]
+offsets = PackedFloat32Array(0.596774, 0.683871)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_gg62j"]
+gradient = SubResource("Gradient_8tn2x")
+fill = 1
+fill_from = Vector2(0.504274, 0.508547)
+
+[node name="GameplayController" type="Camera2D" unique_id=1242196130]
+script = ExtResource("1_5eip2")
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=2111827726]
+
+[node name="hp_backdrop" type="ColorRect" parent="HUD" unique_id=889631127]
+layout_direction = 2
+offset_left = 10.0
+offset_top = 11.0
+offset_right = 110.0
+offset_bottom = 13.0
+color = Color(0.392157, 0.392157, 0.392157, 0.392157)
+
+[node name="hp_bar" type="ColorRect" parent="HUD" unique_id=974406963]
+layout_direction = 2
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 60.0
+offset_bottom = 14.0
+color = Color(0.784314, 0, 0, 1)
+
+[node name="strength_backdrop" type="ColorRect" parent="HUD" unique_id=1594105146]
+layout_direction = 2
+offset_left = 10.0
+offset_top = 13.0
+offset_right = 110.0
+offset_bottom = 15.0
+color = Color(0.392157, 0.392157, 0.392157, 0.392157)
+
+[node name="strength_bar" type="ColorRect" parent="HUD" unique_id=860531961]
+layout_direction = 2
+offset_left = 10.0
+offset_top = 13.0
+offset_right = 60.0
+offset_bottom = 15.0
+color = Color(0.9, 0.9, 0.9, 1)
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=255835940]
+scale = Vector2(2.5, 2.5)
+blend_mode = 2
+shadow_enabled = true
+shadow_filter = 1
+texture = SubResource("GradientTexture2D_gg62j")
+texture_scale = 3.0

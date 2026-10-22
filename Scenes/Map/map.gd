@@ -3,44 +3,46 @@ class_name Map extends Node2D
 var all_chunks : Dictionary[Vector2i, Chunk] = {}
 var root_chunk : Chunk
 
-@onready var chunk_prefab = preload("res://Scenes/Chunk/chunk.tscn")
+@onready var chunk_prefab = preload("res://Scenes/Map/Chunk/chunk.tscn")
 @onready var subviewport_container = $SubViewportContainer
 @onready var subviewport = $SubViewportContainer/SubViewport
 @onready var chunk_box = $SubViewportContainer/SubViewport/Chunks
 
+signal built
 	
+#TODO: rebuild this into some sort of testing harness outside the core code
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("Enter"):
-		build_map()
+		build()
 	if event.is_action_pressed("Interact"):
 		if root_chunk:
 			root_chunk.toggle_tiles()
 
-func build_map():
+func build():
 	for chunk : Chunk in all_chunks.values():
 			chunk.queue_free()
 			all_chunks.erase(all_chunks.find_key(chunk))
 
 			
 	root_chunk = spawn_chunk(Vector2i.ZERO, Chunk.DEFAULT_SIZE )	
-	root_chunk.build()
+	root_chunk.generate()
 	update_viewport_container_bounds()
 	
-	await root_chunk.built
+	await root_chunk.generated
 	var left = extrude_chunk(Vector2i.ZERO, Vector2i.LEFT)
 	var right = extrude_chunk(Vector2i.ZERO, Vector2i.RIGHT)
 
-	left.build()
-	await left.built 
+	left.generate()
+	await left.generated 
 
-	right.build()
-	await right.built  
+	right.generate()
+	await right.generated  
 
 	#for chunk : Chunk in all_chunks.values():
 		#var chunk_coords = all_chunks.find_key(chunk)
 		#var new_chunk := extrude_chunk(chunk_coords, Vector2i.DOWN, Cell.Underground_Template_Set)
-		#new_chunk.build()
-		#await new_chunk.built
+		#new_chunk.generate()
+		#await new_chunk.generated
 		
 	update_viewport_container_bounds()	
 	
@@ -60,7 +62,8 @@ func build_map():
 	root_chunk.extend(Vector2i.DOWN, 5, Cell.Sky_Templates.pick_random())
 	update_viewport_container_bounds()
 	root_chunk.tile_over()
-	
+	await root_chunk.tiled
+	built.emit()
 	
 func spawn_chunk(chunk_coordinates : Vector2i, chunk_size : Vector2i, coordinate_offset := Vector2i.ZERO, cell_templates := Cell.Default_Templates) -> Chunk:
 	var new_chunk : Chunk = chunk_prefab.instantiate()

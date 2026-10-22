@@ -39,12 +39,12 @@ size_flags_horizontal = 4
 size_flags_vertical = 8
 theme_override_constants/separation = 20
 
-[node name="Fight" type="Button" parent="Buttons" unique_id=1859652190]
+[node name="Duel" type="Button" parent="Buttons" unique_id=1859652190]
 layout_mode = 2
 theme_type_variation = &"FlatButton"
 theme_override_colors/font_hover_color = Color(0.9490196, 0.9490196, 0.11372549, 1)
 theme_override_font_sizes/font_size = 32
-text = "Fight"
+text = "Duel"
 
 [node name="quit" type="Button" parent="Buttons" unique_id=1441443313]
 layout_mode = 2
@@ -53,5 +53,5 @@ theme_override_colors/font_hover_color = Color(0.9490196, 0.9490196, 0.11372549,
 theme_override_font_sizes/font_size = 32
 text = "quit"
 
-[connection signal="pressed" from="Buttons/Fight" to="." method="_on_fight_pressed"]
+[connection signal="pressed" from="Buttons/Duel" to="." method="_on_duel_pressed"]
 [connection signal="pressed" from="Buttons/quit" to="." method="_on_quit_pressed"]

@@ -4,33 +4,10 @@ const TITLE = "res://Title.tscn"
 
 # collision layers:
 enum LAYER{
-	# PHYSICAL OBJECTS
-	TERRAIN = 1 << 0, 		# ground, boundaries, etc.
-	STRUCTURE = 1 << 1, 		# buildings, trees, any large or static immovable thing\
-	
-	OBJECT = 1 << 2, 		# non-equipable but physically reactive rigidbodies
-	ITEM = 1 << 3, 			# equipable/consumable physical objects
-	
-	PERSON = 1 << 4,			# human
-	CREATURE = 1 << 5,		# anomalies, monsters, and freaks
-	
-	# ABSTRACT OBJECTS = 10+
-	INTERACTABLE = 1 << 10,  # trigger radius for things like in-game buttons and doors
-	AREA = 1 << 11,			# area script triggers and radius of effect type stuff
-	
+	TERRAIN = 1,
+	GUY = 1 << 1,
+	OBSTACLES = 1 << 4
 }
-
-const MASK_PHYSICS = (
-	LAYER.TERRAIN + LAYER.STRUCTURE
-	+ LAYER.OBJECT + LAYER.ITEM
-	+ LAYER.PERSON + LAYER.CREATURE
-	)
-	
-const MASK_CHARACTER = (
-	LAYER.TERRAIN + LAYER.STRUCTURE
-	+ LAYER.PERSON + LAYER.CREATURE
-	+ LAYER.OBJECT
-)
 
 
 enum GameState{
@@ -67,8 +44,10 @@ func load_scene(scene_path : String) -> void:
 	
 	if active_scene.scene_file_path == TITLE:
 		game_state = GameState.menus
+		PlayerInterface.menu.toggle(true)
 	else:
 		game_state = GameState.session
+		PlayerInterface.menu.toggle(false)
 		
 	PlayerInterface.fade_in()
 

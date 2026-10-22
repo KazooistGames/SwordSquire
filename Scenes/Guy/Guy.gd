@@ -1,5 +1,8 @@
 class_name Guy extends CharacterBody2D
 
+const MASK = SwordSquire.LAYER.TERRAIN + SwordSquire.LAYER.OBSTACLES
+const DUCK_MASK = SwordSquire.LAYER.TERRAIN
+
 const duck_duration := 0.1
 const coyote_period := 0.10
 const base_accel := 400
@@ -60,9 +63,9 @@ func _ready() -> void:
 func _physics_process(delta : float) -> void:	
 	if duck_debounce < duck_duration:
 		duck_debounce += delta
-		collision_mask = 1	
+		collision_mask = DUCK_MASK
 	else:
-		collision_mask = 17
+		collision_mask = MASK
 		
 	_process_energy(delta)
 	_process_movement(delta)		

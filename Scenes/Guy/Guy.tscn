@@ -18,9 +18,9 @@ shape = SubResource("RectangleShape2D_rcyd8")
 debug_color = Color(0.307455, 0.627115, 0, 0.42)
 
 [node name="FightingFrames" parent="." unique_id=1050928777 instance=ExtResource("2_rd74a")]
-region_rect = Rect2(288, 0, 36, 24)
-frame_timer = 0.016666700000000007
-current_frame_index = 8
+region_rect = Rect2(216, 0, 36, 24)
+frame_timer = 0.012500033333333337
+current_frame_index = 6
 
 [node name="Control" type="Control" parent="." unique_id=831230734]
 custom_minimum_size = Vector2(75, 75)
