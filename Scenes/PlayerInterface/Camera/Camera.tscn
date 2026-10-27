@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cvoldq46v0xyn"]
 
-[ext_resource type="Script" uid="uid://ci6fh2bff5v1d" path="res://Scenes/PlayerInterface/GameplayHarness/GameplayHarness.gd" id="1_5eip2"]
+[ext_resource type="Script" uid="uid://ci6fh2bff5v1d" path="res://Scenes/PlayerInterface/Camera/Camera.gd" id="1_a3u6e"]
 
 [sub_resource type="Gradient" id="Gradient_8tn2x"]
 offsets = PackedFloat32Array(0.596774, 0.683871)
@@ -11,8 +11,8 @@ gradient = SubResource("Gradient_8tn2x")
 fill = 1
 fill_from = Vector2(0.504274, 0.508547)
 
-[node name="GameplayController" type="Camera2D" unique_id=1242196130]
-script = ExtResource("1_5eip2")
+[node name="Camera" type="Camera2D" unique_id=1242196130]
+script = ExtResource("1_a3u6e")
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=2111827726]
 

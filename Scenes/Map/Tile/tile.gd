@@ -79,22 +79,24 @@ func build_foreground(signature : String):
 	foreground.texture = PrefabForegrounds[signature]
 	var polys : Array[PackedVector2Array]
 	if PrefabPolygons.has(signature):
-		polys = (PrefabPolygons[signature] as Array[Polygon2D]).duplicate()
+		polys = (PrefabPolygons[signature] as Array[PackedVector2Array]).duplicate()
 	else:	
 		polys = build_polys_from_sprite(foreground)
 		PrefabPolygons[signature] = polys
 		
 	# Create CollisionPolygon2D nodes for each generated polygon
 	body = StaticBody2D.new()
+	body.collision_layer = SwordSquire.LAYER.TERRAIN
+	body.collision_mask = SwordSquire.LAYER.GUY
 	add_child(body)
 	for poly in polys:
 		var collision_polygon = CollisionPolygon2D.new()
+		collision_polygon.build_mode = CollisionPolygon2D.BUILD_SEGMENTS 
 		collision_polygon.polygon = poly
 		body.add_child(collision_polygon)
 		collision_polygon.set_owner(self)
 		collision_polygon.position -= Vector2(foreground.texture.get_image().get_size() / 2)
-		body.collision_layer = SwordSquire.LAYER.TERRAIN
-		body.collision_mask = SwordSquire.LAYER.GUY
+
 
 
 func build_polys_from_sprite(sprite : Sprite2D):

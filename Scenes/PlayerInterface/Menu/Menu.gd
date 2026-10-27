@@ -20,4 +20,4 @@ func _on_quit_pressed() -> void:
 
 
 func _on_duel_pressed() -> void:
-	SwordSquire.load_scene("res://Duel.tscn")
+	SwordSquire.load_scene("res://Scenes/Duel.tscn")

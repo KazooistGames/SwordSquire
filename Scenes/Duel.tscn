@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://curvwwty1rug6"]
 
-[ext_resource type="Script" uid="uid://ikss1soyyns8" path="res://Duel.gd" id="1_umi7p"]
+[ext_resource type="Script" uid="uid://ikss1soyyns8" path="res://Scenes/Duel.gd" id="1_umi7p"]
 [ext_resource type="PackedScene" uid="uid://cmigagy8anvbt" path="res://Scenes/Map/map.tscn" id="2_f81fm"]
 
 [node name="Duel" type="Node" unique_id=1600073162]

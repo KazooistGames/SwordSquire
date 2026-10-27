@@ -1,6 +1,6 @@
 extends Node
 
-const TITLE = "res://Title.tscn"
+const TITLE = "res://Scenes/TitleScreen.tscn"
 
 # collision layers:
 enum LAYER{
@@ -32,6 +32,7 @@ func load_scene(scene_path : String) -> void:
 	
 	PlayerInterface.fade_out()
 	game_state = GameState.loading
+	Lobby.despawn_players()
 	await PlayerInterface.faded_out	
 	
 	#should we free the old scene first instead of spawning new scene first?
@@ -59,6 +60,8 @@ func quit() -> void:
 		get_tree().quit()
 	else:
 		load_scene(TITLE)
+		
+		
 
 
 static func unit_parabola(x:float, period:float):

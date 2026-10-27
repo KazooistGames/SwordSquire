@@ -9,6 +9,7 @@ var root_chunk : Chunk
 @onready var chunk_box = $SubViewportContainer/SubViewport/Chunks
 
 signal built
+signal reset
 	
 #TODO: rebuild this into some sort of testing harness outside the core code
 func _unhandled_input(event: InputEvent) -> void:
@@ -19,6 +20,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			root_chunk.toggle_tiles()
 
 func build():
+	reset.emit()
 	for chunk : Chunk in all_chunks.values():
 			chunk.queue_free()
 			all_chunks.erase(all_chunks.find_key(chunk))
@@ -124,10 +126,10 @@ func absorb_chunk(target : Chunk, victim : Chunk):
 	
 func update_viewport_container_bounds() -> void:
 
-	subviewport_container.size = root_chunk.actual_size * Cell.SIZE * 2 #remove the 2 later, just for testing
+	subviewport_container.size = root_chunk.actual_size * Cell.SIZE
 	chunk_box.position = -root_chunk.corner_min * Cell.SIZE
 	
-	'''THIS NEEDS DELETED BEFORE MAKING REAL GAMEPLAY'''
-	get_window().content_scale_size = subviewport_container.size
+	#'''THIS NEEDS DELETED BEFORE MAKING REAL GAMEPLAY'''
+	#get_window().content_scale_size = subviewport_container.size
 	
 	

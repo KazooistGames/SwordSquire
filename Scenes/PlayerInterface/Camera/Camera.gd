@@ -1,12 +1,13 @@
-class_name GameplayHarness extends Camera2D
+extends Camera2D
 
 const base_x_speed := 0.25
 const base_y_speed := 0.25
 const y_range := 50
 
-@export var guy : Guy = null
+
 @export var target_position := Vector2(0, 0)
 
+@onready var hud = $HUD
 @onready var hp_bar : ColorRect = $HUD/hp_bar
 @onready var strength_bar : ColorRect = $HUD/strength_bar
 @onready var fov_light : PointLight2D = $PointLight2D
@@ -17,50 +18,28 @@ var y_offset := -6.0
 var y_deadbanded := false
 var y_deadband_timer := 0.0
 
+var guy : Guy = null 
+
 
 func _process(delta : float) -> void:
-	assert(guy != null)
-	target_position = guy.global_position
-	fov_light.global_position = guy.global_position
-	_movement_inputs(delta)
-	_combat_inputs(delta)
-	_update_hud(delta)
-	_update_bush_transparency()
-	_update_guy_hidden()	
-	if Input.is_action_just_pressed("Interact"):
-		guy.interact()
-			
-
-func _movement_inputs(_delta : float) -> void:
-	assert(guy != null)
-	if Input.is_action_pressed("moveLeft") and Input.is_action_pressed("moveRight"):
-		guy.left_right = 0
-	elif Input.is_action_pressed("moveRight"):
-		guy.left_right = 1
-	elif Input.is_action_pressed("moveLeft"):
-		guy.left_right = -1
-	else:
-		guy.left_right = 0
-	if Input.is_action_just_pressed("moveUp"):
-		guy.jump()
-	elif Input.is_action_just_pressed("moveDown"):
-		guy.duck()
+	hud.visible = guy != null
+	if guy != null:
+		target_position = guy.global_position
+		track_guy_horizontally(delta)
+		track_guy_vertically(delta)
+		fov_light.global_position = guy.global_position
+		_update_bush_transparency()
+		_update_guy_hidden()	
+		_update_hud(delta)
 		
-
-func _combat_inputs(_delta : float) -> void:
-	if Input.is_action_just_pressed("smash"):
-		guy.charge()
-	elif Input.is_action_just_released("smash"):
-		guy.release()
-
 		
 func _physics_process(delta):
-	assert(guy != null)
-	_process_x(delta)
-	_process_y(delta)
+	if guy != null:
+		track_guy_horizontally(delta)
+		track_guy_vertically(delta)
 	
 
-func _process_x(delta):
+func track_guy_horizontally(delta):
 	assert(guy != null)
 	x_target = guy.global_position.x
 	var offset_from_target : float = abs(x_target - global_position.x)
@@ -68,7 +47,7 @@ func _process_x(delta):
 	global_position.x = move_toward(global_position.x, target_position.x, speed)
 
 
-func _process_y(delta):
+func track_guy_vertically(delta):
 	assert(guy != null)
 	var offset_from_target : float = abs(y_target - global_position.y)
 	if y_deadband_timer >= 3.0:

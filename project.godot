@@ -23,6 +23,7 @@ config/icon="res://_archive/icon.svg"
 
 SwordSquire="*uid://b143xsdphes5r"
 PlayerInterface="*uid://b45v2xnp3sfqs"
+Lobby="*uid://c7t7aj2thcvje"
 
 [display]
 

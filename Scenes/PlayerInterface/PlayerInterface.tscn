@@ -2,14 +2,14 @@
 
 [ext_resource type="Script" uid="uid://b6kkmlebgw6dh" path="res://Scenes/PlayerInterface/PlayerInterface.gd" id="1_0vyax"]
 [ext_resource type="PackedScene" uid="uid://q1gkvwik1xei" path="res://Scenes/PlayerInterface/Menu/Menu.tscn" id="2_5fb22"]
-[ext_resource type="PackedScene" uid="uid://cvoldq46v0xyn" path="res://Scenes/PlayerInterface/GameplayHarness/GameplayHarness.tscn" id="3_aslgv"]
+[ext_resource type="PackedScene" uid="uid://cvoldq46v0xyn" path="res://Scenes/PlayerInterface/Camera/Camera.tscn" id="3_0vyax"]
 
 [node name="Interface" type="CanvasLayer" unique_id=1200656882]
 script = ExtResource("1_0vyax")
 
 [node name="Menu" parent="." unique_id=350530485 instance=ExtResource("2_5fb22")]
 
-[node name="Harness" parent="." unique_id=1242196130 instance=ExtResource("3_aslgv")]
+[node name="Camera" parent="." unique_id=1242196130 instance=ExtResource("3_0vyax")]
 
 [node name="Curtains" type="ColorRect" parent="." unique_id=1753381355]
 anchors_preset = 15
