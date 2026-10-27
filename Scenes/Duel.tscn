@@ -3,7 +3,17 @@
 [ext_resource type="Script" uid="uid://ikss1soyyns8" path="res://Scenes/Duel.gd" id="1_umi7p"]
 [ext_resource type="PackedScene" uid="uid://cmigagy8anvbt" path="res://Scenes/Map/map.tscn" id="2_f81fm"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8u6c3"]
+size = Vector2(2000, 20)
+
 [node name="Duel" type="Node" unique_id=1600073162]
 script = ExtResource("1_umi7p")
 
 [node name="Map" parent="." unique_id=105866871 instance=ExtResource("2_f81fm")]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=690612111]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=977830232]
+position = Vector2(0, 300)
+shape = SubResource("RectangleShape2D_8u6c3")

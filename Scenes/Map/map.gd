@@ -4,9 +4,9 @@ var all_chunks : Dictionary[Vector2i, Chunk] = {}
 var root_chunk : Chunk
 
 @onready var chunk_prefab = preload("res://Scenes/Map/Chunk/chunk.tscn")
-@onready var subviewport_container = $SubViewportContainer
-@onready var subviewport = $SubViewportContainer/SubViewport
-@onready var chunk_box = $SubViewportContainer/SubViewport/Chunks
+#@onready var subviewport_container = $SubViewportContainer
+#@onready var subviewport = $SubViewportContainer/SubViewport
+@onready var chunk_box = $Chunks
 
 signal built
 signal reset
@@ -28,7 +28,7 @@ func build():
 			
 	root_chunk = spawn_chunk(Vector2i.ZERO, Chunk.DEFAULT_SIZE )	
 	root_chunk.generate()
-	update_viewport_container_bounds()
+	#update_viewport_container_bounds()
 	
 	await root_chunk.generated
 	var left = extrude_chunk(Vector2i.ZERO, Vector2i.LEFT)
@@ -46,7 +46,7 @@ func build():
 		#new_chunk.generate()
 		#await new_chunk.generated
 		
-	update_viewport_container_bounds()	
+	#update_viewport_container_bounds()	
 	
 	# FINAL COLLAPSE INTO ONE GRID/CHUNK
 	var temp_chunk_iterator : Array[Chunk] = all_chunks.values().duplicate()
@@ -62,7 +62,7 @@ func build():
 	root_chunk.extend(Vector2i.LEFT, 2, Cell.Sky_Templates.pick_random())
 	root_chunk.extend(Vector2i.RIGHT, 2, Cell.Sky_Templates.pick_random())
 	root_chunk.extend(Vector2i.DOWN, 5, Cell.Sky_Templates.pick_random())
-	update_viewport_container_bounds()
+	#update_viewport_container_bounds()
 	root_chunk.tile_over()
 	await root_chunk.tiled
 	built.emit()
@@ -124,10 +124,10 @@ func absorb_chunk(target : Chunk, victim : Chunk):
 		
 
 	
-func update_viewport_container_bounds() -> void:
-
-	subviewport_container.size = root_chunk.actual_size * Cell.SIZE
-	chunk_box.position = -root_chunk.corner_min * Cell.SIZE
+#func update_viewport_container_bounds() -> void:
+#
+	#subviewport_container.size = root_chunk.actual_size * Cell.SIZE
+	#chunk_box.position = -root_chunk.corner_min * Cell.SIZE
 	
 	#'''THIS NEEDS DELETED BEFORE MAKING REAL GAMEPLAY'''
 	#get_window().content_scale_size = subviewport_container.size

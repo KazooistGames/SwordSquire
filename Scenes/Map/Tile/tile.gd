@@ -40,6 +40,7 @@ var body : StaticBody2D
 var foreground : Sprite2D
 var background : Sprite2D
 
+
 func apply(chunk : Chunk, top_left_coord : Vector2i):
 	
 	calculate_signature(chunk, top_left_coord)
@@ -89,9 +90,10 @@ func build_foreground(signature : String):
 	body.collision_layer = SwordSquire.LAYER.TERRAIN
 	body.collision_mask = SwordSquire.LAYER.GUY
 	add_child(body)
+	var half := Vector2(foreground.texture.get_size()) / 2.0
 	for poly in polys:
 		var collision_polygon = CollisionPolygon2D.new()
-		collision_polygon.build_mode = CollisionPolygon2D.BUILD_SEGMENTS 
+		collision_polygon.build_mode = CollisionPolygon2D.BUILD_SOLIDS 
 		collision_polygon.polygon = poly
 		body.add_child(collision_polygon)
 		collision_polygon.set_owner(self)
@@ -106,7 +108,7 @@ func build_polys_from_sprite(sprite : Sprite2D):
 	bitmap.create_from_image_alpha(image)
 
 	# Convert the bitmap into an array of polygons
-	return bitmap.opaque_to_polygons(Rect2(Vector2.ZERO, image.get_size()), 0.0)
+	return bitmap.opaque_to_polygons(Rect2(Vector2.ZERO, image.get_size()), 2.0)
 
 
 func toggle_visibility():
