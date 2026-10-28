@@ -31,11 +31,11 @@ func load_scene(scene_path : String) -> void:
 	assert(scene_prefab != null)
 	
 	PlayerInterface.fade_out()
-	game_state = GameState.loading
-	Lobby.despawn_players()
 	await PlayerInterface.faded_out	
 	
-	#should we free the old scene first instead of spawning new scene first?
+	game_state = GameState.loading
+	Lobby.despawn_players()
+
 	var new_map = scene_prefab.instantiate()
 	if active_scene != null:
 		active_scene.queue_free()

@@ -3,3 +3,7 @@ res://Scenes/Map/Tile/tile.tscn
 res://Scenes/Map/Tile/tile.gd
 res://Scenes/Map/map.tscn
 res://Scenes/Map/map.gd
+res://SwordSquire.gd
+res://Scenes/PlayerInterface/Camera/Camera.tscn
+res://Scenes/PlayerInterface/Camera/Camera.gd
+res://Scenes/PlayerInterface/Menu/Menu.tscn

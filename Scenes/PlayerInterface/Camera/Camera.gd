@@ -21,8 +21,12 @@ var y_deadband_timer := 0.0
 var guy : Guy = null 
 
 
+func _ready() -> void:
+	assert_gameplay_camera_settings()
+
 func _process(delta : float) -> void:
 	hud.visible = guy != null
+
 	if guy != null:
 		target_position = guy.global_position
 		track_guy_horizontally(delta)
@@ -32,11 +36,6 @@ func _process(delta : float) -> void:
 		_update_guy_hidden()	
 		_update_hud(delta)
 		
-		
-func _physics_process(delta):
-	if guy != null:
-		track_guy_horizontally(delta)
-		track_guy_vertically(delta)
 	
 
 func track_guy_horizontally(delta):
@@ -101,3 +100,17 @@ func can_see_through_all_concealments(other_guy : CharacterBody2D) -> bool:
 			return false
 	return true
 		
+		
+func assert_gameplay_camera_settings():
+	var window := get_window()
+	
+	# Internal resolution the game renders at
+	window.content_scale_size = Vector2i(480, 270)
+	
+	# Scale the whole viewport up (pixel-perfect)
+	window.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
+	window.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
+	window.content_scale_stretch = Window.CONTENT_SCALE_STRETCH_INTEGER
+	
+	# Actual window size on screen
+	window.size = Vector2i(1920, 1080)
