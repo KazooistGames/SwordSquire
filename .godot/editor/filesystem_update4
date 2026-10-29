@@ -7,3 +7,4 @@ res://SwordSquire.gd
 res://Scenes/PlayerInterface/Camera/Camera.tscn
 res://Scenes/PlayerInterface/Camera/Camera.gd
 res://Scenes/PlayerInterface/Menu/Menu.tscn
+res://Scenes/Map/Chunk/chunk.gd

@@ -39,14 +39,6 @@ func build():
 
 	right.generate()
 	await right.generated  
-
-	#for chunk : Chunk in all_chunks.values():
-		#var chunk_coords = all_chunks.find_key(chunk)
-		#var new_chunk := extrude_chunk(chunk_coords, Vector2i.DOWN, Cell.Underground_Template_Set)
-		#new_chunk.generate()
-		#await new_chunk.generated
-		
-	#update_viewport_container_bounds()	
 	
 	# FINAL COLLAPSE INTO ONE GRID/CHUNK
 	var temp_chunk_iterator : Array[Chunk] = all_chunks.values().duplicate()
@@ -62,7 +54,7 @@ func build():
 	root_chunk.extend(Vector2i.LEFT, 2, Cell.Sky_Templates.pick_random())
 	root_chunk.extend(Vector2i.RIGHT, 2, Cell.Sky_Templates.pick_random())
 	root_chunk.extend(Vector2i.DOWN, 5, Cell.Sky_Templates.pick_random())
-	#update_viewport_container_bounds()
+
 	root_chunk.tile_over()
 	await root_chunk.tiled
 	built.emit()

@@ -42,12 +42,12 @@ var background : Sprite2D
 
 
 func apply(chunk : Chunk, top_left_coord : Vector2i):
-	
 	calculate_signature(chunk, top_left_coord)
 	build_background(signature)
 	build_foreground(signature)
 	chunk.add_child(self)
 	position = (top_left_coord * Cell.SIZE) + Cell.SIZE
+	
 	
 func calculate_signature(chunk : Chunk, top_left_coord : Vector2i):
 	signature = ''
@@ -56,7 +56,12 @@ func calculate_signature(chunk : Chunk, top_left_coord : Vector2i):
 	signature += correlate_cell_code(chunk, top_left_coord + Vector2i.DOWN)
 	signature += correlate_cell_code(chunk, top_left_coord + Vector2i.RIGHT + Vector2i.DOWN)
 	
+	
 func correlate_cell_code(chunk : Chunk, coord : Vector2i) -> String: 
+
+	if not chunk.grid_cells.has(coord):
+		return '_'	# edge of map / empty cell correlates to no biome type
+		
 	var tag : Cell.Biomes = chunk.grid_cells[coord].Tag
 	match tag:
 		Cell.Biomes.sky:
@@ -69,12 +74,18 @@ func correlate_cell_code(chunk : Chunk, coord : Vector2i) -> String:
 
 
 func build_background(signature : String):
+	if not PrefabBackgrounds.has(signature):
+		push_error("missing signature for background: " + signature)
+		return
 	background = Sprite2D.new()
 	add_child(background)
 	background.texture = PrefabBackgrounds[signature]
 
 
 func build_foreground(signature : String):
+	if not PrefabForegrounds.has(signature):
+		push_error("missing signature for foreground: " + signature)
+		return
 	foreground = Sprite2D.new()
 	add_child(foreground)
 	foreground.texture = PrefabForegrounds[signature]
