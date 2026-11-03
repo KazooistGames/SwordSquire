@@ -2,7 +2,8 @@ extends Camera2D
 
 const base_x_speed := 0.25
 const base_y_speed := 0.25
-const y_range := 50
+const y_range := (Guy.JUMP_BASE_HEIGHT * 3) + 1
+const deadband_period := 3
 
 
 @export var target_position := Vector2(0, 0)
@@ -67,12 +68,11 @@ func track_guy_horizontally(delta):
 func track_guy_vertically(delta):
 	assert(guy != null)
 	var offset_from_target : float = abs(y_target - global_position.y)
-	if y_deadband_timer >= 3.0:
+	if y_deadband_timer >= deadband_period:
 		y_deadbanded = false
 		y_deadband_timer = 0.0
 	elif y_deadbanded:
 		y_target = guy.global_position.y + y_offset
-		y_deadband_timer += delta
 	else:
 		var speed = base_y_speed + offset_from_target/25.0
 		global_position.y = move_toward(global_position.y, y_target, speed)
@@ -81,10 +81,11 @@ func track_guy_vertically(delta):
 			
 	if offset_from_target >= y_range:
 		y_deadbanded = false
-		y_target = guy.global_position.y
 	elif offset_from_target <= 0.01:
 		y_deadband_timer = 0.0
 		y_deadbanded = true
+	else:
+		y_deadband_timer += delta
 
 
 func _update_hud(_delta):

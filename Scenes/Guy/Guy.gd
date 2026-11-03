@@ -1,18 +1,21 @@
 class_name Guy extends CharacterBody2D
 
-const MASK = SwordSquire.LAYER.TERRAIN + SwordSquire.LAYER.OBSTACLES
+const MASK = SwordSquire.LAYER.TERRAIN + SwordSquire.LAYER.OBSTACLES + SwordSquire.LAYER.GUY
 const DUCK_MASK = SwordSquire.LAYER.TERRAIN
 
 const duck_duration := 0.1
 const coyote_period := 0.10
 const base_accel := 400
 const base_speed := 75
+const RUN_CHARGE_BASE_PERIOD = 0.25
 const charge_timer_max := 0.75
 const charge_timer_min := 0.25
 const cooldown_period = 0.5
 const base_energy_rate := 0.15
-const base_jump_height = 24
-const base_run_charge_period = 0.25
+const JUMP_BASE_HEIGHT = 24
+const JUMP_BASE_PERIOD = 0.75
+const JUMP_MAX_CHARGE = 1.0
+
 
 enum Stance{
 	ready,
@@ -44,7 +47,7 @@ var charge_timer := 0.0
 var charge_marked_for_release := false #used when guy attempts to swing before min charge is met
 var cooldown_timer := 0.0
 var coyote_timer := 0.0
-var jump_timer := 0.0
+var jump_charge_timer := 0.0
 var duck_debounce := 0.0
 var double_jump_charges : int = 1
 var run_charge_timer := 0.0
@@ -85,7 +88,7 @@ func _process_movement(delta : float) -> void:
 		run_accel = base_accel / 2
 	elif left_right == 0 or sign(left_right) != sign(velocity.x):	
 		run_accel = base_accel / 2
-	elif run_charge_timer >= base_run_charge_period:		
+	elif run_charge_timer >= RUN_CHARGE_BASE_PERIOD:		
 		var speed_ratio = clampf(abs(velocity.x)/base_speed, 0.0, 1.0)
 		run_accel = lerpf(base_accel, 0, pow(speed_ratio, 2))	
 	else:
@@ -128,7 +131,7 @@ func _animate_state():
 				sprite.set_state('stance')
 			elif left_right == 0 or sign(left_right) != sign(velocity.x):
 				sprite.set_state('slide')
-			elif run_charge_timer < base_run_charge_period:
+			elif run_charge_timer < RUN_CHARGE_BASE_PERIOD:
 				sprite.set_state('slide')
 			else:
 				sprite.set_state('run')
@@ -182,7 +185,7 @@ func _process_state(delta : float) -> void:
 			if cooldown_timer <= 0:
 				ready()		
 		Stance.jumping:
-			jump_timer += delta
+			jump_charge_timer += delta
 
 
 func _process_energy(delta) -> void:
@@ -197,25 +200,27 @@ func _process_energy(delta) -> void:
 func charge_jump() -> bool:
 	if stance != Stance.ready:
 		return false
-	else:
+	elif coyote_timer < coyote_period:
 		sprite.playback_speed = 1.0
 		stance = Stance.jumping
 		return true
-	
+	else:
+		return false
 
 func release_jump() -> bool:
 	if stance != Stance.jumping:
 		return false
 	elif coyote_timer < coyote_period:
 		coyote_timer = coyote_period
-		run_charge_timer = base_run_charge_period #allows for acceleration out of jump
-		velocity.y = -sqrt(base_jump_height * 1960) * jump_timer * 2
+		run_charge_timer = RUN_CHARGE_BASE_PERIOD # allows for acceleration out of jump
+		var jump_charge = 1 + clampf(jump_charge_timer, 0, JUMP_MAX_CHARGE)
+		velocity.y = -sqrt(JUMP_BASE_HEIGHT * 1960) * jump_charge
 		stance = Stance.ready
-		jump_timer = 0.0
+		jump_charge_timer = 0.0
 		jumped.emit()
 		return true
 	#elif double_jump_charges > 0:
-		#velocity.y = -sqrt(base_jump_height * 1960)
+		#velocity.y = -sqrt(JUMP_BASE_HEIGHT * 1960)
 		#double_jump_charges -= 1
 		#sap(.15)
 		#jumped.emit()
