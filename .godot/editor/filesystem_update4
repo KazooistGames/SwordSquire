@@ -8,3 +8,4 @@ res://Scenes/PlayerInterface/Camera/Camera.tscn
 res://Scenes/PlayerInterface/Camera/Camera.gd
 res://Scenes/PlayerInterface/Menu/Menu.tscn
 res://Scenes/Map/Chunk/chunk.gd
+res://Scenes/Guy/Archetypes/Swordsman/Swordsman.tscn

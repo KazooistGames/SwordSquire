@@ -62,11 +62,12 @@ die.tscn::PackedScene::7769631471050440809::1761510249::0::1::::<><><>0<>0<><>::
 recover.tscn::PackedScene::8620594894333091952::1761510249::0::1::::<><><>0<>0<><>::uid://cy0ubyryvq10d::::res://Scenes/Guy/Animation/custom_animation.gd<>uid://0tokl0nyx5r7::::res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_swing-Sheet.png
 run.tscn::PackedScene::8147552814560349082::1761510249::0::1::::<><><>0<>0<><>::uid://cy0ubyryvq10d::::res://Scenes/Guy/Animation/custom_animation.gd<>uid://cxobu116skjus::::res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_run-Sheet.png
 stance.tscn::PackedScene::3763974574583010135::1761510249::0::1::::<><><>0<>0<><>::uid://cy0ubyryvq10d::::res://Scenes/Guy/Animation/custom_animation.gd<>uid://cjabutfsxarfr::::res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_idle-Sheet.png
-::res://Scenes/Guy/Archetypes/Swordsman/::1774735839
+::res://Scenes/Guy/Archetypes/Swordsman/::1793669011
 Swordsman.tscn::PackedScene::7291695052768747878::1774735839::0::1::::<><><>0<>0<><>::uid://b8xpmmlbv64kh::::res://Scenes/Guy/Guy.tscn<>uid://jk86te33ybkf::::res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_slide-Sheet.png<>uid://cxobu116skjus::::res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_run-Sheet.png<>uid://0tokl0nyx5r7::::res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_swing-Sheet.png<>uid://bfjx4ur3gsug8::::res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_die-Sheet.png<>uid://cjmb2t8shvcb0::::res://Scenes/Guy/FightingFrames/frame_params.gd<>uid://tmo3ijcibewl::::res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_stab-Sheet.png<>uid://cjabutfsxarfr::::res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_idle-Sheet.png
-::res://Scenes/Guy/Archetypes/Swordsman/Sheets/::1774735839
+::res://Scenes/Guy/Archetypes/Swordsman/Sheets/::1793668990
 swordsman_die-Sheet.png::CompressedTexture2D/CompressedTexture2D::2757393658536290285::1751829651::1751829656::1::::<><><>0<>0<>51540a4b653bfbdc0940d4813987d3ad<>res://.godot/imported/swordsman_die-Sheet.png-90ac72695d90c538103a3f0b749da8fb.ctex::
 swordsman_idle-Sheet.png::CompressedTexture2D/CompressedTexture2D::5404638399515625967::1751760520::1751760520::1::::<><><>0<>0<>c562853adfa4e8c5958e98e2d141d130<>res://.godot/imported/swordsman_idle-Sheet.png-dc7b1e0d0d361086358be2dd325f9509.ctex::
+swordsman_jump-Sheet.png::CompressedTexture2D::7465375492273594152::1793668990::1793669018::1::::<><><>0<>0<>079383416021be7ee3dffd6e6f46c741<>res://.godot/imported/swordsman_jump-Sheet.png-7a630150957b802b298b8ce0de2d8ba8.ctex::
 swordsman_run-Sheet.png::CompressedTexture2D/CompressedTexture2D::6416183899693623086::1751760520::1751760520::1::::<><><>0<>0<>8f5015c2194ac10c05eb8150917f1532<>res://.godot/imported/swordsman_run-Sheet.png-a9a5ff18ff9874165f47e698ca2b10fe.ctex::
 swordsman_slide-Sheet.png::CompressedTexture2D/CompressedTexture2D::654403396088658781::1766341701::1766341641::1::::<><><>0<>0<>28e512d122d9638afd3e9637facc9a86<>res://.godot/imported/swordsman_slide-Sheet.png-381e9d505940c81cf8c5c9e1de163902.ctex::
 swordsman_stab-Sheet.png::CompressedTexture2D/CompressedTexture2D::1359261036491047311::1774735839::1766520485::1::::<><><>0<>0<>f2992dfd3367e08cabdeb24450084dda<>res://.godot/imported/swordsman_stab-Sheet.png-58a00e26c0c0682d2a7df61383fc25ed.ctex::
@@ -120,7 +121,7 @@ chunk.tscn::PackedScene::5606746356552463556::1793065302::0::1::::<><><>0<>0<><>
 ::res://Scenes/Map/Tile/::1793236991
 tile.gd::GDScript::6991246086965827661::1793236991::0::1::::Tile<>Node2D<><>0<>0<><>::
 tile.tscn::PackedScene::2359735068340850669::1793066490::0::1::::<><><>0<>0<><>::uid://c6uu2iw2wajdd::::res://Scenes/Map/Tile/tile.gd
-::res://Scenes/Map/Tile/background/::1793667376
+::res://Scenes/Map/Tile/background/::1793667490
 __ss.png::CompressedTexture2D::3843771248298601989::1793236927::1793236965::1::::<><><>0<>0<>7eaecd6c731bc0e10dc8403e1b7e4253<>res://.godot/imported/__ss.png-5efa8b475971e212e30b135090f0c494.ctex::
 _s_s.png::CompressedTexture2D::7624109928964038575::1793667376::1793667490::1::::<><><>0<>0<>68096b53cfbfe9cb7672c11729360e79<>res://.godot/imported/_s_s.png-b804d4483de0ddd3b7fb4336f0a9999b.ctex::
 cccc.png::CompressedTexture2D::4314977813062253358::1793065298::1793065298::1::::<><><>0<>0<>083a9b79757264a3c4a754ae0382d488<>res://.godot/imported/cccc.png-8f96ef28a652bff559d04830cfd304c1.ctex::
@@ -195,7 +196,7 @@ sssd.png::CompressedTexture2D::7909562592452712660::1793065298::1793065298::1:::
 ssss.png::CompressedTexture2D::1350557665676603554::1793065298::1793065298::1::::<><><>0<>0<>b5fcdf03b1fe96290340f34ac673755f<>res://.godot/imported/ssss.png-10ce5c6604326a1dc1bf611c2d54d1d3.ctex::
 ss__.png::CompressedTexture2D::5970907507728877088::1793235882::1793235956::1::::<><><>0<>0<>4b7fa8dc9747d4ff1c1a809d7170ceb3<>res://.godot/imported/ss__.png-509ef03781816379b58ec8a3011aecd2.ctex::
 s_s_.png::CompressedTexture2D::3409855107808362172::1793667368::1793667490::1::::<><><>0<>0<>10053e83218ee79283017bf47c24c31a<>res://.godot/imported/s_s_.png-5d2863b0a4f0030ffbc2e25badebd33f.ctex::
-::res://Scenes/Map/Tile/foreground/::1793667471
+::res://Scenes/Map/Tile/foreground/::1793667490
 __ss.png::CompressedTexture2D::4596859810875391159::1793667460::1793667490::1::::<><><>0<>0<>1ed609ad53a564996ff27c652cd75345<>res://.godot/imported/__ss.png-f71093e4c7a1c040a759fe9370dc33c9.ctex::
 _s_s.png::CompressedTexture2D::5204731499273987449::1793667472::1793667490::1::::<><><>0<>0<>75c3b5df9e7f6838c3403876f229ed86<>res://.godot/imported/_s_s.png-26bd0bc5aa08bc2184319a517857a63a.ctex::
 cccc.png::CompressedTexture2D::390483465881872720::1793065298::1793065298::1::::<><><>0<>0<>f9bdf0526eea80207c624e65fffb157b<>res://.godot/imported/cccc.png-90f5f10bd793db783282b070df133dee.ctex::
