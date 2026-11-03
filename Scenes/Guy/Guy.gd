@@ -14,16 +14,17 @@ const base_energy_rate := 0.15
 const base_jump_height = 24
 const base_run_charge_period = 0.25
 
-enum State{
+enum Stance{
 	ready,
 	charging,
 	attacking,
 	recovering,
+	jumping,
 	dead
 }
 
 @export var Team := 0
-@export var state : State = State.ready
+@export var stance : Stance = Stance.ready
 @export var HP := 100
 @export var Energy := 1.0
 @export var left_right := 0
@@ -43,6 +44,7 @@ var charge_timer := 0.0
 var charge_marked_for_release := false #used when guy attempts to swing before min charge is met
 var cooldown_timer := 0.0
 var coyote_timer := 0.0
+var jump_timer := 0.0
 var duck_debounce := 0.0
 var double_jump_charges : int = 1
 var run_charge_timer := 0.0
@@ -58,7 +60,7 @@ func _ready() -> void:
 	sprite.finished.connect(_handle_animation_finished)
 	sprite.play()
 	sprite.set_state('stance')
-	state = State.ready
+	stance = Stance.ready
 	
 func _physics_process(delta : float) -> void:	
 	if duck_debounce < duck_duration:
@@ -71,14 +73,14 @@ func _physics_process(delta : float) -> void:
 	_process_movement(delta)		
 	_animate_state()
 	_process_state(delta)
-	facing_locked = state != State.ready and state != State.charging
+	facing_locked = stance != Stance.ready and stance != Stance.charging
 	if left_right != 0 and not facing_locked:
 		facing_direction = left_right	
 
 
 func _process_movement(delta : float) -> void:
 	var target_real_speed = left_right * base_speed
-	if state != State.ready:
+	if stance != Stance.ready:
 		target_real_speed = 0
 		run_accel = base_accel / 2
 	elif left_right == 0 or sign(left_right) != sign(velocity.x):	
@@ -113,8 +115,8 @@ func _animate_state():
 	if HP <= 0:
 		sprite.set_state('die')
 		return	
-	match(state):
-		State.ready:
+	match(stance):
+		Stance.ready:
 			if facing_direction > 0:
 				sprite.flip_h
 			elif facing_direction < 0:
@@ -132,27 +134,29 @@ func _animate_state():
 				sprite.set_state('run')
 				var real_speed_ratio = abs(velocity.x) / base_speed
 				sprite.playback_speed = real_speed_ratio
-		State.charging:
+		Stance.charging:
 			sprite.flip_h = facing_direction > 0
 			if smash_attack:
 				sprite.set_state('slash_windup')
 			else:
 				sprite.set_state('stab_windup')
-		State.attacking:
+		Stance.attacking:
 			if smash_attack:
 				sprite.set_state('slash')
 			else:
 				sprite.set_state('stab')
-		State.recovering:
+		Stance.recovering:
 			if smash_attack:
 				sprite.set_state('slash_recover')
 			else:
 				sprite.set_state('stab_recover')
+		Stance.jumping:
+			sprite.set_state('jump_charge')
 	
 	
 func _process_state(delta : float) -> void:
-	match state:		
-		State.ready:
+	match stance:		
+		Stance.ready:
 			if left_right == 0 and velocity.x == 0:
 				run_charge_timer = 0.0
 			elif sign(left_right) != sign(velocity.x) and left_right != 0:
@@ -161,7 +165,7 @@ func _process_state(delta : float) -> void:
 				if run_charge_timer == 0:
 					shove(Vector2.RIGHT * sign(left_right) * base_speed / 10)
 				run_charge_timer += delta
-		State.charging:
+		Stance.charging:
 			charge_timer += delta	
 			if charge_timer >= charge_timer_max:
 				charge_timer = charge_timer_max 
@@ -171,41 +175,54 @@ func _process_state(delta : float) -> void:
 			elif charge_marked_for_release:
 				release()			
 			sprite.flip_h = facing_direction > 0	
-		State.attacking:
+		Stance.attacking:
 			pass	
-		State.recovering:
+		Stance.recovering:
 			cooldown_timer -= delta
 			if cooldown_timer <= 0:
 				ready()		
+		Stance.jumping:
+			jump_timer += delta
 
 
 func _process_energy(delta) -> void:
-	if state != State.ready:
+	if stance != Stance.ready:
 		pass
 	elif is_on_floor():
 		var stationary_buff = lerp(2, 1, abs(left_right))
-		var health_nerf = lerp(0.5, 1.0, HP / 100)
 		Energy += delta * base_energy_rate * stationary_buff		
 	Energy = clampf(Energy, 0.0, 1.0)
 	
+	
+func charge_jump() -> bool:
+	if stance != Stance.ready:
+		return false
+	else:
+		sprite.playback_speed = 1.0
+		stance = Stance.jumping
+		return true
+	
 
-func jump() -> bool:
-	if state == State.dead:
+func release_jump() -> bool:
+	if stance != Stance.jumping:
 		return false
 	elif coyote_timer < coyote_period:
 		coyote_timer = coyote_period
-		run_charge_timer = base_run_charge_period
-		velocity.y = -sqrt(base_jump_height * 1960)
+		run_charge_timer = base_run_charge_period #allows for acceleration out of jump
+		velocity.y = -sqrt(base_jump_height * 1960) * jump_timer * 2
+		stance = Stance.ready
+		jump_timer = 0.0
 		jumped.emit()
 		return true
-	elif double_jump_charges > 0:
-		velocity.y = -sqrt(base_jump_height * 1960)
-		double_jump_charges -= 1
-		sap(.15)
-		jumped.emit()
-		return true
+	#elif double_jump_charges > 0:
+		#velocity.y = -sqrt(base_jump_height * 1960)
+		#double_jump_charges -= 1
+		#sap(.15)
+		#jumped.emit()
+		#return true
 	else:
 		return false
+
 
 func land():
 	double_jump_charges = 1
@@ -217,9 +234,9 @@ func duck() -> bool:
 	
 	
 func charge() -> bool:
-	if state == State.ready:
+	if stance == Stance.ready:
 		sprite.playback_speed = 1.0
-		state = State.charging
+		stance = Stance.charging
 		cooldown_timer = 0.0
 		charge_timer = 0.0
 		smash_attack = left_right == 0
@@ -229,14 +246,14 @@ func charge() -> bool:
 	
 	
 func release() -> bool:
-	if not state == State.charging:
+	if not stance == Stance.charging:
 		return false
 	elif charge_timer < charge_timer_min:
 		charge_marked_for_release = true
 		return false	
 	else:
 		charge_marked_for_release = false
-		state = State.attacking
+		stance = Stance.attacking
 		cooldown_timer = cooldown_period
 		var charged_power = charge_timer / charge_timer_max	
 		sap(charged_power * 0.5)
@@ -251,18 +268,18 @@ func release() -> bool:
 
 
 func recover() -> bool:
-	if state == State.attacking:
+	if stance == Stance.attacking:
 		sprite.playback_speed = 1.0
-		state = State.recovering
+		stance = Stance.recovering
 		return true
 	else:
 		return false
 
 
 func ready() -> bool:
-	if state == State.recovering:
+	if stance == Stance.recovering:
 		sprite.playback_speed = 1.0
-		state = State.ready
+		stance = Stance.ready
 		charge_timer = 0.0
 		return true
 	else:
@@ -282,7 +299,7 @@ func _handle_parry(guy : CharacterBody2D):
 
 
 func _handle_animation_finished():
-	if state == State.attacking:
+	if stance == Stance.attacking:
 		recover()	
 	
 		
@@ -314,7 +331,7 @@ func damage(value : int) -> void:
 	HP -= value
 	if HP <= 0:
 		died.emit()
-		state = State.dead
+		stance = Stance.dead
 
 
 func is_facing(object : Node2D) -> bool:

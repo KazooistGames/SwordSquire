@@ -29,7 +29,9 @@ func _movement_inputs(_delta : float) -> void:
 	else:
 		guy.left_right = 0
 	if Input.is_action_just_pressed("moveUp"):
-		guy.jump()
+		guy.charge_jump()
+	elif Input.is_action_just_released("moveUp"):
+		guy.release_jump()	
 	elif Input.is_action_just_pressed("moveDown"):
 		guy.duck()
 		
