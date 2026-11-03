@@ -1,6 +1,6 @@
 class_name Chunk extends Node2D
 
-const DEFAULT_SIZE := Vector2i(8,8)
+const DEFAULT_SIZE := Vector2i(6,4)
 var random = RandomNumberGenerator.new()
 
 var entropy_propagation_queue : Array[Vector2i] = []
@@ -64,15 +64,9 @@ func generate():
 func tile_over():
 	var tile_prefab := load("res://Scenes/Map/Tile/tile.tscn")
 	for coord : Vector2i in grid_cells.keys():
-		# TODO: stop skipping the tiles on the edge 
-		#if coord.x == corner_min.x-1 or coord.y == corner_min.y-1:
-			#continue
-		#elif coord.x == corner_max.x or coord.y == corner_max.y:
-			#continue
 		var new_tile : Tile = tile_prefab.instantiate()
 		new_tile.apply(self, coord)
 		grid_tiles[coord] = new_tile
-		#grid_cells[coord].toggle_block(false)
 		await get_tree().process_frame
 	tiled.emit()
 

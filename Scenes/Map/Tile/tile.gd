@@ -111,9 +111,7 @@ func build_foreground(signature : String):
 		collision_polygon.position -= Vector2(foreground.texture.get_image().get_size() / 2)
 
 
-
 func build_polys_from_sprite(sprite : Sprite2D):
-
 	var image := sprite.texture.get_image()
 	var bitmap: BitMap = BitMap.new()
 	bitmap.create_from_image_alpha(image)
