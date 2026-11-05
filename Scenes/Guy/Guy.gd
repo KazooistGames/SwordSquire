@@ -11,11 +11,16 @@ const RUN_CHARGE_BASE_PERIOD = 0.25
 const charge_timer_max := 0.75
 const charge_timer_min := 0.25
 const cooldown_period = 0.5
-const base_energy_rate := 0.15
+const base_poise_rate := 0.15
 const JUMP_BASE_HEIGHT = 24
 const JUMP_BASE_PERIOD = 0.75
 const JUMP_MAX_CHARGE = 1.0
 
+enum Posture{
+	weak = -1,
+	normal = 0,
+	strong = 1
+}
 
 enum Stance{
 	ready,
@@ -29,7 +34,8 @@ enum Stance{
 @export var Team := 0
 @export var stance : Stance = Stance.ready
 @export var HP := 100
-@export var Energy := 1.0
+@export var Poise := 1.0
+@export var posture : Posture = Posture.strong
 @export var left_right := 0
 @export var Concealments : Array[Area2D] = []
 
@@ -40,7 +46,7 @@ enum Stance{
 #var aerial := false
 
 var real_speed := 60.0
-@export var run_accel := 0.0
+var run_accel := 0.0
 var facing_direction := 1
 var facing_locked := false
 var charge_timer := 0.0
@@ -51,19 +57,19 @@ var jump_charge_timer := 0.0
 var duck_debounce := 0.0
 var double_jump_charges : int = 1
 var run_charge_timer := 0.0
-
 var smash_attack := false
 
 signal died
 signal jumped
 signal fell
 
-func _ready() -> void:
 
+func _ready() -> void:
 	sprite.finished.connect(_handle_animation_finished)
 	sprite.play()
 	sprite.set_state('stance')
 	stance = Stance.ready
+	
 	
 func _physics_process(delta : float) -> void:	
 	if duck_debounce < duck_duration:
@@ -72,10 +78,10 @@ func _physics_process(delta : float) -> void:
 	else:
 		collision_mask = MASK
 		
-	_process_energy(delta)
+	_process_poise(delta)
 	_process_movement(delta)		
-	_animate_state()
-	_process_state(delta)
+	_animate_stance()
+	_process_stance(delta)
 	facing_locked = stance != Stance.ready and stance != Stance.charging
 	if left_right != 0 and not facing_locked:
 		facing_direction = left_right	
@@ -113,8 +119,7 @@ func _process_movement(delta : float) -> void:
 		coyote_timer += delta
 		
 
-	
-func _animate_state():
+func _animate_stance():
 	if HP <= 0:
 		sprite.set_state('die')
 		return	
@@ -157,7 +162,7 @@ func _animate_state():
 			sprite.set_state('jump_charge')
 	
 	
-func _process_state(delta : float) -> void:
+func _process_stance(delta : float) -> void:
 	match stance:		
 		Stance.ready:
 			if left_right == 0 and velocity.x == 0:
@@ -188,13 +193,20 @@ func _process_state(delta : float) -> void:
 			jump_charge_timer += delta
 
 
-func _process_energy(delta) -> void:
+func _process_poise(delta) -> void:
 	if stance != Stance.ready:
 		pass
 	elif is_on_floor():
 		var stationary_buff = lerp(2, 1, abs(left_right))
-		Energy += delta * base_energy_rate * stationary_buff		
-	Energy = clampf(Energy, 0.0, 1.0)
+		Poise += delta * base_poise_rate * stationary_buff		
+	Poise = clampf(Poise, 0.0, 1.0)
+	
+	if Poise == 1:
+		posture = Posture.strong
+	elif Poise == 0.0:
+		posture = Posture.weak
+	elif posture != Posture.weak:
+		posture = Posture.normal
 	
 	
 func charge_jump() -> bool:
@@ -352,10 +364,10 @@ func turn_toward(object : Node2D):
 	
 	
 func sap(value : float):	
-	if value > Energy:
-		Energy = 0.0
+	if value > Poise:
+		Poise = 0.0
 	else:
-		Energy -= value
+		Poise -= value
 
 
 func interact():

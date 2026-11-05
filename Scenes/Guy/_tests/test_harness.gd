@@ -9,6 +9,6 @@ extends Control
 
 
 func _physics_process(_delta: float) -> void:
-	state_label.text = str(guy.stance)
+	state_label.text = "stance: %s\nposture: %s" % [guy.stance, guy.posture]
 	xy_label.text = "%.0f" % guy.velocity.x
 	accel_label.text = "%.0f" % guy.run_accel

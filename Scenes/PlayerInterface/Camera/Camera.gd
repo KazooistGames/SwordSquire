@@ -9,8 +9,7 @@ const deadband_period := 3
 @export var target_position := Vector2(0, 0)
 
 @onready var hud = $HUD
-@onready var hp_bar : ColorRect = $HUD/hp_bar
-@onready var strength_bar : ColorRect = $HUD/strength_bar
+@onready var poise_meter : ColorRect = $HUD/poise_meter
 @onready var fov_light : PointLight2D = $PointLight2D
 
 var x_target := 0.0
@@ -90,8 +89,7 @@ func track_guy_vertically(delta):
 
 func _update_hud(_delta):
 	assert(guy != null)
-	hp_bar.size.x = guy.HP
-	strength_bar.size.x = guy.Energy * 100
+	poise_meter.size.x = guy.Poise * 100
 	
 	
 func _update_bush_transparency():

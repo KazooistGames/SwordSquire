@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://b2khc8c5roqwo"]
+
+[ext_resource type="Script" uid="uid://dpgp76gaq0d60" path="res://Scenes/Guy/_tests/test_harness.gd" id="1_lp4pl"]
+
+[node name="test_harness" type="Control" unique_id=53073980]
+custom_minimum_size = Vector2(75, 75)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lp4pl")
+
+[node name="state" type="Label" parent="." unique_id=1143888860]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/line_spacing = 1
+theme_override_font_sizes/font_size = 8
+text = "0"
+
+[node name="xy" type="Label" parent="." unique_id=757157330]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 12
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="accel" type="Label" parent="." unique_id=1177819865]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.66, 0, 0, 1)
+theme_override_font_sizes/font_size = 8
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 2

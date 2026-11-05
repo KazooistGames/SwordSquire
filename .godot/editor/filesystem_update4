@@ -12,3 +12,5 @@ res://Scenes/Guy/Archetypes/Swordsman/Swordsman.tscn
 res://Scenes/Guy/Guy.gd
 res://Scenes/Guy/GameplayHarness/GameplayHarness.gd
 res://Scenes/Guy/debug.gd
+res://Scenes/Guy/Guy.tscn
+res://Scenes/Guy/_tests/test_harness.tscn
