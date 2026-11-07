@@ -46,7 +46,7 @@ enum Stance{
 #var aerial := false
 
 var real_speed := 60.0
-var run_accel := 0.0
+@export var run_accel := 0.0
 var facing_direction := 1
 var facing_locked := false
 var charge_timer := 0.0
@@ -195,6 +195,8 @@ func _process_stance(delta : float) -> void:
 
 func _process_poise(delta) -> void:
 	if stance != Stance.ready:
+		pass
+	elif velocity.x != 0:
 		pass
 	elif is_on_floor():
 		var stationary_buff = lerp(2, 1, abs(left_right))

@@ -18,8 +18,6 @@ shape = SubResource("RectangleShape2D_rcyd8")
 debug_color = Color(0.307455, 0.627115, 0, 0.42)
 
 [node name="FightingFrames" parent="." unique_id=1050928777 instance=ExtResource("2_rd74a")]
-region_rect = Rect2(288, 0, 36, 24)
-frame_timer = 0.012500033333333337
-current_frame_index = 8
+frame_timer = 0.004166700000000006
 
 [node name="test_harness" parent="." unique_id=53073980 instance=ExtResource("3_ifsry")]
