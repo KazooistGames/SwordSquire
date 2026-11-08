@@ -23,12 +23,12 @@ enum Posture{
 }
 
 enum Stance{
-	ready,
-	charging,
-	attacking,
-	recovering,
-	jumping,
-	dead
+	ready = 0,
+	charging = 1,
+	attacking = 2,
+	recovering = 3,
+	jumping = 4,
+	dead = 5
 }
 
 @export var Team := 0
@@ -77,18 +77,15 @@ func _physics_process(delta : float) -> void:
 		collision_mask = DUCK_MASK
 	else:
 		collision_mask = MASK
-		
 	_process_poise(delta)
 	_process_movement(delta)		
 	_animate_stance()
 	_process_stance(delta)
-	facing_locked = stance != Stance.ready and stance != Stance.charging
-	if left_right != 0 and not facing_locked:
-		facing_direction = left_right	
 
 
+var target_real_speed := 0.0
 func _process_movement(delta : float) -> void:
-	var target_real_speed = left_right * base_speed
+	target_real_speed = left_right * base_speed
 	if stance != Stance.ready:
 		target_real_speed = 0
 		run_accel = base_accel / 2
@@ -109,27 +106,23 @@ func _process_movement(delta : float) -> void:
 	move_and_slide()	
 	
 	#Coyote timer
-	if is_on_floor():
-		if coyote_timer >= coyote_period:
-			land()		
-		coyote_timer = 0
-	else:
-		if coyote_timer == 0.0:
-			fell.emit()	
-		coyote_timer += delta
-		
+	_process_coyote_timer(delta)
 
+	
+
+		
+		
 func _animate_stance():
 	if HP <= 0:
 		sprite.set_state('die')
 		return	
+		
+	if facing_direction > 0:
+		sprite.flip_h = true
+	elif facing_direction < 0:
+		sprite.flip_h = false
 	match(stance):
 		Stance.ready:
-			if facing_direction > 0:
-				sprite.flip_h
-			elif facing_direction < 0:
-				sprite.flip_h = false
-			sprite.flip_h = facing_direction > 0
 			if not is_on_floor():
 				sprite.set_state('stance')
 			elif velocity.x == 0:
@@ -160,11 +153,13 @@ func _animate_stance():
 				sprite.set_state('stab_recover')
 		Stance.jumping:
 			sprite.set_state('jump_charge')
-	
-	
+
+
 func _process_stance(delta : float) -> void:
+	facing_locked = true
 	match stance:		
 		Stance.ready:
+			facing_locked = false
 			if left_right == 0 and velocity.x == 0:
 				run_charge_timer = 0.0
 			elif sign(left_right) != sign(velocity.x) and left_right != 0:
@@ -190,8 +185,11 @@ func _process_stance(delta : float) -> void:
 			if cooldown_timer <= 0:
 				ready()		
 		Stance.jumping:
+			facing_locked = false
 			jump_charge_timer += delta
-
+			
+	if left_right != 0 and not facing_locked:
+		facing_direction = left_right	
 
 func _process_poise(delta) -> void:
 	if stance != Stance.ready:
@@ -209,7 +207,18 @@ func _process_poise(delta) -> void:
 		posture = Posture.weak
 	elif posture != Posture.weak:
 		posture = Posture.normal
-	
+
+
+func _process_coyote_timer(delta):
+	if is_on_floor():
+		if coyote_timer >= coyote_period:
+			land()		
+		coyote_timer = 0
+	else:
+		if coyote_timer == 0.0:
+			fell.emit()	
+		coyote_timer += delta	
+		
 	
 func charge_jump() -> bool:
 	if stance != Stance.ready:
@@ -228,7 +237,9 @@ func release_jump() -> bool:
 		coyote_timer = coyote_period
 		run_charge_timer = RUN_CHARGE_BASE_PERIOD # allows for acceleration out of jump
 		var jump_charge = 1 + clampf(jump_charge_timer, 0, JUMP_MAX_CHARGE)
-		velocity.y = -sqrt(JUMP_BASE_HEIGHT * 1960) * jump_charge
+		var jump_impulse = -sqrt(JUMP_BASE_HEIGHT * 1960) * jump_charge
+		velocity.y = jump_impulse
+		velocity.x = left_right * base_speed
 		stance = Stance.ready
 		jump_charge_timer = 0.0
 		jumped.emit()
