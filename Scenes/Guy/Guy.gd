@@ -23,12 +23,13 @@ enum Posture{
 }
 
 enum Stance{
-	ready = 0,
-	charging = 1,
-	attacking = 2,
-	recovering = 3,
-	jumping = 4,
-	dead = 5
+	ready,
+	charging,
+	attacking,
+	recovering,
+	jumping,
+	ducking,
+	dead
 }
 
 @export var Team := 0
@@ -54,7 +55,6 @@ var charge_marked_for_release := false #used when guy attempts to swing before m
 var cooldown_timer := 0.0
 var coyote_timer := 0.0
 var jump_charge_timer := 0.0
-var duck_debounce := 0.0
 var double_jump_charges : int = 1
 var run_charge_timer := 0.0
 var smash_attack := false
@@ -72,11 +72,6 @@ func _ready() -> void:
 	
 	
 func _physics_process(delta : float) -> void:	
-	if duck_debounce < duck_duration:
-		duck_debounce += delta
-		collision_mask = DUCK_MASK
-	else:
-		collision_mask = MASK
 	_process_poise(delta)
 	_process_movement(delta)		
 	_animate_stance()
@@ -85,10 +80,15 @@ func _physics_process(delta : float) -> void:
 
 var target_real_speed := 0.0
 func _process_movement(delta : float) -> void:
+	
+	collision_mask = DUCK_MASK if stance == Stance.ducking else MASK
 	target_real_speed = left_right * base_speed
 	if stance != Stance.ready:
 		target_real_speed = 0
-		run_accel = base_accel / 2
+		if stance == Stance.ducking:
+			run_accel = base_accel / 4
+		else:
+			run_accel = base_accel / 2
 	elif left_right == 0 or sign(left_right) != sign(velocity.x):	
 		run_accel = base_accel / 2
 	elif run_charge_timer >= RUN_CHARGE_BASE_PERIOD:		
@@ -107,10 +107,7 @@ func _process_movement(delta : float) -> void:
 	
 	#Coyote timer
 	_process_coyote_timer(delta)
-
 	
-
-		
 		
 func _animate_stance():
 	if HP <= 0:
@@ -153,6 +150,8 @@ func _animate_stance():
 				sprite.set_state('stab_recover')
 		Stance.jumping:
 			sprite.set_state('jump_charge')
+		Stance.ducking:
+			sprite.set_state('duck')
 
 
 func _process_stance(delta : float) -> void:
@@ -257,10 +256,19 @@ func release_jump() -> bool:
 func land():
 	double_jump_charges = 1
 
-	
+
 func duck() -> bool:
-	duck_debounce = 0.0
-	return false
+	if stance == Stance.recovering or stance == Stance.attacking:
+		return false
+	stance = Stance.ducking
+	return true
+	
+	
+func release_duck() -> bool:
+	if stance != Stance.ducking:
+		return false
+	stance = Stance.ready
+	return true
 	
 	
 func charge() -> bool:

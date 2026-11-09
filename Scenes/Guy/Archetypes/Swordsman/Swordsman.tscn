@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://db5fff6v2i5p7"]
 
 [ext_resource type="PackedScene" uid="uid://b8xpmmlbv64kh" path="res://Scenes/Guy/Guy.tscn" id="1_8rpvy"]
+[ext_resource type="Texture2D" uid="uid://dhgct8k8fdape" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_duck-Sheet.png" id="2_0x861"]
 [ext_resource type="Texture2D" uid="uid://jk86te33ybkf" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_slide-Sheet.png" id="2_2jugv"]
 [ext_resource type="Texture2D" uid="uid://cxobu116skjus" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_run-Sheet.png" id="2_3nu5a"]
 [ext_resource type="Texture2D" uid="uid://demjv5cek8yey" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_jump-Sheet.png" id="2_21dxl"]
@@ -14,15 +15,16 @@
 Team = 1
 
 [node name="FightingFrames" parent="." index="1" unique_id=1050928777 node_paths=PackedStringArray("param_node")]
-texture = ExtResource("2_21dxl")
-region_rect = Rect2(24, 0, 24, 24)
-sprite_sheet = ExtResource("2_21dxl")
+texture = ExtResource("2_0x861")
+region_rect = Rect2(120, 0, 24, 24)
+sprite_sheet = ExtResource("2_0x861")
 texture_size = Vector2i(24, 24)
+playing = false
 frames_per_second = 8
-frame_timer = 0.03333366666666666
 first_frame_index = 0
-last_frame_index = 3
-current_frame_index = 1
+last_frame_index = 5
+current_frame_index = 5
+looping = false
 hitbox_disabled = true
 hitbox_radius = 1.0
 hitbox_height = 1.0
@@ -30,7 +32,7 @@ hitbox_rotation = 0.0
 hitbox_positions = Array[Vector2]([])
 hurtbox_radius = 5.0
 hurtbox_positions = Array[Vector2]([Vector2(0, 3)])
-param_node = NodePath("jump_charge")
+param_node = NodePath("duck")
 
 [node name="stance" type="Node" parent="FightingFrames" index="0" unique_id=1787436432]
 script = ExtResource("2_stp78")
@@ -174,8 +176,21 @@ hurtbox_positions = Array[Vector2]([Vector2(1, 1)])
 [node name="jump_charge" type="Node" parent="FightingFrames" index="12" unique_id=134442373]
 script = ExtResource("2_stp78")
 sprite_sheet = ExtResource("2_21dxl")
-frames_per_second = 8
-last_frame_index = 3
+frames_per_second = 10
+last_frame_index = 4
+looping = false
+hitbox_disabled = true
+hitbox_radius = 1.0
+hitbox_height = 1.0
+hurtbox_radius = 5.0
+hurtbox_height = 20.0
+hurtbox_positions = Array[Vector2]([Vector2(0, 3)])
+
+[node name="duck" type="Node" parent="FightingFrames" index="13" unique_id=1769091416]
+script = ExtResource("2_stp78")
+sprite_sheet = ExtResource("2_0x861")
+frames_per_second = 15
+last_frame_index = 5
 looping = false
 hitbox_disabled = true
 hitbox_radius = 1.0

@@ -34,6 +34,9 @@ func _movement_inputs(_delta : float) -> void:
 		guy.release_jump()	
 	elif Input.is_action_just_pressed("moveDown"):
 		guy.duck()
+	elif Input.is_action_just_released("moveDown"):
+		guy.release_duck()
+	
 		
 
 func _combat_inputs(_delta : float) -> void:
