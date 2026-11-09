@@ -84,13 +84,16 @@ func _process_movement(delta : float) -> void:
 	collision_mask = DUCK_MASK if stance == Stance.ducking else MASK
 	target_real_speed = left_right * base_speed
 	if stance != Stance.ready:
-		target_real_speed = 0
+		if is_on_floor():
+			target_real_speed = 0
 		if stance == Stance.ducking:
 			run_accel = base_accel / 4
 		else:
 			run_accel = base_accel / 2
 	elif left_right == 0 or sign(left_right) != sign(velocity.x):	
 		run_accel = base_accel / 2
+	elif not is_on_floor():
+		run_accel = base_accel
 	elif run_charge_timer >= RUN_CHARGE_BASE_PERIOD:		
 		var speed_ratio = clampf(abs(velocity.x)/base_speed, 0.0, 1.0)
 		run_accel = lerpf(base_accel, 0, pow(speed_ratio, 2))	
@@ -234,11 +237,8 @@ func release_jump() -> bool:
 		return false
 	elif coyote_timer < coyote_period:
 		coyote_timer = coyote_period
-		run_charge_timer = RUN_CHARGE_BASE_PERIOD # allows for acceleration out of jump
 		var jump_charge = 1 + clampf(jump_charge_timer, 0, JUMP_MAX_CHARGE)
-		var jump_impulse = -sqrt(JUMP_BASE_HEIGHT * 1960) * jump_charge
-		velocity.y = jump_impulse
-		velocity.x = left_right * base_speed
+		velocity.y = -sqrt(JUMP_BASE_HEIGHT * 1960) * jump_charge
 		stance = Stance.ready
 		jump_charge_timer = 0.0
 		jumped.emit()
@@ -298,6 +298,7 @@ func release() -> bool:
 		if smash_attack:
 			sprite.playback_speed = lerpf(1.0, 2.0, charged_power)
 		else:
+			#TODO: make the shove be an assertion of velocity, not additive
 			sprite.playback_speed = lerpf(1.0, 0.25, charged_power)
 			var base_magnitude = base_speed * 2.0
 			var impulse = Vector2(facing_direction, 0) * base_magnitude * sqrt(charged_power)
