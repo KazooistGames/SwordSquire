@@ -11,7 +11,8 @@ const RUN_CHARGE_BASE_PERIOD = 0.25
 const charge_timer_max := 0.75
 const charge_timer_min := 0.25
 const cooldown_period = 0.5
-const base_poise_rate := 0.15
+const POISE_BASE_RATE := 0.05
+const POISE_BASE_COST := 0.15
 const JUMP_BASE_HEIGHT = 24
 const JUMP_BASE_PERIOD = 0.75
 const JUMP_MAX_CHARGE = 1.0
@@ -60,6 +61,11 @@ var double_jump_charges : int = 1
 var run_charge_timer := 0.0
 var smash_attack := false
 
+var effective_poise : float :
+	get():
+		return 0 if posture == Posture.weak else Poise
+
+
 signal died
 signal jumped
 signal fell
@@ -67,7 +73,7 @@ signal fell
 func _ready() -> void:
 	sprite.finished.connect(_handle_animation_finished)
 	sprite.play()
-	sprite.set_state('stance')
+	sprite.set_state('ready')
 	stance = Stance.ready
 	
 	
@@ -86,7 +92,7 @@ func _process_movement(delta : float) -> void:
 	if stance != Stance.ready:
 		if is_on_floor():
 			target_real_speed = 0
-		if stance == Stance.ducking:
+		if stance == Stance.ducking or stance == Stance.jumping:
 			run_accel = base_accel / 4
 		else:
 			run_accel = base_accel / 2
@@ -116,7 +122,6 @@ func _animate_stance():
 	if HP <= 0:
 		sprite.set_state('die')
 		return	
-		
 	if facing_direction > 0:
 		sprite.flip_h = true
 	elif facing_direction < 0:
@@ -124,9 +129,9 @@ func _animate_stance():
 	match(stance):
 		Stance.ready:
 			if not is_on_floor():
-				sprite.set_state('stance')
+				sprite.set_state('ready')
 			elif velocity.x == 0:
-				sprite.set_state('stance')
+				sprite.set_state('ready')
 			elif left_right == 0 or sign(left_right) != sign(velocity.x):
 				sprite.set_state('slide')
 			elif run_charge_timer < RUN_CHARGE_BASE_PERIOD:
@@ -183,12 +188,12 @@ func _process_stance(delta : float) -> void:
 		Stance.attacking:
 			pass	
 		Stance.recovering:
-			cooldown_timer -= delta
+			cooldown_timer -= delta * (0.5 + effective_poise/2.0)
 			if cooldown_timer <= 0:
 				ready()		
 		Stance.jumping:
 			facing_locked = false
-			jump_charge_timer += delta
+			jump_charge_timer += delta * (0.5 + effective_poise/2.0)
 			
 	if left_right != 0 and not facing_locked:
 		facing_direction = left_right	
@@ -196,11 +201,10 @@ func _process_stance(delta : float) -> void:
 func _process_poise(delta) -> void:
 	if stance != Stance.ready:
 		pass
-	elif velocity.x != 0:
-		pass
 	elif is_on_floor():
-		var stationary_buff = lerp(2, 1, abs(left_right))
-		Poise += delta * base_poise_rate * stationary_buff		
+		var stationary_buff : float = 2 - abs(left_right)
+		var increment : float = delta * POISE_BASE_RATE * stationary_buff		
+		Poise += increment
 	Poise = clampf(Poise, 0.0, 1.0)
 	
 	if Poise == 1:
@@ -261,15 +265,17 @@ func duck() -> bool:
 	if stance == Stance.recovering or stance == Stance.attacking or stance == Stance.ducking:
 		return false
 	stance = Stance.ducking
+	sprite.playback_speed = 1.0
 	if left_right != 0:
 		velocity.x = base_speed * left_right * DUCK_BOOST
+		sap(POISE_BASE_COST)
 	return true
 	
 	
 func release_duck() -> bool:
 	if stance != Stance.ducking:
 		return false
-	while(abs(velocity.x) > base_speed / 5):
+	while(abs(velocity.x) > lerp(0, base_speed/2, effective_poise) or sprite.playing):
 		await get_tree().physics_frame
 	stance = Stance.ready
 	return true
@@ -298,11 +304,11 @@ func release() -> bool:
 		stance = Stance.attacking
 		cooldown_timer = cooldown_period
 		var charged_power = charge_timer / charge_timer_max	
-		sap(charged_power * 0.5)
+		sap(POISE_BASE_COST)
 		if smash_attack:
 			sprite.playback_speed = lerpf(1.0, 2.0, charged_power)
 		else:
-			#TODO: make the shove be an assertion of velocity, not additive
+			#TODO: make the shove be an assertion of velocity, not additive?
 			sprite.playback_speed = lerpf(1.0, 0.25, charged_power)
 			var base_magnitude = base_speed * 2.0
 			var impulse = Vector2(facing_direction, 0) * base_magnitude * sqrt(charged_power)
@@ -312,9 +318,9 @@ func release() -> bool:
 
 func recover() -> bool:
 	if stance == Stance.attacking:
-		sprite.playback_speed = 1.0
 		stance = Stance.recovering
-		return true
+		sprite.playback_speed = 1.0
+		return true	
 	else:
 		return false
 

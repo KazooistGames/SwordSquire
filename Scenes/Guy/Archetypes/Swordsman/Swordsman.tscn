@@ -34,7 +34,7 @@ hurtbox_radius = 5.0
 hurtbox_positions = Array[Vector2]([Vector2(0, 3)])
 param_node = NodePath("duck")
 
-[node name="stance" type="Node" parent="FightingFrames" index="0" unique_id=1787436432]
+[node name="ready" type="Node" parent="FightingFrames" index="0" unique_id=1787436432]
 script = ExtResource("2_stp78")
 sprite_sheet = ExtResource("4_nypsl")
 last_frame_index = 3
