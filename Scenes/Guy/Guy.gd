@@ -15,6 +15,7 @@ const base_poise_rate := 0.15
 const JUMP_BASE_HEIGHT = 24
 const JUMP_BASE_PERIOD = 0.75
 const JUMP_MAX_CHARGE = 1.0
+const DUCK_BOOST := 1.5
 
 enum Posture{
 	weak = -1,
@@ -62,7 +63,6 @@ var smash_attack := false
 signal died
 signal jumped
 signal fell
-
 
 func _ready() -> void:
 	sprite.finished.connect(_handle_animation_finished)
@@ -258,15 +258,19 @@ func land():
 
 
 func duck() -> bool:
-	if stance == Stance.recovering or stance == Stance.attacking:
+	if stance == Stance.recovering or stance == Stance.attacking or stance == Stance.ducking:
 		return false
 	stance = Stance.ducking
+	if left_right != 0:
+		velocity.x = base_speed * left_right * DUCK_BOOST
 	return true
 	
 	
 func release_duck() -> bool:
 	if stance != Stance.ducking:
 		return false
+	while(abs(velocity.x) > base_speed / 5):
+		await get_tree().physics_frame
 	stance = Stance.ready
 	return true
 	

@@ -15,3 +15,4 @@ res://Scenes/Guy/debug.gd
 res://Scenes/Guy/Guy.tscn
 res://Scenes/Guy/_tests/test_harness.tscn
 res://Scenes/PlayerInterface/PlayerInterface.tscn
+res://Scenes/Guy/FightingFrames/fightingFrames.gd
