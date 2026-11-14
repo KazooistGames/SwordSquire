@@ -5,18 +5,18 @@ const DUCK_MASK = SwordSquire.LAYER.TERRAIN
 
 const duck_duration := 0.1
 const coyote_period := 0.10
-const base_accel := 400
-const base_speed := 75
+const BASE_ACCEL := 300
+const BASE_SPEED := 90
 const RUN_CHARGE_BASE_PERIOD = 0.25
 const charge_timer_max := 0.75
-const charge_timer_min := 0.25
+const charge_timer_min := 0.15
 const cooldown_period = 0.5
-const POISE_BASE_RATE := 0.05
-const POISE_BASE_COST := 0.15
+const POISE_BASE_RATE := 0.1
+const POISE_BASE_COST := 0.2
 const JUMP_BASE_HEIGHT = 24
-const JUMP_BASE_PERIOD = 0.75
+const JUMP_BASE_PERIOD = 0.5
 const JUMP_MAX_CHARGE = 1.0
-const DUCK_BOOST := 1.5
+const DUCK_BOOST := 1.0
 
 enum Posture{
 	weak = -1,
@@ -49,7 +49,7 @@ enum Stance{
 #var aerial := false
 
 var real_speed := 60.0
-@export var run_accel := 0.0
+@export var effective_accel := 0.0
 var facing_direction := 1
 var facing_locked := false
 var charge_timer := 0.0
@@ -84,40 +84,59 @@ func _physics_process(delta : float) -> void:
 	_process_stance(delta)
 
 
-var target_real_speed := 0.0
+var target_speed := 0.0
 func _process_movement(delta : float) -> void:
 	
-	collision_mask = DUCK_MASK if stance == Stance.ducking else MASK
-	target_real_speed = left_right * base_speed
-	if stance != Stance.ready:
-		if is_on_floor():
-			target_real_speed = 0
-		if stance == Stance.ducking or stance == Stance.jumping:
-			run_accel = base_accel / 4
-		else:
-			run_accel = base_accel / 2
-	elif left_right == 0 or sign(left_right) != sign(velocity.x):	
-		run_accel = base_accel / 2
-	elif not is_on_floor():
-		run_accel = base_accel
-	elif run_charge_timer >= RUN_CHARGE_BASE_PERIOD:		
-		var speed_ratio = clampf(abs(velocity.x)/base_speed, 0.0, 1.0)
-		run_accel = lerpf(base_accel, 0, pow(speed_ratio, 2))	
-	else:
-		target_real_speed = 0
-		run_accel = 0.0
-			
-	if not is_on_floor():
-		velocity.y += 980 * delta		
-		run_accel /= 2	
-		
-	velocity.x = move_toward(velocity.x, target_real_speed, run_accel * delta)	
-	move_and_slide()	
-	
 	#Coyote timer
-	_process_coyote_timer(delta)
+	if is_on_floor():
+		if coyote_timer >= coyote_period:
+			land()		
+		coyote_timer = 0
+	else:
+		if coyote_timer == 0.0:
+			fell.emit()	
+		coyote_timer += delta	
 	
-		
+	target_speed = left_right * BASE_SPEED	
+	
+	# grounded movement
+	if is_on_floor():
+		if stance != Stance.ready: # doing something
+			target_speed = 0
+			effective_accel = BASE_ACCEL / 2	
+		elif left_right == 0 or sign(left_right) != sign(velocity.x): # pivot
+			effective_accel = BASE_ACCEL		
+		elif abs(velocity.x) > target_speed:
+			effective_accel = BASE_ACCEL / 2
+		elif run_charge_timer >= RUN_CHARGE_BASE_PERIOD: # speeding up
+			var speed_ratio = clampf(abs(velocity.x)/BASE_SPEED, 0.0, 1.0)
+			effective_accel = lerpf(BASE_ACCEL, 0, pow(speed_ratio, 2))			
+		else:
+			target_speed = 0
+			effective_accel = 0.0
+			
+	# aerial movement
+	else:
+		'''
+		Orients on directional input instead of stance.
+		Lends to more "veritacity" in the jump.
+		The jump feels controlled while still carrying aerial momentum
+		''' 
+		velocity.y += 980 * delta	
+		effective_accel = BASE_ACCEL / 2
+		if left_right == 0:	# idle
+			effective_accel = 0.0	
+		elif sign(left_right) != sign(velocity.x): # turning around
+			pass
+		elif abs(velocity.x) < BASE_SPEED: # speeding up
+			pass
+		else:
+			effective_accel = 0.0
+				
+	velocity.x = move_toward(velocity.x, target_speed, effective_accel * delta)	
+	move_and_slide()
+	
+
 func _animate_stance():
 	if HP <= 0:
 		sprite.set_state('die')
@@ -138,7 +157,7 @@ func _animate_stance():
 				sprite.set_state('slide')
 			else:
 				sprite.set_state('run')
-				var real_speed_ratio = abs(velocity.x) / base_speed
+				var real_speed_ratio = abs(velocity.x) / BASE_SPEED
 				sprite.playback_speed = real_speed_ratio
 		Stance.charging:
 			sprite.flip_h = facing_direction > 0
@@ -173,7 +192,7 @@ func _process_stance(delta : float) -> void:
 				run_charge_timer = 0.0
 			else:
 				if run_charge_timer == 0:
-					shove(Vector2.RIGHT * sign(left_right) * base_speed / 10)
+					shove(Vector2.RIGHT * sign(left_right) * BASE_SPEED / 10)
 				run_charge_timer += delta
 		Stance.charging:
 			charge_timer += delta	
@@ -193,7 +212,7 @@ func _process_stance(delta : float) -> void:
 				ready()		
 		Stance.jumping:
 			facing_locked = false
-			jump_charge_timer += delta * (0.5 + effective_poise/2.0)
+			jump_charge_timer += delta / JUMP_BASE_PERIOD
 			
 	if left_right != 0 and not facing_locked:
 		facing_direction = left_right	
@@ -215,17 +234,6 @@ func _process_poise(delta) -> void:
 		posture = Posture.normal
 
 
-func _process_coyote_timer(delta):
-	if is_on_floor():
-		if coyote_timer >= coyote_period:
-			land()		
-		coyote_timer = 0
-	else:
-		if coyote_timer == 0.0:
-			fell.emit()	
-		coyote_timer += delta	
-		
-	
 func charge_jump() -> bool:
 	if stance != Stance.ready:
 		return false
@@ -267,16 +275,28 @@ func duck() -> bool:
 	stance = Stance.ducking
 	sprite.playback_speed = 1.0
 	if left_right != 0:
-		velocity.x = base_speed * left_right * DUCK_BOOST
-		sap(POISE_BASE_COST)
+		slide()
+	else:
+		collision_mask = DUCK_MASK
 	return true
+	
+	
+func slide() -> void:
+	var direction = Vector2(left_right, 0)
+	shove(direction * BASE_SPEED * DUCK_BOOST)
+	sap(POISE_BASE_COST)
 	
 	
 func release_duck() -> bool:
 	if stance != Stance.ducking:
 		return false
-	while(abs(velocity.x) > lerp(0, base_speed/2, effective_poise) or sprite.playing):
-		await get_tree().physics_frame
+	if velocity.x != 0:
+		while(abs(velocity.x) > lerp(0, BASE_SPEED/2, effective_poise)):
+			await get_tree().physics_frame
+	else:
+		while(sprite.playing):
+			await get_tree().physics_frame
+	collision_mask = MASK	
 	stance = Stance.ready
 	return true
 	
@@ -310,7 +330,7 @@ func release() -> bool:
 		else:
 			#TODO: make the shove be an assertion of velocity, not additive?
 			sprite.playback_speed = lerpf(1.0, 0.25, charged_power)
-			var base_magnitude = base_speed * 2.0
+			var base_magnitude = BASE_SPEED * 2.0
 			var impulse = Vector2(facing_direction, 0) * base_magnitude * sqrt(charged_power)
 			shove(impulse)
 		return true
@@ -372,8 +392,7 @@ func shove(impulse : Vector2) -> void:
 	else:
 		velocity.x = impulse.x
 			
-	if is_nan(velocity.x):
-		print("wtf")
+	assert(not is_nan(velocity.x))
 	
 			
 func damage(value : int) -> void:
