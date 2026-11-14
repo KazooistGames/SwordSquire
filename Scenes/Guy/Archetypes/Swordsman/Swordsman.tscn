@@ -7,194 +7,98 @@
 [ext_resource type="Texture2D" uid="uid://demjv5cek8yey" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_jump-Sheet.png" id="2_21dxl"]
 [ext_resource type="Texture2D" uid="uid://0tokl0nyx5r7" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_swing-Sheet.png" id="2_a8pqw"]
 [ext_resource type="Texture2D" uid="uid://bfjx4ur3gsug8" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_die-Sheet.png" id="2_cnphc"]
-[ext_resource type="Script" uid="uid://cjmb2t8shvcb0" path="res://Scenes/Guy/FightingFrames/frame_params.gd" id="2_stp78"]
+[ext_resource type="Script" uid="uid://cjmb2t8shvcb0" path="res://Scenes/Guy/FrameRig/frame_params.gd" id="2_stp78"]
 [ext_resource type="Texture2D" uid="uid://tmo3ijcibewl" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_stab-Sheet.png" id="3_a8pqw"]
 [ext_resource type="Texture2D" uid="uid://cjabutfsxarfr" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_idle-Sheet.png" id="4_nypsl"]
 
 [node name="Swordsman" unique_id=1920363709 instance=ExtResource("1_8rpvy")]
 Team = 1
 
-[node name="FightingFrames" parent="." index="1" unique_id=1050928777 node_paths=PackedStringArray("param_node")]
-texture = ExtResource("2_0x861")
-region_rect = Rect2(120, 0, 24, 24)
-sprite_sheet = ExtResource("2_0x861")
-texture_size = Vector2i(24, 24)
-playing = false
-frames_per_second = 8
-first_frame_index = 0
-last_frame_index = 5
-current_frame_index = 5
-looping = false
-hitbox_disabled = true
-hitbox_radius = 1.0
-hitbox_height = 1.0
-hitbox_rotation = 0.0
-hitbox_positions = Array[Vector2]([])
-hurtbox_radius = 5.0
-hurtbox_positions = Array[Vector2]([Vector2(0, 3)])
-param_node = NodePath("duck")
+[node name="frameRig" parent="." index="1" unique_id=1050928777]
+texture = ExtResource("4_nypsl")
+region_rect = Rect2(48, 0, 24, 24)
+current_frame_index = 2
+frame_timer = 0.11666666666666664
 
-[node name="ready" type="Node" parent="FightingFrames" index="0" unique_id=1787436432]
+[node name="ready" type="Node" parent="frameRig" index="0" unique_id=1787436432]
 script = ExtResource("2_stp78")
-sprite_sheet = ExtResource("4_nypsl")
-last_frame_index = 3
-hitbox_disabled = true
-hitbox_radius = 1.0
-hitbox_height = 1.0
-hurtbox_radius = 5.0
-hurtbox_height = 22.0
-hurtbox_positions = Array[Vector2]([Vector2(1, 1), Vector2(0, 1), Vector2(1, 1), Vector2(2, 1)])
+sheet = ExtResource("4_nypsl")
+last_i = 3
+loop = true
 
-[node name="run" type="Node" parent="FightingFrames" index="3" unique_id=497721600]
+[node name="run" type="Node" parent="frameRig" index="1" unique_id=497721600]
 script = ExtResource("2_stp78")
-sprite_sheet = ExtResource("2_3nu5a")
-frames_per_second = 16
-last_frame_index = 5
-hitbox_disabled = true
-hitbox_radius = 1.0
-hitbox_height = 1.0
-hitbox_rotation = 90.0
-hitbox_positions = Array[Vector2]([Vector2(0, 0)])
-hurtbox_radius = 5.0
-hurtbox_height = 20.0
-hurtbox_positions = Array[Vector2]([Vector2(0, 1)])
+sheet = ExtResource("2_3nu5a")
+fps = 15
+last_i = 5
+loop = true
 
-[node name="stab" type="Node" parent="FightingFrames" index="4" unique_id=873176266]
+[node name="stab" type="Node" parent="frameRig" index="2" unique_id=873176266]
 script = ExtResource("2_stp78")
-sprite_sheet = ExtResource("3_a8pqw")
-texture_size = Vector2i(36, 24)
-frames_per_second = 48
-first_frame_index = 4
-last_frame_index = 10
-looping = false
-hitbox_radius = 1.5
-hitbox_height = 12.0
-hitbox_rotation = 90.0
-hitbox_positions = Array[Vector2]([Vector2(-2.5, -2.5), Vector2(-3, -2.5), Vector2(-4, -2.5), Vector2(-9, -1.5), Vector2(-12, -2.5), Vector2(-12, -3.5), Vector2(-12, -4.5), Vector2(-12, -4.5)])
-hurtbox_radius = 4.0
-hurtbox_height = 20.0
-hurtbox_positions = Array[Vector2]([Vector2(3, 1), Vector2(2, 1), Vector2(1, 1), Vector2(1, 1), Vector2(2, 1)])
+sheet = ExtResource("3_a8pqw")
+tex_size = Vector2i(36, 24)
+fps = 30
+first_i = 4
+last_i = 10
 
-[node name="stab_windup" type="Node" parent="FightingFrames" index="5" unique_id=503556153]
+[node name="stab_windup" type="Node" parent="frameRig" index="3" unique_id=503556153]
 script = ExtResource("2_stp78")
-sprite_sheet = ExtResource("3_a8pqw")
-texture_size = Vector2i(36, 24)
-frames_per_second = 12
-last_frame_index = 3
-looping = false
-hitbox_disabled = true
-hitbox_radius = 1.0
-hitbox_height = 1.0
-hitbox_rotation = 90.0
-hitbox_positions = Array[Vector2]([Vector2(0, 0)])
-hurtbox_radius = 5.0
-hurtbox_height = 20.0
-hurtbox_positions = Array[Vector2]([Vector2(4, 2)])
+sheet = ExtResource("3_a8pqw")
+tex_size = Vector2i(36, 24)
+fps = 6
+last_i = 3
 
-[node name="stab_recover" type="Node" parent="FightingFrames" index="6" unique_id=1416778604]
+[node name="stab_recover" type="Node" parent="frameRig" index="4" unique_id=1416778604]
 script = ExtResource("2_stp78")
-sprite_sheet = ExtResource("3_a8pqw")
-texture_size = Vector2i(36, 24)
-frames_per_second = 12
-first_frame_index = 11
-last_frame_index = 12
-looping = false
-hitbox_disabled = true
-hitbox_radius = 1.0
-hitbox_height = 1.0
-hitbox_rotation = 90.0
-hitbox_positions = Array[Vector2]([Vector2(0, 0)])
-hurtbox_radius = 4.0
-hurtbox_height = 20.0
-hurtbox_positions = Array[Vector2]([Vector2(2, 2)])
+sheet = ExtResource("3_a8pqw")
+tex_size = Vector2i(36, 24)
+fps = 12
+first_i = 11
+last_i = 12
 
-[node name="slash" type="Node" parent="FightingFrames" index="7" unique_id=613023106]
+[node name="slash" type="Node" parent="frameRig" index="5" unique_id=613023106]
 script = ExtResource("2_stp78")
-sprite_sheet = ExtResource("2_a8pqw")
-frames_per_second = 15
-first_frame_index = 8
-last_frame_index = 11
-looping = false
-hitbox_radius = 4.0
-hitbox_height = 18.0
-hitbox_positions = Array[Vector2]([Vector2(8, 3), Vector2(1, 6), Vector2(-8, 0), Vector2(-2, -6)])
-hurtbox_radius = 4.0
-hurtbox_height = 20.0
-hurtbox_positions = Array[Vector2]([Vector2(2, 2), Vector2(0, 2)])
+sheet = ExtResource("2_a8pqw")
+fps = 15
+first_i = 8
+last_i = 11
 
-[node name="slash_windup" type="Node" parent="FightingFrames" index="8" unique_id=722483617]
+[node name="slash_windup" type="Node" parent="frameRig" index="6" unique_id=722483617]
 script = ExtResource("2_stp78")
-sprite_sheet = ExtResource("2_a8pqw")
-frames_per_second = 12
-last_frame_index = 7
-looping = false
-hitbox_disabled = true
-hitbox_radius = 1.5
-hitbox_height = 12.0
-hitbox_rotation = 90.0
-hitbox_positions = Array[Vector2]([Vector2(0, 0)])
-hurtbox_radius = 4.0
-hurtbox_height = 20.0
-hurtbox_positions = Array[Vector2]([Vector2(2, 2)])
+sheet = ExtResource("2_a8pqw")
+fps = 15
+last_i = 7
 
-[node name="slash_recover" type="Node" parent="FightingFrames" index="9" unique_id=986274525]
+[node name="slash_recover" type="Node" parent="frameRig" index="7" unique_id=986274525]
 script = ExtResource("2_stp78")
-sprite_sheet = ExtResource("2_a8pqw")
-frames_per_second = 8
-first_frame_index = 12
-last_frame_index = 14
-looping = false
-hitbox_disabled = true
-hitbox_radius = 1.5
-hitbox_height = 12.0
-hitbox_rotation = 90.0
-hitbox_positions = Array[Vector2]([Vector2(0, 0)])
-hurtbox_radius = 4.0
-hurtbox_height = 20.0
-hurtbox_positions = Array[Vector2]([Vector2(2, 2)])
+sheet = ExtResource("2_a8pqw")
+fps = 9
+first_i = 12
+last_i = 14
 
-[node name="die" type="Node" parent="FightingFrames" index="10" unique_id=120575319]
+[node name="die" type="Node" parent="frameRig" index="8" unique_id=120575319]
 script = ExtResource("2_stp78")
-sprite_sheet = ExtResource("2_cnphc")
-frames_per_second = 4
-last_frame_index = 4
-looping = false
-hitbox_disabled = true
+sheet = ExtResource("2_cnphc")
+fps = 4
+last_i = 4
 
-[node name="slide" type="Node" parent="FightingFrames" index="11" unique_id=1322022693]
+[node name="slide" type="Node" parent="frameRig" index="9" unique_id=1322022693]
 script = ExtResource("2_stp78")
-sprite_sheet = ExtResource("2_2jugv")
-frames_per_second = 5
-last_frame_index = 2
-looping = false
-hitbox_disabled = true
-hitbox_height = 1.0
-hurtbox_radius = 5.0
-hurtbox_height = 20.0
-hurtbox_positions = Array[Vector2]([Vector2(1, 1)])
+sheet = ExtResource("2_2jugv")
+fps = 6
+last_i = 2
 
-[node name="jump_charge" type="Node" parent="FightingFrames" index="12" unique_id=134442373]
+[node name="jump_charge" type="Node" parent="frameRig" index="10" unique_id=134442373]
 script = ExtResource("2_stp78")
-sprite_sheet = ExtResource("2_21dxl")
-frames_per_second = 12
-last_frame_index = 4
-looping = false
-hitbox_disabled = true
-hitbox_radius = 1.0
-hitbox_height = 1.0
-hurtbox_radius = 5.0
-hurtbox_height = 20.0
-hurtbox_positions = Array[Vector2]([Vector2(0, 3)])
+sheet = ExtResource("2_21dxl")
+fps = 10
+last_i = 4
 
-[node name="duck" type="Node" parent="FightingFrames" index="13" unique_id=1769091416]
+[node name="duck" type="Node" parent="frameRig" index="11" unique_id=1769091416]
 script = ExtResource("2_stp78")
-sprite_sheet = ExtResource("2_0x861")
-frames_per_second = 15
-last_frame_index = 5
-looping = false
-hitbox_disabled = true
-hitbox_radius = 1.0
-hitbox_height = 1.0
-hurtbox_radius = 5.0
-hurtbox_height = 20.0
-hurtbox_positions = Array[Vector2]([Vector2(0, 3)])
+sheet = ExtResource("2_0x861")
+fps = 12
+last_i = 5
+
+[node name="CollisionShape2D" parent="interactBox" parent_id_path=PackedInt32Array(1315001161) index="0" unique_id=58424191]
+debug_color = Color(0.5882353, 0.49019608, 0, 0.078431375)

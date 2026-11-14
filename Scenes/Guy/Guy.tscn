@@ -1,11 +1,14 @@
 [gd_scene format=3 uid="uid://b8xpmmlbv64kh"]
 
 [ext_resource type="Script" uid="uid://b8g5l11p4we4p" path="res://Scenes/Guy/Guy.gd" id="1_jkuat"]
-[ext_resource type="PackedScene" uid="uid://cj3exco8pbdh7" path="res://Scenes/Guy/FightingFrames/fightingFrames.tscn" id="2_rd74a"]
+[ext_resource type="PackedScene" uid="uid://cj3exco8pbdh7" path="res://Scenes/Guy/FrameRig/frameRig.tscn" id="2_rd74a"]
 [ext_resource type="PackedScene" uid="uid://b2khc8c5roqwo" path="res://Scenes/Guy/_tests/test_harness.tscn" id="3_ifsry"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rcyd8"]
 size = Vector2(6, 3)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ifsry"]
+radius = 12.0
 
 [node name="Guy" type="CharacterBody2D" unique_id=1110990232 groups=["Guy"]]
 collision_layer = 2
@@ -17,8 +20,13 @@ position = Vector2(0, 10)
 shape = SubResource("RectangleShape2D_rcyd8")
 debug_color = Color(0.307455, 0.627115, 0, 0.42)
 
-[node name="FightingFrames" parent="." unique_id=1050928777 instance=ExtResource("2_rd74a")]
-region_rect = Rect2(216, 0, 36, 24)
-current_frame_index = 6
+[node name="frameRig" parent="." unique_id=1050928777 instance=ExtResource("2_rd74a")]
+frame_timer = 195.61250000004785
 
 [node name="test_harness" parent="." unique_id=53073980 instance=ExtResource("3_ifsry")]
+
+[node name="interactBox" type="Area2D" parent="." unique_id=1315001161]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="interactBox" unique_id=58424191]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_ifsry")

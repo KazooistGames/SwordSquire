@@ -1,9 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://dfyuiajfkc0h"]
-
-[ext_resource type="Script" uid="uid://cy0ubyryvq10d" path="res://Scenes/Guy/Animation/custom_animation.gd" id="1_6hxee"]
-[ext_resource type="Texture2D" uid="uid://cjabutfsxarfr" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_idle-Sheet.png" id="2_x46q6"]
-
-[node name="stance" type="Node2D"]
-script = ExtResource("1_6hxee")
-sprite_sheet = ExtResource("2_x46q6")
-last_frame_index = 3

@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cj3exco8pbdh7"]
+
+[ext_resource type="Texture2D" uid="uid://tmo3ijcibewl" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_stab-Sheet.png" id="1_ogbdo"]
+[ext_resource type="Script" uid="uid://c0ww8hb384pwm" path="res://Scenes/Guy/FrameRig/frameRig.gd" id="2_texl7"]
+
+[node name="frameRig" type="Sprite2D" unique_id=19226099]
+texture = ExtResource("1_ogbdo")
+region_enabled = true
+region_rect = Rect2(216, 0, 36, 24)
+script = ExtResource("2_texl7")
+playing = true
+current_frame_index = 6
+frame_timer = 0.0125

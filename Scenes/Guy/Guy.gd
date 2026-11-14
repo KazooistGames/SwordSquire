@@ -42,9 +42,8 @@ enum Stance{
 @export var left_right := 0
 @export var Concealments : Array[Area2D] = []
 
-@onready var sprite : FightingFrames = $FightingFrames
-@onready var hitbox : Area2D = $FightingFrames/hitBox
-@onready var hurtbox : Area2D = $FightingFrames/hurtBox
+@onready var frame_rig : FrameRig = $frameRig
+@onready var interact_box : Area2D = $interactBox
 
 #var aerial := false
 
@@ -71,9 +70,9 @@ signal jumped
 signal fell
 
 func _ready() -> void:
-	sprite.finished.connect(_handle_animation_finished)
-	sprite.play()
-	sprite.set_state('ready')
+	frame_rig.finished.connect(_handle_animation_finished)
+	frame_rig.set_state('ready')
+	frame_rig.play()
 	stance = Stance.ready
 	
 	
@@ -106,7 +105,7 @@ func _process_movement(delta : float) -> void:
 			effective_accel = BASE_ACCEL / 2	
 		elif left_right == 0 or sign(left_right) != sign(velocity.x): # pivot
 			effective_accel = BASE_ACCEL		
-		elif abs(velocity.x) > target_speed:
+		elif abs(velocity.x) > abs(target_speed):
 			effective_accel = BASE_ACCEL / 2
 		elif run_charge_timer >= RUN_CHARGE_BASE_PERIOD: # speeding up
 			var speed_ratio = clampf(abs(velocity.x)/BASE_SPEED, 0.0, 1.0)
@@ -139,46 +138,46 @@ func _process_movement(delta : float) -> void:
 
 func _animate_stance():
 	if HP <= 0:
-		sprite.set_state('die')
+		frame_rig.set_state('die')
 		return	
 	if facing_direction > 0:
-		sprite.flip_h = true
+		frame_rig.flip_h = true
 	elif facing_direction < 0:
-		sprite.flip_h = false
+		frame_rig.flip_h = false
 	match(stance):
 		Stance.ready:
 			if not is_on_floor():
-				sprite.set_state('ready')
+				frame_rig.set_state('ready')
 			elif velocity.x == 0:
-				sprite.set_state('ready')
+				frame_rig.set_state('ready')
 			elif left_right == 0 or sign(left_right) != sign(velocity.x):
-				sprite.set_state('slide')
+				frame_rig.set_state('slide')
 			elif run_charge_timer < RUN_CHARGE_BASE_PERIOD:
-				sprite.set_state('slide')
+				frame_rig.set_state('slide')
 			else:
-				sprite.set_state('run')
+				frame_rig.set_state('run')
 				var real_speed_ratio = abs(velocity.x) / BASE_SPEED
-				sprite.playback_speed = real_speed_ratio
+				frame_rig.playback_speed = real_speed_ratio
 		Stance.charging:
-			sprite.flip_h = facing_direction > 0
+			frame_rig.flip_h = facing_direction > 0
 			if smash_attack:
-				sprite.set_state('slash_windup')
+				frame_rig.set_state('slash_windup')
 			else:
-				sprite.set_state('stab_windup')
+				frame_rig.set_state('stab_windup')
 		Stance.attacking:
 			if smash_attack:
-				sprite.set_state('slash')
+				frame_rig.set_state('slash')
 			else:
-				sprite.set_state('stab')
+				frame_rig.set_state('stab')
 		Stance.recovering:
 			if smash_attack:
-				sprite.set_state('slash_recover')
+				frame_rig.set_state('slash_recover')
 			else:
-				sprite.set_state('stab_recover')
+				frame_rig.set_state('stab_recover')
 		Stance.jumping:
-			sprite.set_state('jump_charge')
+			frame_rig.set_state('jump_charge')
 		Stance.ducking:
-			sprite.set_state('duck')
+			frame_rig.set_state('duck')
 
 
 func _process_stance(delta : float) -> void:
@@ -203,7 +202,7 @@ func _process_stance(delta : float) -> void:
 				pass
 			elif charge_marked_for_release:
 				release()			
-			sprite.flip_h = facing_direction > 0	
+			frame_rig.flip_h = facing_direction > 0	
 		Stance.attacking:
 			pass	
 		Stance.recovering:
@@ -238,7 +237,7 @@ func charge_jump() -> bool:
 	if stance != Stance.ready:
 		return false
 	elif coyote_timer < coyote_period:
-		sprite.playback_speed = 1.0
+		frame_rig.playback_speed = 1.0
 		stance = Stance.jumping
 		return true
 	else:
@@ -273,15 +272,15 @@ func duck() -> bool:
 	if stance == Stance.recovering or stance == Stance.attacking or stance == Stance.ducking:
 		return false
 	stance = Stance.ducking
-	sprite.playback_speed = 1.0
+	frame_rig.playback_speed = 1.0
 	if left_right != 0:
-		slide()
+		dash()
 	else:
 		collision_mask = DUCK_MASK
 	return true
 	
 	
-func slide() -> void:
+func dash() -> void:
 	var direction = Vector2(left_right, 0)
 	shove(direction * BASE_SPEED * DUCK_BOOST)
 	sap(POISE_BASE_COST)
@@ -294,7 +293,7 @@ func release_duck() -> bool:
 		while(abs(velocity.x) > lerp(0, BASE_SPEED/2, effective_poise)):
 			await get_tree().physics_frame
 	else:
-		while(sprite.playing):
+		while(frame_rig.playing):
 			await get_tree().physics_frame
 	collision_mask = MASK	
 	stance = Stance.ready
@@ -303,7 +302,7 @@ func release_duck() -> bool:
 	
 func charge() -> bool:
 	if stance == Stance.ready:
-		sprite.playback_speed = 1.0
+		frame_rig.playback_speed = 1.0
 		stance = Stance.charging
 		cooldown_timer = 0.0
 		charge_timer = 0.0
@@ -326,10 +325,10 @@ func release() -> bool:
 		var charged_power = charge_timer / charge_timer_max	
 		sap(POISE_BASE_COST)
 		if smash_attack:
-			sprite.playback_speed = lerpf(1.0, 2.0, charged_power)
+			frame_rig.playback_speed = lerpf(1.0, 2.0, charged_power)
 		else:
 			#TODO: make the shove be an assertion of velocity, not additive?
-			sprite.playback_speed = lerpf(1.0, 0.25, charged_power)
+			frame_rig.playback_speed = lerpf(1.0, 0.25, charged_power)
 			var base_magnitude = BASE_SPEED * 2.0
 			var impulse = Vector2(facing_direction, 0) * base_magnitude * sqrt(charged_power)
 			shove(impulse)
@@ -339,7 +338,7 @@ func release() -> bool:
 func recover() -> bool:
 	if stance == Stance.attacking:
 		stance = Stance.recovering
-		sprite.playback_speed = 1.0
+		frame_rig.playback_speed = 1.0
 		return true	
 	else:
 		return false
@@ -347,7 +346,7 @@ func recover() -> bool:
 
 func ready() -> bool:
 	if stance == Stance.recovering:
-		sprite.playback_speed = 1.0
+		frame_rig.playback_speed = 1.0
 		stance = Stance.ready
 		charge_timer = 0.0
 		return true
@@ -381,7 +380,7 @@ func check_sprite_collision(coordinates : Vector2, bounds : Vector2, offset : Ve
 		for x in range(-bounds.x / 2.0, bounds.x / 2.0):
 			bound_coord.x = x
 			pixel_coord = disposition + bound_coord + offset
-			if sprite.is_pixel_opaque(pixel_coord):
+			if frame_rig.is_pixel_opaque(pixel_coord):
 				return true	
 	return false
 
@@ -422,7 +421,7 @@ func sap(value : float):
 
 
 func interact():
-	var interactable_bodies = hurtbox.get_overlapping_bodies()
+	var interactable_bodies = interact_box.get_overlapping_bodies()
 	for body in interactable_bodies:	
 		if body.collision_layer & 512 >= 1:
 			body.use(self)
