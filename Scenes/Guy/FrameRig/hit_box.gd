@@ -8,7 +8,6 @@ var guys_marked_for_hit : Array[CharacterBody2D] = []
 var guys_marked_for_parry : Array[CharacterBody2D] = []
 var items_marked_for_smack : Array[PhysicsBody2D] = []
 
-var box_frames : Array[BoxFrames]
 var colliders : Array[CollisionShape2D]
 
 signal parried(Guy)
@@ -95,17 +94,4 @@ func _handle_item_overlap(item : PhysicsBody2D) -> void:
 	else:
 		items_marked_for_smack.append(item)
 		
-func load_sheet(sheet : FrameSheet):
-	
-	for col in colliders:
-		col.queue_free()
-	colliders.clear()
-	box_frames = sheet.get_children().filter(
-		func(x): return x is BoxFrames and x.type == BoxFrames.Type.hurt)
-		
-	for frames in box_frames:
-		var new_col = CollisionShape2D.new()
-		new_col.shape = CapsuleShape2D.new()
-		add_child(new_col)
-	
 	

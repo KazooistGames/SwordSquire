@@ -19,3 +19,4 @@ res://Scenes/Guy/FrameRig/_sheet.gd
 res://Scenes/Guy/FrameRig/frames.gd
 res://Scenes/Guy/FrameRig/box_frames.gd
 res://Scenes/Guy/FrameRig/States/stab.tscn
+res://Scenes/Guy/FrameRig/boxSheet.gd

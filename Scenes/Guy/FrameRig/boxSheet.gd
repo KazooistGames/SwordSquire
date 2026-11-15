@@ -1,4 +1,4 @@
-class_name BoxFrames
+class_name BoxSheet
 extends Node
 
 enum Type {

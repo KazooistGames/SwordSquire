@@ -9,6 +9,7 @@ extends Sprite2D
 			return
 		elif playing and current_frame_index == frame_sheet.last_i:
 			current_frame_index = frame_sheet.first_i
+			
 @export var playback_speed = 1.0
 @export var current_frame_index := 0
 @export var frame_timer := 0.0
@@ -25,12 +26,15 @@ extends Sprite2D
 			frame_sheet = value
 			play()			
 				
+@export var hurt_sheets : Array[BoxSheet]				
+@export var hit_sheets : Array[BoxSheet]				
+				
 signal started()
 signal looped()
 signal finished()
 	
-@onready var hit_box = $hitBox
-@onready var hurt_box = $hurtBox
+@onready var hitbox = $hitBox
+@onready var hurtbox = $hurtBox
 	
 
 func _ready() -> void:
@@ -71,11 +75,12 @@ func _render_current_frame():
 		var w = frame_sheet.tex_size.x
 		var h = frame_sheet.tex_size.y
 		region_rect = Rect2(x, y, w, h)
-	
-	#var frame_number : int = current_frame_index - sheet.first_i
-	#var x_dir = -1 if flip_h else 1
-	#var y_dir = -1 if flip_v else 1
 
+func _simulate_current_frame():
+	var active_frame_index = current_frame_index - frame_sheet.first_i
+	for collider : CollisionShape2D in hurtbox.colliders:
+		var box_sheet : BoxSheet = hurt_sheets[hurtbox.colliders.find(collider)]
+		set_collider_frame(collider, box_sheet, active_frame_index)
 		
 		
 func play():
@@ -102,7 +107,31 @@ func set_state(state_name : String):
 		elif child.name == state_name:
 			frame_timer = 0
 			frame_sheet = child
-			
-			#TODO: set colliders for hitbox/hurtbox as per state
-			
+			load_box_frames(frame_sheet)
+			break
 	
+	
+func load_box_frames(sheet : FrameSheet):
+	for col in hurtbox.colliders:
+		col.queue_free()
+		hurtbox.colliders.clear()
+		hurt_sheets = sheet.get_children().filter(
+			func(x): return x is BoxSheet and x.type == BoxSheet.Type.hurt)
+			
+		for frame in hurt_sheets:
+			var new_col = CollisionShape2D.new()
+			new_col.shape = CapsuleShape2D.new()
+			add_child(new_col)
+			
+			
+func set_collider_frame(collider : CollisionShape2D, frames : BoxSheet, active_frame_index : int):
+	var frame_offset = frames.offset.get(active_frame_index)
+	var frame_radius = frames.radius.get(active_frame_index)
+	var frame_height = frames.height.get(active_frame_index)
+	
+	if frame_offset != null:
+		collider.position = frame_offset
+	if frame_radius != null:
+		collider.shape.radius = frame_radius
+	if frame_height != null:
+		collider.shape.height = frame_height	
