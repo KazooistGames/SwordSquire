@@ -20,12 +20,13 @@ extends Sprite2D
 	get:
 		return frame_sheet
 	set(value):
-		if not value is FrameSheet:
-			return
-		elif value != null and value != frame_sheet:
-			frame_sheet = value
-			play()			
+		frame_sheet = value	
+		if frame_sheet != null:
+			frame_timer = 0
+			load_box_frames(frame_sheet)
+			play()		
 				
+		
 @export var hurt_sheets : Array[BoxSheet]				
 @export var hit_sheets : Array[BoxSheet]				
 				
@@ -33,9 +34,9 @@ signal started()
 signal looped()
 signal finished()
 	
-@onready var hitbox = $hitBox
-@onready var hurtbox = $hurtBox
-	
+@onready var hitbox : HitBox = $hitBox
+@onready var hurtbox : HurtBox = $hurtBox
+@onready var guy : Guy = get_parent()
 
 func _ready() -> void:
 	frame_sheet = $ready #guarantees it isnt null on load..
@@ -55,7 +56,7 @@ func _physics_process(delta: float) -> void:
 
 	current_frame_index = clampi(current_frame_index, frame_sheet.first_i, frame_sheet.last_i)
 	_render_current_frame()
-
+	_simulate_current_frame()
 
 func _get_next_frame():
 	if current_frame_index < frame_sheet.last_i:
@@ -78,9 +79,10 @@ func _render_current_frame():
 
 func _simulate_current_frame():
 	var active_frame_index = current_frame_index - frame_sheet.first_i
-	for collider : CollisionShape2D in hurtbox.colliders:
-		var box_sheet : BoxSheet = hurt_sheets[hurtbox.colliders.find(collider)]
-		set_collider_frame(collider, box_sheet, active_frame_index)
+	if hurtbox != null:
+		for collider : CollisionShape2D in hurtbox.colliders:
+			var box_sheet : BoxSheet = hurt_sheets[hurtbox.colliders.find(collider)]
+			set_collider_frame(collider, box_sheet, active_frame_index)
 		
 		
 func play():
@@ -105,31 +107,36 @@ func set_state(state_name : String):
 		if not child is FrameSheet:
 			pass
 		elif child.name == state_name:
-			frame_timer = 0
 			frame_sheet = child
-			load_box_frames(frame_sheet)
 			break
 	
 	
 func load_box_frames(sheet : FrameSheet):
-	for col in hurtbox.colliders:
-		col.queue_free()
-		hurtbox.colliders.clear()
-		hurt_sheets = sheet.get_children().filter(
-			func(x): return x is BoxSheet and x.type == BoxSheet.Type.hurt)
+	if hurtbox:
+		for col in hurtbox.colliders:
+			col.queue_free()
+			hurtbox.colliders.clear()
+			
+		hurt_sheets = []
+		for child in sheet.get_children():
+			if child is BoxSheet and child.type == BoxSheet.Type.hurt:
+				hurt_sheets.append(child)
 			
 		for frame in hurt_sheets:
 			var new_col = CollisionShape2D.new()
 			new_col.shape = CapsuleShape2D.new()
+			hurtbox.colliders.append(new_col)
 			add_child(new_col)
 			
 			
 func set_collider_frame(collider : CollisionShape2D, frames : BoxSheet, active_frame_index : int):
-	var frame_offset = frames.offset.get(active_frame_index)
-	var frame_radius = frames.radius.get(active_frame_index)
-	var frame_height = frames.height.get(active_frame_index)
+	# uses ternaries as null coalescion to avoid editor error spam
+	var frame_offset = frames.offset[active_frame_index] if active_frame_index >= 0 and active_frame_index < frames.offset.size() else null
+	var frame_radius = frames.radius[active_frame_index] if active_frame_index >= 0 and active_frame_index < frames.radius.size() else null
+	var frame_height = frames.height[active_frame_index] if active_frame_index >= 0 and active_frame_index < frames.height.size() else null
 	
 	if frame_offset != null:
+		frame_offset.x *= -guy.facing_direction 
 		collider.position = frame_offset
 	if frame_radius != null:
 		collider.shape.radius = frame_radius
