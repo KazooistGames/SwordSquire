@@ -1,15 +1,19 @@
 [gd_scene format=3 uid="uid://db5fff6v2i5p7"]
 
 [ext_resource type="PackedScene" uid="uid://b8xpmmlbv64kh" path="res://Scenes/Guy/Guy.tscn" id="1_8rpvy"]
-[ext_resource type="Texture2D" uid="uid://dhgct8k8fdape" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_duck-Sheet.png" id="2_0x861"]
-[ext_resource type="Texture2D" uid="uid://jk86te33ybkf" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_slide-Sheet.png" id="2_2jugv"]
-[ext_resource type="Texture2D" uid="uid://cxobu116skjus" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_run-Sheet.png" id="2_3nu5a"]
-[ext_resource type="Texture2D" uid="uid://demjv5cek8yey" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_jump-Sheet.png" id="2_21dxl"]
-[ext_resource type="Texture2D" uid="uid://0tokl0nyx5r7" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_swing-Sheet.png" id="2_a8pqw"]
-[ext_resource type="Texture2D" uid="uid://bfjx4ur3gsug8" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_die-Sheet.png" id="2_cnphc"]
-[ext_resource type="Script" uid="uid://cjmb2t8shvcb0" path="res://Scenes/Guy/FrameRig/frame_params.gd" id="2_stp78"]
-[ext_resource type="Texture2D" uid="uid://tmo3ijcibewl" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_stab-Sheet.png" id="3_a8pqw"]
+[ext_resource type="PackedScene" uid="uid://bhed0j2bonr73" path="res://Scenes/Guy/FrameRig/States/ready.tscn" id="3_u740s"]
 [ext_resource type="Texture2D" uid="uid://cjabutfsxarfr" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_idle-Sheet.png" id="4_nypsl"]
+[ext_resource type="PackedScene" uid="uid://dnq6m6031evb6" path="res://Scenes/Guy/FrameRig/States/run.tscn" id="4_um7s8"]
+[ext_resource type="PackedScene" uid="uid://h1nxp1qgvb07" path="res://Scenes/Guy/FrameRig/States/slide.tscn" id="5_gsbyi"]
+[ext_resource type="PackedScene" uid="uid://b42vu0xv2nuyw" path="res://Scenes/Guy/FrameRig/States/duck.tscn" id="6_ithbq"]
+[ext_resource type="PackedScene" uid="uid://v360olckx2p8" path="res://Scenes/Guy/FrameRig/States/jump_charge.tscn" id="7_qhxhs"]
+[ext_resource type="PackedScene" uid="uid://qe4lc0ympwc5" path="res://Scenes/Guy/FrameRig/States/slash_windup.tscn" id="8_u2ijk"]
+[ext_resource type="PackedScene" uid="uid://ebwh63xa1m4l" path="res://Scenes/Guy/FrameRig/States/slash.tscn" id="9_et5ya"]
+[ext_resource type="PackedScene" uid="uid://bme06ejjvv6vd" path="res://Scenes/Guy/FrameRig/States/slash_recover.tscn" id="10_ekpvm"]
+[ext_resource type="PackedScene" uid="uid://b8dsb51p3g7if" path="res://Scenes/Guy/FrameRig/States/stab_windup.tscn" id="11_rjqmb"]
+[ext_resource type="PackedScene" uid="uid://bxvxgtiggywbb" path="res://Scenes/Guy/FrameRig/States/stab.tscn" id="12_63hrh"]
+[ext_resource type="PackedScene" uid="uid://cq4ptvbargod" path="res://Scenes/Guy/FrameRig/States/stab_recover.tscn" id="13_06p1n"]
+[ext_resource type="PackedScene" uid="uid://oxog1op5bwnh" path="res://Scenes/Guy/FrameRig/States/die.tscn" id="14_b45ho"]
 
 [node name="Swordsman" unique_id=1920363709 instance=ExtResource("1_8rpvy")]
 Team = 1
@@ -18,87 +22,31 @@ Team = 1
 texture = ExtResource("4_nypsl")
 region_rect = Rect2(48, 0, 24, 24)
 current_frame_index = 2
-frame_timer = 0.11666666666666664
+frame_timer = 0.13333333333328473
 
-[node name="ready" type="Node" parent="frameRig" index="0" unique_id=1787436432]
-script = ExtResource("2_stp78")
-sheet = ExtResource("4_nypsl")
-last_i = 3
-loop = true
+[node name="ready" parent="frameRig" index="0" unique_id=204285093 instance=ExtResource("3_u740s")]
 
-[node name="run" type="Node" parent="frameRig" index="1" unique_id=497721600]
-script = ExtResource("2_stp78")
-sheet = ExtResource("2_3nu5a")
-fps = 15
-last_i = 5
-loop = true
+[node name="run" parent="frameRig" index="1" unique_id=67683473 instance=ExtResource("4_um7s8")]
 
-[node name="stab" type="Node" parent="frameRig" index="2" unique_id=873176266]
-script = ExtResource("2_stp78")
-sheet = ExtResource("3_a8pqw")
-tex_size = Vector2i(36, 24)
-fps = 30
-first_i = 4
-last_i = 10
+[node name="slide" parent="frameRig" index="2" unique_id=1894792820 instance=ExtResource("5_gsbyi")]
 
-[node name="stab_windup" type="Node" parent="frameRig" index="3" unique_id=503556153]
-script = ExtResource("2_stp78")
-sheet = ExtResource("3_a8pqw")
-tex_size = Vector2i(36, 24)
-fps = 6
-last_i = 3
+[node name="duck" parent="frameRig" index="3" unique_id=526719022 instance=ExtResource("6_ithbq")]
 
-[node name="stab_recover" type="Node" parent="frameRig" index="4" unique_id=1416778604]
-script = ExtResource("2_stp78")
-sheet = ExtResource("3_a8pqw")
-tex_size = Vector2i(36, 24)
-fps = 12
-first_i = 11
-last_i = 12
+[node name="jump_charge" parent="frameRig" index="4" unique_id=2081429308 instance=ExtResource("7_qhxhs")]
 
-[node name="slash" type="Node" parent="frameRig" index="5" unique_id=613023106]
-script = ExtResource("2_stp78")
-sheet = ExtResource("2_a8pqw")
-fps = 15
-first_i = 8
-last_i = 11
+[node name="slash_windup" parent="frameRig" index="5" unique_id=1720459390 instance=ExtResource("8_u2ijk")]
 
-[node name="slash_windup" type="Node" parent="frameRig" index="6" unique_id=722483617]
-script = ExtResource("2_stp78")
-sheet = ExtResource("2_a8pqw")
-fps = 15
-last_i = 7
+[node name="slash" parent="frameRig" index="6" unique_id=2002721167 instance=ExtResource("9_et5ya")]
 
-[node name="slash_recover" type="Node" parent="frameRig" index="7" unique_id=986274525]
-script = ExtResource("2_stp78")
-sheet = ExtResource("2_a8pqw")
-fps = 9
-first_i = 12
-last_i = 14
+[node name="slash_recover" parent="frameRig" index="7" unique_id=1170255487 instance=ExtResource("10_ekpvm")]
 
-[node name="die" type="Node" parent="frameRig" index="8" unique_id=120575319]
-script = ExtResource("2_stp78")
-sheet = ExtResource("2_cnphc")
-fps = 4
-last_i = 4
+[node name="stab_windup" parent="frameRig" index="8" unique_id=1117975670 instance=ExtResource("11_rjqmb")]
 
-[node name="slide" type="Node" parent="frameRig" index="9" unique_id=1322022693]
-script = ExtResource("2_stp78")
-sheet = ExtResource("2_2jugv")
-fps = 6
-last_i = 2
+[node name="stab" parent="frameRig" index="9" unique_id=1660537331 instance=ExtResource("12_63hrh")]
 
-[node name="jump_charge" type="Node" parent="frameRig" index="10" unique_id=134442373]
-script = ExtResource("2_stp78")
-sheet = ExtResource("2_21dxl")
-fps = 10
-last_i = 4
+[node name="stab_recover" parent="frameRig" index="10" unique_id=1202957307 instance=ExtResource("13_06p1n")]
 
-[node name="duck" type="Node" parent="frameRig" index="11" unique_id=1769091416]
-script = ExtResource("2_stp78")
-sheet = ExtResource("2_0x861")
-fps = 12
-last_i = 5
+[node name="die" parent="frameRig" index="11" unique_id=940246265 instance=ExtResource("14_b45ho")]
 
 [node name="CollisionShape2D" parent="interactBox" parent_id_path=PackedInt32Array(1315001161) index="0" unique_id=58424191]
 debug_color = Color(0.5882353, 0.49019608, 0, 0.078431375)

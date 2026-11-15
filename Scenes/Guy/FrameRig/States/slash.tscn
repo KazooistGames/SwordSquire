@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://ebwh63xa1m4l"]
+
+[ext_resource type="Script" uid="uid://cjmb2t8shvcb0" path="res://Scenes/Guy/FrameRig/frameSheet.gd" id="1_me2s3"]
+[ext_resource type="Texture2D" uid="uid://0tokl0nyx5r7" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_swing-Sheet.png" id="2_1x5i0"]
+
+[node name="slash" type="Node" unique_id=2002721167]
+script = ExtResource("1_me2s3")
+sheet = ExtResource("2_1x5i0")
+fps = 15
+first_i = 8
+last_i = 11

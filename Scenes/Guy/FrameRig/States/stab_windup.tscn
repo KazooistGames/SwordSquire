@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://b8dsb51p3g7if"]
+
+[ext_resource type="Script" uid="uid://cjmb2t8shvcb0" path="res://Scenes/Guy/FrameRig/frameSheet.gd" id="1_g574l"]
+[ext_resource type="Texture2D" uid="uid://tmo3ijcibewl" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_stab-Sheet.png" id="2_16lat"]
+
+[node name="stab_windup" type="Node" unique_id=1117975670]
+script = ExtResource("1_g574l")
+sheet = ExtResource("2_16lat")
+tex_size = Vector2i(36, 24)
+fps = 6
+last_i = 3

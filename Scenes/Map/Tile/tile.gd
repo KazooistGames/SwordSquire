@@ -73,42 +73,42 @@ func correlate_cell_code(chunk : Chunk, coord : Vector2i) -> String:
 	return '*'
 
 
-func build_background(signature : String):
-	if not PrefabBackgrounds.has(signature):
-		push_error("missing signature for background: " + signature)
+func build_background(sig : String):
+	if not PrefabBackgrounds.has(sig):
+		push_error("missing signature for background: " + sig)
 		return
 	background = Sprite2D.new()
 	add_child(background)
-	background.texture = PrefabBackgrounds[signature]
+	background.texture = PrefabBackgrounds[sig]
 
 
-func build_foreground(signature : String):
-	if not PrefabForegrounds.has(signature):
-		push_error("missing signature for foreground: " + signature)
+func build_foreground(sig : String):
+	if not PrefabForegrounds.has(sig):
+		push_error("missing signature for foreground: " + sig)
 		return
 	foreground = Sprite2D.new()
 	add_child(foreground)
-	foreground.texture = PrefabForegrounds[signature]
+	foreground.texture = PrefabForegrounds[sig]
 	var polys : Array[PackedVector2Array]
-	if PrefabPolygons.has(signature):
-		polys = (PrefabPolygons[signature] as Array[PackedVector2Array]).duplicate()
+	if PrefabPolygons.has(sig):
+		polys = (PrefabPolygons[sig] as Array[PackedVector2Array]).duplicate()
 	else:	
 		polys = build_polys_from_sprite(foreground)
-		PrefabPolygons[signature] = polys
+		PrefabPolygons[sig] = polys
 		
 	# Create CollisionPolygon2D nodes for each generated polygon
 	body = StaticBody2D.new()
 	body.collision_layer = SwordSquire.LAYER.TERRAIN
 	body.collision_mask = SwordSquire.LAYER.GUY
 	add_child(body)
-	var half := Vector2(foreground.texture.get_size()) / 2.0
+	#var half := Vector2(foreground.texture.get_size()) / 2.0
 	for poly in polys:
 		var collision_polygon = CollisionPolygon2D.new()
 		collision_polygon.build_mode = CollisionPolygon2D.BUILD_SOLIDS 
 		collision_polygon.polygon = poly
 		body.add_child(collision_polygon)
 		collision_polygon.set_owner(self)
-		collision_polygon.position -= Vector2(foreground.texture.get_image().get_size() / 2)
+		collision_polygon.position -= Vector2(foreground.texture.get_image().get_size() / 2.0)
 
 
 func build_polys_from_sprite(sprite : Sprite2D):

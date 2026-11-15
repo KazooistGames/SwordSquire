@@ -2,32 +2,34 @@ extends Area2D
 
 @export var Position_Offset : Vector2 = Vector2(8, 0)
 
-@onready var parent : CharacterBody2D = get_parent()
-@onready var collider : CollisionShape2D = $CollisionShape2D
+@onready var parent : Guy = get_parent().get_parent()
 
 var guys_marked_for_hit : Array[CharacterBody2D] = []
 var guys_marked_for_parry : Array[CharacterBody2D] = []
 var items_marked_for_smack : Array[PhysicsBody2D] = []
 
-signal parried(CharacterBody2D)
-signal landed_hit(CharacterBody2D)
+var box_frames : Array[BoxFrames]
+var colliders : Array[CollisionShape2D]
+
+signal parried(Guy)
+signal landed_hit(Guy)
 
 
 func _process(delta : float) -> void:
 	position = Position_Offset
 	position.x *= parent.facing_direction
-	match parent.state:
-		parent.State.attacking:
+	match parent.stance:
+		parent.Stance.attacking:
 			_process_attacking(delta)
 			
-		parent.State.recovering:
+		parent.Stance.recovering:
 			_process_recovering(delta)		
 								
 		_:
 			pass
 			
 			
-func _process_attacking(delta : float) -> void:
+func _process_attacking(_delta : float) -> void:
 	var colliding_areas : Array[Area2D] = get_overlapping_areas()	
 	for area in colliding_areas:
 		var object = area.get_parent()		
@@ -44,7 +46,7 @@ func _process_attacking(delta : float) -> void:
 			_handle_item_overlap(body)
 
 					
-func _process_recovering(delta : float) -> void:
+func _process_recovering(_delta : float) -> void:
 	for guy in guys_marked_for_hit:		
 		if guy == null:
 			continue
@@ -63,7 +65,7 @@ func _process_recovering(delta : float) -> void:
 		if item == null:
 			continue
 			
-		var disposition = (item.global_position - global_position).normalized()
+		#var disposition = (item.global_position - global_position).normalized()
 		var direction = Vector2(parent.facing_direction, -1).normalized()
 		var magnitude = 250
 		item.smack(direction * magnitude)
@@ -93,6 +95,17 @@ func _handle_item_overlap(item : PhysicsBody2D) -> void:
 	else:
 		items_marked_for_smack.append(item)
 		
-
+func load_sheet(sheet : FrameSheet):
+	
+	for col in colliders:
+		col.queue_free()
+	colliders.clear()
+	box_frames = sheet.get_children().filter(
+		func(x): return x is BoxFrames and x.type == BoxFrames.Type.hurt)
+		
+	for frames in box_frames:
+		var new_col = CollisionShape2D.new()
+		new_col.shape = CapsuleShape2D.new()
+		add_child(new_col)
 	
 	

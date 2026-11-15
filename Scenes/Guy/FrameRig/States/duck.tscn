@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://b42vu0xv2nuyw"]
+
+[ext_resource type="Script" uid="uid://cjmb2t8shvcb0" path="res://Scenes/Guy/FrameRig/frameSheet.gd" id="1_w4p3u"]
+[ext_resource type="Texture2D" uid="uid://dhgct8k8fdape" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_duck-Sheet.png" id="2_dt3cp"]
+
+[node name="duck" type="Node" unique_id=526719022]
+script = ExtResource("1_w4p3u")
+sheet = ExtResource("2_dt3cp")
+fps = 12
+last_i = 5

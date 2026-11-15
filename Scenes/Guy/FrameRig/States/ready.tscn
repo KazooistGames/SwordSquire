@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bhed0j2bonr73"]
+
+[ext_resource type="Script" uid="uid://cjmb2t8shvcb0" path="res://Scenes/Guy/FrameRig/frameSheet.gd" id="1_lj4q7"]
+[ext_resource type="Texture2D" uid="uid://cjabutfsxarfr" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_idle-Sheet.png" id="2_argik"]
+
+[node name="ready" type="Node" unique_id=204285093]
+script = ExtResource("1_lj4q7")
+sheet = ExtResource("2_argik")
+last_i = 3
+loop = true

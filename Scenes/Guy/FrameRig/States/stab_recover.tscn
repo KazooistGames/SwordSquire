@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://cq4ptvbargod"]
+
+[ext_resource type="Script" uid="uid://cjmb2t8shvcb0" path="res://Scenes/Guy/FrameRig/frameSheet.gd" id="1_1xcp1"]
+[ext_resource type="Texture2D" uid="uid://tmo3ijcibewl" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_stab-Sheet.png" id="2_x277y"]
+
+[node name="stab_recover" type="Node" unique_id=1202957307]
+script = ExtResource("1_1xcp1")
+sheet = ExtResource("2_x277y")
+tex_size = Vector2i(36, 24)
+fps = 12
+first_i = 11
+last_i = 12

@@ -14,7 +14,7 @@ func spawn_player() -> Guy:
 	add_child(new_guy)
 	var harness : GameplayHarness = GameplayHarness.new()
 	new_guy.add_child(harness)
-	PlayerInterface.camera.guy = new_guy
+	PlayerInterface.camera.target_guy = new_guy
 	new_guy.position.x = 500
 	return new_guy
 	
@@ -23,4 +23,4 @@ func despawn_players():
 	for guy in player_guys:
 		guy.queue_free()
 	player_guys.clear()
-	PlayerInterface.camera.guy = null
+	PlayerInterface.camera.target_guy = null

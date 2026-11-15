@@ -62,7 +62,7 @@ var smash_attack := false
 
 var effective_poise : float :
 	get():
-		return 0 if posture == Posture.weak else Poise
+		return 0.0 if posture == Posture.weak else Poise
 
 
 signal died
@@ -102,11 +102,11 @@ func _process_movement(delta : float) -> void:
 	if is_on_floor():
 		if stance != Stance.ready: # doing something
 			target_speed = 0
-			effective_accel = BASE_ACCEL / 2	
+			effective_accel = BASE_ACCEL / 2.0
 		elif left_right == 0 or sign(left_right) != sign(velocity.x): # pivot
 			effective_accel = BASE_ACCEL		
 		elif abs(velocity.x) > abs(target_speed):
-			effective_accel = BASE_ACCEL / 2
+			effective_accel = BASE_ACCEL / 2.0
 		elif run_charge_timer >= RUN_CHARGE_BASE_PERIOD: # speeding up
 			var speed_ratio = clampf(abs(velocity.x)/BASE_SPEED, 0.0, 1.0)
 			effective_accel = lerpf(BASE_ACCEL, 0, pow(speed_ratio, 2))			
@@ -122,7 +122,7 @@ func _process_movement(delta : float) -> void:
 		The jump feels controlled while still carrying aerial momentum
 		''' 
 		velocity.y += 980 * delta	
-		effective_accel = BASE_ACCEL / 2
+		effective_accel = BASE_ACCEL / 2.0
 		if left_right == 0:	# idle
 			effective_accel = 0.0	
 		elif sign(left_right) != sign(velocity.x): # turning around
@@ -290,7 +290,7 @@ func release_duck() -> bool:
 	if stance != Stance.ducking:
 		return false
 	if velocity.x != 0:
-		while(abs(velocity.x) > lerp(0, BASE_SPEED/2, effective_poise)):
+		while(abs(velocity.x) > lerp(0.0, BASE_SPEED/2.0, effective_poise)):
 			await get_tree().physics_frame
 	else:
 		while(frame_rig.playing):

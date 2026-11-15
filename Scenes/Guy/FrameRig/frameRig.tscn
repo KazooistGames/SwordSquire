@@ -2,6 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://tmo3ijcibewl" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_stab-Sheet.png" id="1_ogbdo"]
 [ext_resource type="Script" uid="uid://c0ww8hb384pwm" path="res://Scenes/Guy/FrameRig/frameRig.gd" id="2_texl7"]
+[ext_resource type="Script" uid="uid://bb2v6ohbgegrp" path="res://Scenes/Guy/FrameRig/hit_box.gd" id="3_bk2k5"]
+[ext_resource type="Script" uid="uid://bkt8a20ec31ev" path="res://Scenes/Guy/FrameRig/hurt_box.gd" id="4_klt75"]
 
 [node name="frameRig" type="Sprite2D" unique_id=19226099]
 texture = ExtResource("1_ogbdo")
@@ -11,3 +13,9 @@ script = ExtResource("2_texl7")
 playing = true
 current_frame_index = 6
 frame_timer = 0.0125
+
+[node name="hitBox" type="Area2D" parent="." unique_id=1863566005]
+script = ExtResource("3_bk2k5")
+
+[node name="hurtBox" type="Area2D" parent="." unique_id=2064098238]
+script = ExtResource("4_klt75")

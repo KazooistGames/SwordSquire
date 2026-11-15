@@ -5,3 +5,17 @@ res://Scenes/Guy/FrameRig/frameRig.tscn
 res://Scenes/Guy/Guy.tscn
 res://Scenes/Guy/FrameRig/frameRig.gd
 res://Scenes/Guy/FrameRig/frame_params.gd
+res://Scenes/Guy/Boxes/hit_box.tscn
+res://Scenes/Guy/FrameRig/Boxes/hit_box.tscn
+res://Scenes/Guy/FrameRig/hit_box.gd
+res://Scenes/Guy/FrameRig/hurt_box.gd
+res://Scenes/Map/Tile/tile.gd
+res://Scenes/PlayerInterface/Camera/Camera.gd
+res://Scenes/Lobby/Lobby.gd
+res://Scenes/Map/Chunk/chunk.gd
+res://Scenes/Guy/FrameRig/frame.gd
+res://Scenes/Guy/FrameRig/frame_sheet.gd
+res://Scenes/Guy/FrameRig/_sheet.gd
+res://Scenes/Guy/FrameRig/frames.gd
+res://Scenes/Guy/FrameRig/box_frames.gd
+res://Scenes/Guy/FrameRig/States/stab.tscn

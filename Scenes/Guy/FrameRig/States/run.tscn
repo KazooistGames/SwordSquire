@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dnq6m6031evb6"]
+
+[ext_resource type="Script" uid="uid://cjmb2t8shvcb0" path="res://Scenes/Guy/FrameRig/frameSheet.gd" id="1_bqgvw"]
+[ext_resource type="Texture2D" uid="uid://cxobu116skjus" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_run-Sheet.png" id="2_8k13j"]
+
+[node name="run" type="Node" unique_id=67683473]
+script = ExtResource("1_bqgvw")
+sheet = ExtResource("2_8k13j")
+fps = 15
+last_i = 5
+loop = true

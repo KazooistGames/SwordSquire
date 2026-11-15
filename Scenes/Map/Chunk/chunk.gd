@@ -254,27 +254,27 @@ func extend(direction : Vector2i, count : int = 1, fill : Cell = null):
 	assert(count >= 1)
 	var edge : Vector2i
 	var increment : Vector2i
-	var range : int
+	var corner_range : int
 	match direction:
 		Vector2i.UP:
 			edge = Vector2i(corner_min.x, corner_max.y)
 			increment = Vector2i(1, 0)
-			range = corner_max.x - corner_min.x	+ 1
+			corner_range = corner_max.x - corner_min.x	+ 1
 		Vector2i.DOWN:
 			edge = Vector2i(corner_min.x, corner_min.y)
 			increment = Vector2i(1, 0)
-			range = corner_max.x - corner_min.x + 1
+			corner_range = corner_max.x - corner_min.x + 1
 		Vector2i.LEFT:
 			edge = Vector2i(corner_max.x, corner_min.y)
 			increment = Vector2i(0, 1)
-			range = corner_max.y - corner_min.y + 1
+			corner_range = corner_max.y - corner_min.y + 1
 		Vector2i.RIGHT:
 			edge = Vector2i(corner_min.x, corner_min.y)
 			increment = Vector2i(0, 1)
-			range = corner_max.y - corner_min.y + 1
+			corner_range = corner_max.y - corner_min.y + 1
 						
 	var coordinates := edge - direction	
-	for i in (range):
+	for i in (corner_range):
 		init_cell(coordinates)
 		if fill != null:
 			collapse_cell(coordinates, fill)

@@ -1,5 +1,5 @@
 
-class_name FrameParams
+class_name FrameSheet
 extends Node
 
 @export var sheet : CompressedTexture2D = null

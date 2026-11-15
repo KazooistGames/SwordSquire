@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://oxog1op5bwnh"]
+
+[ext_resource type="Script" uid="uid://cjmb2t8shvcb0" path="res://Scenes/Guy/FrameRig/frameSheet.gd" id="1_bns45"]
+[ext_resource type="Texture2D" uid="uid://bfjx4ur3gsug8" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_die-Sheet.png" id="2_swk8o"]
+
+[node name="die" type="Node" unique_id=940246265]
+script = ExtResource("1_bns45")
+sheet = ExtResource("2_swk8o")
+fps = 4
+last_i = 4

@@ -18,15 +18,15 @@ var y_offset := -6.0
 var y_deadbanded := false
 var y_deadband_timer := 0.0
 
-var guy : Guy = null :
+var target_guy : Guy = null :
 	get():
-		return guy
+		return target_guy
 	set(value):
 		if value == null:
 			hud.visible = false
 		else:
 			hud.visible = true
-		guy = value
+		target_guy = value
 
 
 func _ready():
@@ -42,41 +42,41 @@ func _ready():
 	
 
 func _process(delta : float) -> void:
-	if guy != null:
-		target_position = guy.global_position
-		fov_light.global_position = guy.global_position
+	if target_guy != null:
+		target_position = target_guy.global_position
+		fov_light.global_position = target_guy.global_position
 		_update_bush_transparency()
 		_update_guy_hidden()	
 		_update_hud(delta)
 	
 	
 func _physics_process(delta: float) -> void:
-	if guy != null:
+	if target_guy != null:
 		track_guy_horizontally(delta)
 		track_guy_vertically(delta)
 	
 	
-func track_guy_horizontally(delta):
-	assert(guy != null)
-	x_target = guy.global_position.x
+func track_guy_horizontally(_delta):
+	assert(target_guy != null)
+	x_target = target_guy.global_position.x
 	var offset_from_target : float = abs(x_target - global_position.x)
 	var speed = base_x_speed + offset_from_target / 20.0
 	global_position.x = move_toward(global_position.x, target_position.x, speed)
 
 
 func track_guy_vertically(delta):
-	assert(guy != null)
+	assert(target_guy != null)
 	var offset_from_target : float = abs(y_target - global_position.y)
 	if y_deadband_timer >= deadband_period:
 		y_deadbanded = false
 		y_deadband_timer = 0.0
 	elif y_deadbanded:
-		y_target = guy.global_position.y + y_offset
+		y_target = target_guy.global_position.y + y_offset
 	else:
 		var speed = base_y_speed + offset_from_target/25.0
 		global_position.y = move_toward(global_position.y, y_target, speed)
-		if abs(y_target - guy.global_position.y) >= y_range:
-			y_target = guy.global_position.y + y_offset
+		if abs(y_target - target_guy.global_position.y) >= y_range:
+			y_target = target_guy.global_position.y + y_offset
 			
 	if offset_from_target >= y_range:
 		y_deadbanded = false
@@ -88,19 +88,19 @@ func track_guy_vertically(delta):
 
 
 func _update_hud(_delta):
-	assert(guy != null)
-	poise_meter.size.x = guy.Poise * 100
+	assert(target_guy != null)
+	poise_meter.size.x = target_guy.Poise * 100
 	
 	
 func _update_bush_transparency():
-	assert(guy != null)
+	assert(target_guy != null)
 	var bushes : Array[Node] = get_tree().get_nodes_in_group("Bush")
 	for bush in bushes:
-		bush.Transparent = bush.inhabitants.has(guy)
+		bush.Transparent = bush.inhabitants.has(target_guy)
 
 
 func _update_guy_hidden():
-	assert(guy != null)
+	assert(target_guy != null)
 	var guys : Array[Node] = get_tree().get_nodes_in_group("Guy")
 	for guy in guys:
 		if guy == guy:
@@ -113,7 +113,7 @@ func can_see_through_all_concealments(other_guy : CharacterBody2D) -> bool:
 	for concealment in other_guy.Concealments:
 		if concealment == null:
 			continue
-		elif not guy.Concealments.has(concealment):
+		elif not target_guy.Concealments.has(concealment):
 			return false
 	return true
 		
