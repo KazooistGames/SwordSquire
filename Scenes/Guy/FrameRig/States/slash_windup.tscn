@@ -6,11 +6,10 @@
 
 [node name="slash_windup" type="Node" unique_id=1720459390]
 script = ExtResource("1_avlsm")
-sheet = ExtResource("2_quo8a")
+texture = ExtResource("2_quo8a")
 fps = 15
 last_i = 7
 
 [node name="hurt" type="Node" parent="." unique_id=1141743668]
 script = ExtResource("3_quo8a")
 offset = Array[Vector2i]([Vector2i(2, 1)])
-radius = Array[float]([4.0])

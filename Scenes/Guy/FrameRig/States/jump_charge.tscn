@@ -4,11 +4,14 @@
 [ext_resource type="Texture2D" uid="uid://demjv5cek8yey" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_jump-Sheet.png" id="2_i27ja"]
 [ext_resource type="Script" uid="uid://ybahaesvpiuc" path="res://Scenes/Guy/FrameRig/boxSheet.gd" id="3_i27ja"]
 
-[node name="jump_charge" type="Node" unique_id=2081429308]
+[node name="jump_charge" type="Node" unique_id=2081429308 node_paths=PackedStringArray("hurt_frames")]
 script = ExtResource("1_l467n")
-sheet = ExtResource("2_i27ja")
+texture = ExtResource("2_i27ja")
 fps = 10
 last_i = 4
+hurt_frames = [NodePath("hurt")]
 
 [node name="hurt" type="Node" parent="." unique_id=666139257]
 script = ExtResource("3_i27ja")
+offset = Array[Vector2i]([Vector2i(0, 2), Vector2i(0, 2), Vector2i(-1, 2)])
+height = Array[float]([17.0])

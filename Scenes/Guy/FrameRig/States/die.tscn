@@ -5,6 +5,6 @@
 
 [node name="die" type="Node" unique_id=940246265]
 script = ExtResource("1_bns45")
-sheet = ExtResource("2_swk8o")
+texture = ExtResource("2_swk8o")
 fps = 4
 last_i = 4

@@ -6,7 +6,7 @@
 
 [node name="stab" type="Node" unique_id=1660537331]
 script = ExtResource("1_x06df")
-sheet = ExtResource("2_muhsr")
+texture = ExtResource("2_muhsr")
 tex_size = Vector2i(36, 24)
 fps = 32
 first_i = 4

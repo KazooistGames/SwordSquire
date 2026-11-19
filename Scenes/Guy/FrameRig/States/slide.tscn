@@ -6,7 +6,7 @@
 
 [node name="slide" type="Node" unique_id=1894792820]
 script = ExtResource("1_8dj4c")
-sheet = ExtResource("2_vj25c")
+texture = ExtResource("2_vj25c")
 fps = 6
 last_i = 2
 

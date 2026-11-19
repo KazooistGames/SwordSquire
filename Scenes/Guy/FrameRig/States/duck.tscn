@@ -6,7 +6,7 @@
 
 [node name="duck" type="Node" unique_id=526719022]
 script = ExtResource("1_w4p3u")
-sheet = ExtResource("2_dt3cp")
+texture = ExtResource("2_dt3cp")
 fps = 12
 last_i = 5
 

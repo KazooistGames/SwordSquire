@@ -4,12 +4,13 @@
 [ext_resource type="Texture2D" uid="uid://tmo3ijcibewl" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_stab-Sheet.png" id="2_16lat"]
 [ext_resource type="Script" uid="uid://ybahaesvpiuc" path="res://Scenes/Guy/FrameRig/boxSheet.gd" id="3_16lat"]
 
-[node name="stab_windup" type="Node" unique_id=1117975670]
+[node name="stab_windup" type="Node" unique_id=1117975670 node_paths=PackedStringArray("hurt_frames")]
 script = ExtResource("1_g574l")
-sheet = ExtResource("2_16lat")
+texture = ExtResource("2_16lat")
 tex_size = Vector2i(36, 24)
 fps = 6
 last_i = 3
+hurt_frames = [NodePath("hurt")]
 
 [node name="hurt" type="Node" parent="." unique_id=472474075]
 script = ExtResource("3_16lat")

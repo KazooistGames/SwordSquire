@@ -6,7 +6,7 @@
 
 [node name="stab_recover" type="Node" unique_id=1202957307]
 script = ExtResource("1_1xcp1")
-sheet = ExtResource("2_x277y")
+texture = ExtResource("2_x277y")
 tex_size = Vector2i(36, 24)
 fps = 12
 first_i = 11

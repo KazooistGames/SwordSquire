@@ -6,7 +6,7 @@
 
 [node name="slash_recover" type="Node" unique_id=1170255487]
 script = ExtResource("1_6ny8x")
-sheet = ExtResource("2_8qrym")
+texture = ExtResource("2_8qrym")
 fps = 9
 first_i = 12
 last_i = 14

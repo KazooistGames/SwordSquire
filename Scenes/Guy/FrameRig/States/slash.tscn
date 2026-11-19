@@ -6,11 +6,10 @@
 
 [node name="slash" type="Node" unique_id=2002721167]
 script = ExtResource("1_me2s3")
-sheet = ExtResource("2_1x5i0")
+texture = ExtResource("2_1x5i0")
 fps = 15
 first_i = 8
 last_i = 11
 
 [node name="hurt" type="Node" parent="." unique_id=53716734]
 script = ExtResource("3_1x5i0")
-radius = Array[float]([4.0])
