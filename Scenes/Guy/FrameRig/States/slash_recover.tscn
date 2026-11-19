@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cjmb2t8shvcb0" path="res://Scenes/Guy/FrameRig/frameSheet.gd" id="1_6ny8x"]
 [ext_resource type="Texture2D" uid="uid://0tokl0nyx5r7" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_swing-Sheet.png" id="2_8qrym"]
+[ext_resource type="Script" uid="uid://ybahaesvpiuc" path="res://Scenes/Guy/FrameRig/boxSheet.gd" id="3_8qrym"]
 
 [node name="slash_recover" type="Node" unique_id=1170255487]
 script = ExtResource("1_6ny8x")
@@ -9,3 +10,6 @@ sheet = ExtResource("2_8qrym")
 fps = 9
 first_i = 12
 last_i = 14
+
+[node name="hurt" type="Node" parent="." unique_id=143707918]
+script = ExtResource("3_8qrym")

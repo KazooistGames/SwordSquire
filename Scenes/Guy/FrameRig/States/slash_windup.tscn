@@ -2,9 +2,15 @@
 
 [ext_resource type="Script" uid="uid://cjmb2t8shvcb0" path="res://Scenes/Guy/FrameRig/frameSheet.gd" id="1_avlsm"]
 [ext_resource type="Texture2D" uid="uid://0tokl0nyx5r7" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_swing-Sheet.png" id="2_quo8a"]
+[ext_resource type="Script" uid="uid://ybahaesvpiuc" path="res://Scenes/Guy/FrameRig/boxSheet.gd" id="3_quo8a"]
 
 [node name="slash_windup" type="Node" unique_id=1720459390]
 script = ExtResource("1_avlsm")
 sheet = ExtResource("2_quo8a")
 fps = 15
 last_i = 7
+
+[node name="hurt" type="Node" parent="." unique_id=1141743668]
+script = ExtResource("3_quo8a")
+offset = Array[Vector2i]([Vector2i(2, 1)])
+radius = Array[float]([4.0])

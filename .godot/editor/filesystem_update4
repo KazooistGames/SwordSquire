@@ -22,3 +22,11 @@ res://Scenes/Guy/FrameRig/States/stab.tscn
 res://Scenes/Guy/FrameRig/boxSheet.gd
 res://Scenes/Guy/FrameRig/States/ready.tscn
 res://Scenes/Guy/FrameRig/States/duck.tscn
+res://Scenes/Guy/FrameRig/States/run.tscn
+res://Scenes/Guy/FrameRig/States/slash.tscn
+res://Scenes/Guy/FrameRig/States/slash_windup.tscn
+res://Scenes/Guy/FrameRig/States/slash_recover.tscn
+res://Scenes/Guy/FrameRig/States/stab_windup.tscn
+res://Scenes/Guy/FrameRig/States/stab_recover.tscn
+res://Scenes/Guy/FrameRig/States/slide.tscn
+res://Scenes/Guy/FrameRig/States/jump_charge.tscn

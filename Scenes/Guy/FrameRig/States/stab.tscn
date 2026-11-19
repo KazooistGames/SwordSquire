@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cjmb2t8shvcb0" path="res://Scenes/Guy/FrameRig/frameSheet.gd" id="1_x06df"]
 [ext_resource type="Texture2D" uid="uid://tmo3ijcibewl" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_stab-Sheet.png" id="2_muhsr"]
+[ext_resource type="Script" uid="uid://ybahaesvpiuc" path="res://Scenes/Guy/FrameRig/boxSheet.gd" id="3_w1xg3"]
 
 [node name="stab" type="Node" unique_id=1660537331]
 script = ExtResource("1_x06df")
@@ -10,3 +11,8 @@ tex_size = Vector2i(36, 24)
 fps = 32
 first_i = 4
 last_i = 10
+
+[node name="hurt" type="Node" parent="." unique_id=1730018815]
+script = ExtResource("3_w1xg3")
+offset = Array[Vector2i]([Vector2i(1, 1)])
+radius = Array[float]([5.0])

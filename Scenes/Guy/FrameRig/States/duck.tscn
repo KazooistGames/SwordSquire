@@ -14,4 +14,4 @@ last_i = 5
 script = ExtResource("3_dt3cp")
 offset = Array[Vector2i]([Vector2i(1, 2), Vector2i(-1, 6)])
 radius = Array[float]([6.0, 6.0])
-height = Array[float]([18.0, 12.0])
+height = Array[float]([18.0, 10.0])

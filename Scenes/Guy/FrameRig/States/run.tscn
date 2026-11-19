@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cjmb2t8shvcb0" path="res://Scenes/Guy/FrameRig/frameSheet.gd" id="1_bqgvw"]
 [ext_resource type="Texture2D" uid="uid://cxobu116skjus" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_run-Sheet.png" id="2_8k13j"]
+[ext_resource type="Script" uid="uid://ybahaesvpiuc" path="res://Scenes/Guy/FrameRig/boxSheet.gd" id="3_8k13j"]
 
 [node name="run" type="Node" unique_id=67683473]
 script = ExtResource("1_bqgvw")
@@ -9,3 +10,9 @@ sheet = ExtResource("2_8k13j")
 fps = 15
 last_i = 5
 loop = true
+
+[node name="hurt" type="Node" parent="." unique_id=2084927191]
+script = ExtResource("3_8k13j")
+offset = Array[Vector2i]([Vector2i(0, 1)])
+radius = Array[float]([4.0])
+height = Array[float]([18.0])
