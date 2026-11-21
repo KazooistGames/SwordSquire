@@ -4,18 +4,19 @@ const MASK = SwordSquire.LAYER.TERRAIN + SwordSquire.LAYER.OBSTACLES + SwordSqui
 const DUCK_MASK = SwordSquire.LAYER.TERRAIN
 
 const duck_duration := 0.1
-const coyote_period := 0.10
+const coyote_period := 0.1
 const BASE_ACCEL := 300
 const BASE_SPEED := 90
-const RUN_CHARGE_BASE_PERIOD = 0.25
+const RUN_CHARGE_BASE_PERIOD := 0.25
 const charge_timer_max := 0.75
 const charge_timer_min := 0.15
-const cooldown_period = 0.5
+const cooldown_period := 0.5
 const POISE_BASE_RATE := 0.1
 const POISE_BASE_COST := 0.2
-const JUMP_BASE_HEIGHT = 24
-const JUMP_BASE_PERIOD = 0.5
-const JUMP_MAX_CHARGE = 1.0
+const JUMP_BASE_HEIGHT := 30
+const JUMP_MAGIC_NUMBER := 1960
+const JUMP_MIN_CHARGE := 0.1
+const JUMP_MAX_CHARGE := 0.5
 const DUCK_BOOST := 1.0
 
 enum Posture{
@@ -62,7 +63,14 @@ var smash_attack := false
 
 var effective_poise : float :
 	get():
-		return 0.0 if posture == Posture.weak else Poise
+		match posture:
+			Posture.weak:
+				return 0.0
+			Posture.normal:
+				return 1.0
+			Posture.strong:
+				return 1.0
+		return NAN	
 
 
 signal died
@@ -77,15 +85,14 @@ func _ready() -> void:
 	
 	
 func _physics_process(delta : float) -> void:	
-	_process_poise(delta)
-	_process_movement(delta)		
-	_animate_stance()
-	_process_stance(delta)
+	_poise(delta)
+	_movement(delta)		
+	_state_transitions()
+	_process_state(delta)
 
 
 var target_speed := 0.0
-func _process_movement(delta : float) -> void:
-	
+func _movement(delta : float) -> void:
 	#Coyote timer
 	if is_on_floor():
 		if coyote_timer >= coyote_period:
@@ -113,7 +120,10 @@ func _process_movement(delta : float) -> void:
 		else:
 			target_speed = 0
 			effective_accel = 0.0
-			
+	elif is_on_wall() and left_right != 0:		
+		effective_accel = 0.0
+		target_speed = 0
+		velocity.y = move_toward(velocity.y, 0.0, BASE_ACCEL) 
 	# aerial movement
 	else:
 		'''
@@ -136,14 +146,10 @@ func _process_movement(delta : float) -> void:
 	move_and_slide()
 	
 
-func _animate_stance():
+func _state_transitions():
 	if HP <= 0:
 		frame_rig.set_state('die')
 		return	
-	if facing_direction > 0:
-		frame_rig.flip_h = true
-	elif facing_direction < 0:
-		frame_rig.flip_h = false
 	match(stance):
 		Stance.ready:
 			if not is_on_floor():
@@ -180,8 +186,13 @@ func _animate_stance():
 			frame_rig.set_state('duck')
 
 
-func _process_stance(delta : float) -> void:
+func _process_state(delta : float) -> void:
 	facing_locked = true
+	if facing_direction > 0:
+		frame_rig.flip_h = true
+	elif facing_direction < 0:
+		frame_rig.flip_h = false
+		
 	match stance:		
 		Stance.ready:
 			facing_locked = false
@@ -193,6 +204,7 @@ func _process_stance(delta : float) -> void:
 				if run_charge_timer == 0:
 					shove(Vector2.RIGHT * sign(left_right) * BASE_SPEED / 10)
 				run_charge_timer += delta
+				
 		Stance.charging:
 			charge_timer += delta	
 			if charge_timer >= charge_timer_max:
@@ -203,20 +215,26 @@ func _process_stance(delta : float) -> void:
 			elif charge_marked_for_release:
 				release()			
 			frame_rig.flip_h = facing_direction > 0	
+			
 		Stance.attacking:
 			pass	
+			
 		Stance.recovering:
 			cooldown_timer -= delta * (0.5 + effective_poise/2.0)
 			if cooldown_timer <= 0:
 				ready()		
+				
 		Stance.jumping:
 			facing_locked = false
-			jump_charge_timer += delta / JUMP_BASE_PERIOD
+			jump_charge_timer += delta
+			if jump_charge_timer >= JUMP_MAX_CHARGE:
+				release_jump()
 			
 	if left_right != 0 and not facing_locked:
 		facing_direction = left_right	
 
-func _process_poise(delta) -> void:
+
+func _poise(delta) -> void:
 	if stance != Stance.ready:
 		pass
 	elif is_on_floor():
@@ -233,40 +251,58 @@ func _process_poise(delta) -> void:
 		posture = Posture.normal
 
 
-func charge_jump() -> bool:
+func charge_jump() -> bool: #returns true on successful transition to jump charge
 	if stance != Stance.ready:
 		return false
-	elif coyote_timer < coyote_period:
+	elif is_on_floor():
 		frame_rig.playback_speed = 1.0
 		stance = Stance.jumping
 		return true
 	else:
 		return false
 
-func release_jump() -> bool:
+func release_jump() -> bool: #returns true on successful transition to jumping
 	if stance != Stance.jumping:
+		return false
+	elif jump_charge_timer < JUMP_MIN_CHARGE:
 		return false
 	elif coyote_timer < coyote_period:
 		coyote_timer = coyote_period
-		var jump_charge = 1 + clampf(jump_charge_timer, 0, JUMP_MAX_CHARGE)
-		velocity.y = -sqrt(JUMP_BASE_HEIGHT * 1960) * jump_charge
+		var charge_range = JUMP_MAX_CHARGE - JUMP_MIN_CHARGE
+		var charge_delta = jump_charge_timer - JUMP_MIN_CHARGE
+		var effective_charge = charge_delta/charge_range
+		var jump_scalar = 1 + clampf(effective_charge, 0, 1.0)
+		velocity.y = -sqrt(JUMP_BASE_HEIGHT * JUMP_MAGIC_NUMBER * jump_scalar) 
+		if effective_charge >= 1.0:
+			velocity.x = left_right * BASE_SPEED
 		stance = Stance.ready
 		jump_charge_timer = 0.0
 		jumped.emit()
 		return true
-	#elif double_jump_charges > 0:
-		#velocity.y = -sqrt(JUMP_BASE_HEIGHT * 1960)
-		#double_jump_charges -= 1
-		#sap(.15)
-		#jumped.emit()
-		#return true
 	else:
+		stance = Stance.ready
+		jump_charge_timer = 0.0
 		return false
 
+func double_jump() -> bool:
+	if is_on_floor():
+		return false
+	elif is_on_wall():
+		return false
+	elif double_jump_charges <= 0:
+		return false
+	else:
+		velocity.y = -sqrt(JUMP_BASE_HEIGHT * 1960)
+		double_jump_charges -= 1
+		return true
 
 func land():
 	double_jump_charges = 1
 
+func dash() -> void:
+	var direction = Vector2(left_right, 0)
+	shove(direction * BASE_SPEED * DUCK_BOOST)
+	sap(POISE_BASE_COST)
 
 func duck() -> bool:
 	if stance == Stance.recovering or stance == Stance.attacking or stance == Stance.ducking:
@@ -280,21 +316,14 @@ func duck() -> bool:
 	return true
 	
 	
-func dash() -> void:
-	var direction = Vector2(left_right, 0)
-	shove(direction * BASE_SPEED * DUCK_BOOST)
-	sap(POISE_BASE_COST)
-	
-	
 func release_duck() -> bool:
 	if stance != Stance.ducking:
 		return false
-	if velocity.x != 0:
-		while(abs(velocity.x) > lerp(0.0, BASE_SPEED/2.0, effective_poise)):
-			await get_tree().physics_frame
-	else:
-		while(frame_rig.playing):
-			await get_tree().physics_frame
+	if frame_rig.playing:
+		return false
+	elif (abs(velocity.x) > lerp(0, BASE_SPEED, effective_poise)):
+		return false
+		
 	collision_mask = MASK	
 	stance = Stance.ready
 	return true

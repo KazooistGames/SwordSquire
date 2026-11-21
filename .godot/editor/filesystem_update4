@@ -3,3 +3,5 @@ res://Scenes/Guy/FrameRig/frameRig.gd
 res://Scenes/Guy/FrameRig/hurt_box.gd
 res://Scenes/Guy/FrameRig/States/stab.tscn
 res://Scenes/Guy/FrameRig/frameSheet.gd
+res://Scenes/Guy/GameplayHarness/GameplayHarness.gd
+res://Scenes/Guy/Guy.gd
