@@ -20,6 +20,8 @@ func _ready() -> void:
 			continue
 		match child.type:
 			BoxSheet.Type.hurt:
-				hurt_frames.append(child)
+				if not hurt_frames.has(child):
+					hurt_frames.append(child)
 			BoxSheet.Type.hit:
-				hit_frames.append(child)
+				if not hit_frames.has(child):
+					hit_frames.append(child)

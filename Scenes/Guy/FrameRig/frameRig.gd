@@ -23,7 +23,8 @@ extends Sprite2D
 		sheet = value	
 		if sheet != null:
 			frame_timer = 0
-			load_box_frames(sheet)
+			equalize_box_colliders(sheet.hurt_frames, hurtbox)
+			equalize_box_colliders(sheet.hit_frames, hitbox)
 			play()		
 				
 		
@@ -42,7 +43,6 @@ func _ready() -> void:
 	sheet = $ready #guarantees it isnt null on load..
 
 func _physics_process(delta: float) -> void:
-	print(hurtbox.colliders.size())
 	if sheet == null:
 		return
 		
@@ -57,7 +57,10 @@ func _physics_process(delta: float) -> void:
 
 	current_frame_index = clampi(current_frame_index, sheet.first_i, sheet.last_i)
 	_render_current_frame()
-	_simulate_current_frame()
+	if hurtbox != null:
+		_simulate_current_frame(hurtbox, sheet.hurt_frames)
+	if hitbox != null:
+		_simulate_current_frame(hitbox, sheet.hit_frames)
 
 
 func _get_next_frame():
@@ -80,16 +83,15 @@ func _render_current_frame():
 		region_rect = Rect2(x, y, w, h)
 
 
-func _simulate_current_frame():
+func _simulate_current_frame(box : Area2D, box_sheets : Array[BoxSheet]):
 	var active_frame_index = current_frame_index - sheet.first_i
-	if hurtbox != null:
-		for collider : CollisionShape2D in hurtbox.colliders:
-			var box_sheet : BoxSheet = sheet.hurt_frames[hurtbox.colliders.find(collider)]
-			set_collider_frame(collider, box_sheet, active_frame_index)
-	if hitbox != null:
-		for collider : CollisionShape2D in hitbox.colliders:
-			var box_sheet : BoxSheet = sheet.hit_frames[hitbox.colliders.find(collider)]
-			set_collider_frame(collider, box_sheet, active_frame_index)	
+	assert(box != null)
+	var colliders = box.get_children().filter(func(x): return x is CollisionShape2D)
+	assert(colliders.size() == box_sheets.size())
+	for index in range(min(colliders.size(), box_sheets.size())): # just a little robustness to prevent us from ever getting and index issue
+		var box_sheet : BoxSheet = box_sheets[index]
+		var collider : CollisionShape2D = colliders[index]
+		set_collider_frame(collider, box_sheet, active_frame_index)
 		
 func play():
 	started.emit()
@@ -117,16 +119,17 @@ func set_state(state_name : String):
 			break
 	
 	
-func load_box_frames(box_frames : Array[BoxSheet], box : Area2D):
+func equalize_box_colliders(box_frames : Array[BoxSheet], box : Area2D):
 	assert(box != null)
-	var colliders = box.get_children().filter(func(x): x is CollisionShape2D)
+	var colliders = box.get_children().filter(func(x): return x is CollisionShape2D)
 	while(colliders.size() < box_frames.size()):
 		var new_col = CollisionShape2D.new()
 		new_col.shape = CapsuleShape2D.new()
 		colliders.append(new_col)
 		box.add_child(new_col)
-	while(colliders.size() > box_frames.size()):
+	while(colliders.size() > box_frames.size()):	
 		colliders.pop_back().queue_free()
+	assert(colliders.size() == box_frames.size())
 
 			
 			

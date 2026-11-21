@@ -1,4 +1,5 @@
-res://Scenes/TitleScreen.tscn
-res://Scenes/Guy/FrameRig/frameRig.gd
 res://Scenes/Guy/FrameRig/States/duck.tscn
+res://Scenes/Guy/FrameRig/frameRig.gd
+res://Scenes/Guy/FrameRig/hurt_box.gd
+res://Scenes/Guy/FrameRig/States/stab.tscn
 res://Scenes/Guy/FrameRig/frameSheet.gd
