@@ -61,6 +61,8 @@ var double_jump_charges : int = 1
 var run_charge_timer := 0.0
 var smash_attack := false
 
+var wall_side := 0
+
 var effective_poise : float :
 	get():
 		match posture:
@@ -105,6 +107,12 @@ func _movement(delta : float) -> void:
 	
 	target_speed = left_right * BASE_SPEED	
 	
+	if is_on_wall():		
+		var collision : KinematicCollision2D = get_last_slide_collision()
+		wall_side = 0 if collision == null else sign(-collision.get_normal().x)
+	else:
+		wall_side = 0
+		
 	# grounded movement
 	if is_on_floor():
 		if stance != Stance.ready: # doing something
@@ -120,10 +128,6 @@ func _movement(delta : float) -> void:
 		else:
 			target_speed = 0
 			effective_accel = 0.0
-	elif is_on_wall() and left_right != 0:		
-		effective_accel = 0.0
-		target_speed = 0
-		velocity.y = move_toward(velocity.y, 0.0, BASE_ACCEL) 
 	# aerial movement
 	else:
 		'''
@@ -131,7 +135,12 @@ func _movement(delta : float) -> void:
 		Lends to more "veritacity" in the jump.
 		The jump feels controlled while still carrying aerial momentum
 		''' 
-		velocity.y += 980 * delta	
+		velocity.y += 980 * delta	# gravity
+		
+		if wall_side * left_right > 0: # grapple wall 
+			velocity.x = 0
+			velocity.y = min(velocity.y, 0.0)
+
 		effective_accel = BASE_ACCEL / 2.0
 		if left_right == 0:	# idle
 			effective_accel = 0.0	
@@ -187,6 +196,9 @@ func _state_transitions():
 
 
 func _process_state(delta : float) -> void:
+	'''
+	non-movement state-specific code.
+	'''
 	facing_locked = true
 	if facing_direction > 0:
 		frame_rig.flip_h = true
