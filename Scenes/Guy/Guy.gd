@@ -115,7 +115,7 @@ func _movement(delta : float) -> void:
 		
 	# grounded movement
 	if is_on_floor():
-		if stance != Stance.ready: # doing something
+		if stance != Stance.ready: # doing somethingaw
 			target_speed = 0
 			effective_accel = BASE_ACCEL / 2.0
 		elif left_right == 0 or sign(left_right) != sign(velocity.x): # pivot
@@ -162,7 +162,7 @@ func _state_transitions():
 	match(stance):
 		Stance.ready:
 			if not is_on_floor():
-				frame_rig.set_state('ready')
+				frame_rig.set_state('aerial')
 			elif velocity.x == 0:
 				frame_rig.set_state('ready')
 			elif left_right == 0 or sign(left_right) != sign(velocity.x):

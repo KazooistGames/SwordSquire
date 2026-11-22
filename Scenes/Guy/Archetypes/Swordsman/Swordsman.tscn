@@ -14,17 +14,17 @@
 [ext_resource type="PackedScene" uid="uid://bxvxgtiggywbb" path="res://Scenes/Guy/FrameRig/States/stab.tscn" id="12_63hrh"]
 [ext_resource type="PackedScene" uid="uid://cq4ptvbargod" path="res://Scenes/Guy/FrameRig/States/stab_recover.tscn" id="13_06p1n"]
 [ext_resource type="PackedScene" uid="uid://oxog1op5bwnh" path="res://Scenes/Guy/FrameRig/States/die.tscn" id="14_b45ho"]
+[ext_resource type="PackedScene" uid="uid://f621or2c0v5l" path="res://Scenes/Guy/FrameRig/States/aerial.tscn" id="15_um7s8"]
 
 [node name="Swordsman" unique_id=1920363709 instance=ExtResource("1_8rpvy")]
 Team = 1
 
-[node name="frameRig" parent="." index="1" unique_id=1050928777 node_paths=PackedStringArray("frame_sheet", "hurt_sheets")]
+[node name="frameRig" parent="." index="1" unique_id=1050928777 node_paths=PackedStringArray("sheet")]
 texture = ExtResource("4_nypsl")
 region_rect = Rect2(72, 0, 24, 24)
 current_frame_index = 3
-frame_timer = 0.2833333333333333
-frame_sheet = NodePath("ready")
-hurt_sheets = [NodePath("ready/hurtSheet")]
+frame_timer = 0.3
+sheet = NodePath("ready")
 
 [node name="ready" parent="frameRig" index="0" unique_id=204285093 instance=ExtResource("3_u740s")]
 
@@ -49,6 +49,8 @@ hurt_sheets = [NodePath("ready/hurtSheet")]
 [node name="stab_recover" parent="frameRig" index="10" unique_id=1202957307 instance=ExtResource("13_06p1n")]
 
 [node name="die" parent="frameRig" index="11" unique_id=940246265 instance=ExtResource("14_b45ho")]
+
+[node name="aerial" parent="frameRig" index="14" unique_id=1415674925 instance=ExtResource("15_um7s8")]
 
 [node name="CollisionShape2D" parent="interactBox" parent_id_path=PackedInt32Array(1315001161) index="0" unique_id=58424191]
 debug_color = Color(0.5882353, 0.49019608, 0, 0.078431375)

@@ -120,7 +120,8 @@ func set_state(state_name : String):
 	
 	
 func equalize_box_colliders(box_frames : Array[BoxSheet], box : Area2D):
-	assert(box != null)
+	if box == null:
+		return
 	var colliders = box.get_children().filter(func(x): return x is CollisionShape2D)
 	while(colliders.size() < box_frames.size()):
 		var new_col = CollisionShape2D.new()
