@@ -60,8 +60,10 @@ var jump_charge_timer := 0.0
 var double_jump_charges : int = 1
 var run_charge_timer := 0.0
 var smash_attack := false
-
 var wall_side := 0
+
+var request_jump := false
+var request_duck := false
 
 var effective_poise : float :
 	get():
@@ -186,6 +188,7 @@ func _state_transitions():
 				frame_rig.set_state('stab')
 		Stance.recovering:
 			if smash_attack:
+				
 				frame_rig.set_state('slash_recover')
 			else:
 				frame_rig.set_state('stab_recover')
@@ -271,7 +274,8 @@ func charge_jump() -> bool: #returns true on successful transition to jump charg
 		stance = Stance.jumping
 		return true
 	else:
-		return false
+		return false	
+
 
 func release_jump() -> bool: #returns true on successful transition to jumping
 	if stance != Stance.jumping:
