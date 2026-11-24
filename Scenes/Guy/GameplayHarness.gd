@@ -39,6 +39,7 @@ func _movement_inputs(_delta : float) -> void:
 
 func _combat_inputs(_delta : float) -> void:
 	assert(guy != null)
+	#TODO consider turning this into raw pass through as well
 	if Input.is_action_just_pressed("smash"):
 		guy.charge()
 	elif Input.is_action_just_released("smash"):

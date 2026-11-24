@@ -79,7 +79,8 @@ var jump_latch := false :
 			
 		jump_latch = value
 		
-var request_duck := false
+#TODO: replace existing duck input processing with the same method as jump. 
+var duck_latch := false
 
 var effective_poise : float :
 	get():
