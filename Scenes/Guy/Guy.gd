@@ -3,14 +3,14 @@ class_name Guy extends CharacterBody2D
 const MASK = SwordSquire.LAYER.TERRAIN + SwordSquire.LAYER.OBSTACLES + SwordSquire.LAYER.GUY
 const DUCK_MASK = SwordSquire.LAYER.TERRAIN
 
-const duck_duration := 0.1
-const coyote_period := 0.1
+const DUCK_DURATION := 0.1
+const COYOTE_PERIOD := 0.1
 const BASE_ACCEL := 300
 const BASE_SPEED := 90
-const RUN_CHARGE_BASE_PERIOD := 0.25
-const charge_timer_max := 0.75
-const charge_timer_min := 0.15
-const cooldown_period := 0.5
+const RUN_CHARGE_BASE_PERIOD := 0.4
+const CHARGE_TIMER_MAX := 0.75
+const CHARGE_TIMER_MIN := 0.15
+const COOLDOWN_PERIOD := 0.4
 const POISE_BASE_RATE := 0.1
 const POISE_BASE_COST := 0.2
 const JUMP_BASE_HEIGHT := 30
@@ -18,6 +18,7 @@ const JUMP_MAGIC_NUMBER := 1960
 const JUMP_MIN_CHARGE := 0.1
 const JUMP_MAX_CHARGE := 0.5
 const DUCK_BOOST := 1.0
+const BASE_DOUBLE_JUMP_CHARGES := 1
 
 enum Posture{
 	weak = -1,
@@ -62,7 +63,22 @@ var run_charge_timer := 0.0
 var smash_attack := false
 var wall_side := 0
 
-var request_jump := false
+var jump_latch := false :
+	get():
+		return jump_latch
+	set(value):
+		var rising = value and not jump_latch
+		if not rising: 
+			pass
+		elif is_on_floor():
+			charge_jump()
+		elif is_wallhanging():
+			wall_jump()
+		else:
+			double_jump()
+			
+		jump_latch = value
+		
 var request_duck := false
 
 var effective_poise : float :
@@ -97,9 +113,10 @@ func _physics_process(delta : float) -> void:
 
 var target_speed := 0.0
 func _movement(delta : float) -> void:
-	#Coyote timer
-	if is_on_floor():
-		if coyote_timer >= coyote_period:
+	
+	#Coyote timer	
+	if is_on_floor() or is_wallhanging():
+		if coyote_timer >= COYOTE_PERIOD:
 			land()		
 		coyote_timer = 0
 	else:
@@ -139,21 +156,22 @@ func _movement(delta : float) -> void:
 		''' 
 		velocity.y += 980 * delta	# gravity
 		
-		if wall_side * left_right > 0: # grapple wall 
-			velocity.x = 0
+		if is_wallhanging(): # grapple wall 
+			#velocity.x = 0
 			velocity.y = min(velocity.y, 0.0)
 
-		effective_accel = BASE_ACCEL / 2.0
+		effective_accel = BASE_ACCEL
 		if left_right == 0:	# idle
-			effective_accel = 0.0	
+			effective_accel = 0.0
 		elif sign(left_right) != sign(velocity.x): # turning around
 			pass
 		elif abs(velocity.x) < BASE_SPEED: # speeding up
 			pass
 		else:
-			effective_accel = 0.0
-				
-	velocity.x = move_toward(velocity.x, target_speed, effective_accel * delta)	
+			effective_accel =  0.0
+			
+	var increment = effective_accel * delta
+	velocity.x = move_toward(velocity.x, target_speed, increment)	
 	move_and_slide()
 	
 
@@ -215,17 +233,19 @@ func _process_state(delta : float) -> void:
 				run_charge_timer = 0.0
 			elif sign(left_right) != sign(velocity.x) and left_right != 0:
 				run_charge_timer = 0.0
-			else:
-				if run_charge_timer == 0:
-					shove(Vector2.RIGHT * sign(left_right) * BASE_SPEED / 10)
-				run_charge_timer += delta
+			else: # weird way to get the edge, but this is 
+				#if run_charge_timer == 0 and is_on_floor():
+					#var direction = Vector2.RIGHT * sign(left_right)
+					#var magnitude = BASE_SPEED / 10
+					#shove( direction * magnitude)
+				run_charge_timer += delta * (1 + effective_poise)
 				
 		Stance.charging:
 			charge_timer += delta	
-			if charge_timer >= charge_timer_max:
-				charge_timer = charge_timer_max 
+			if charge_timer >= CHARGE_TIMER_MAX:
+				charge_timer = CHARGE_TIMER_MAX 
 				release()	
-			elif charge_timer < charge_timer_min:
+			elif charge_timer < CHARGE_TIMER_MIN:
 				pass
 			elif charge_marked_for_release:
 				release()			
@@ -240,13 +260,26 @@ func _process_state(delta : float) -> void:
 				ready()		
 				
 		Stance.jumping:
-			facing_locked = false
 			jump_charge_timer += delta
+			facing_locked = false
 			if jump_charge_timer >= JUMP_MAX_CHARGE:
 				release_jump()
+			elif jump_latch:
+				pass
+			elif jump_charge_timer >= JUMP_MIN_CHARGE:
+				release_jump()
 			
-	if left_right != 0 and not facing_locked:
+			
+	if left_right == 0 or facing_locked:
+		pass
+	elif is_wallhanging():
+		facing_direction = -left_right	
+	elif is_on_floor():
 		facing_direction = left_right	
+	elif stance == Stance.ready:
+		facing_direction = sign(velocity.x)
+	else:
+		facing_direction = left_right
 
 
 func _poise(delta) -> void:
@@ -282,8 +315,8 @@ func release_jump() -> bool: #returns true on successful transition to jumping
 		return false
 	elif jump_charge_timer < JUMP_MIN_CHARGE:
 		return false
-	elif coyote_timer < coyote_period:
-		coyote_timer = coyote_period
+	elif coyote_timer < COYOTE_PERIOD:
+		coyote_timer = COYOTE_PERIOD
 		var charge_range = JUMP_MAX_CHARGE - JUMP_MIN_CHARGE
 		var charge_delta = jump_charge_timer - JUMP_MIN_CHARGE
 		var effective_charge = charge_delta/charge_range
@@ -300,6 +333,16 @@ func release_jump() -> bool: #returns true on successful transition to jumping
 		jump_charge_timer = 0.0
 		return false
 
+
+func wall_jump() -> bool:
+	if is_wallhanging():
+		velocity.y = -sqrt(JUMP_BASE_HEIGHT * 1960)
+		velocity.x = -wall_side * BASE_SPEED
+		double_jump_charges
+		return true
+	else:
+		return false
+
 func double_jump() -> bool:
 	if is_on_floor():
 		return false
@@ -312,8 +355,10 @@ func double_jump() -> bool:
 		double_jump_charges -= 1
 		return true
 
+
 func land():
-	double_jump_charges = 1
+	double_jump_charges = BASE_DOUBLE_JUMP_CHARGES
+
 
 func dash() -> void:
 	var direction = Vector2(left_right, 0)
@@ -360,14 +405,14 @@ func charge() -> bool:
 func release() -> bool:
 	if not stance == Stance.charging:
 		return false
-	elif charge_timer < charge_timer_min:
+	elif charge_timer < CHARGE_TIMER_MIN:
 		charge_marked_for_release = true
 		return false	
 	else:
 		charge_marked_for_release = false
 		stance = Stance.attacking
-		cooldown_timer = cooldown_period
-		var charged_power = charge_timer / charge_timer_max	
+		cooldown_timer = COOLDOWN_PERIOD
+		var charged_power = charge_timer / CHARGE_TIMER_MAX	
 		sap(POISE_BASE_COST)
 		if smash_attack:
 			frame_rig.playback_speed = lerpf(1.0, 2.0, charged_power)
@@ -400,10 +445,10 @@ func ready() -> bool:
 	
 	
 func _handle_hit(guy : CharacterBody2D):
-	var power = sqrt(charge_timer/charge_timer_max) * 120
+	var power = sqrt(charge_timer/CHARGE_TIMER_MAX) * 120
 	var impulse = Vector2(facing_direction, 0) * power
 	guy.shove(impulse)
-	guy.damage(charge_timer/charge_timer_max * 100)
+	guy.damage(charge_timer/CHARGE_TIMER_MAX * 100)
 	
 	
 func _handle_parry(guy : CharacterBody2D):
@@ -473,4 +518,5 @@ func interact():
 			return
 
 	
-	
+func is_wallhanging() -> bool:
+	return wall_side * left_right > 0 and is_on_wall_only()
