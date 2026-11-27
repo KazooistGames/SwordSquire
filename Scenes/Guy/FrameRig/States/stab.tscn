@@ -8,7 +8,7 @@
 script = ExtResource("1_x06df")
 texture = ExtResource("2_muhsr")
 tex_size = Vector2i(36, 24)
-fps = 32
+fps = 36
 first_i = 4
 last_i = 10
 
