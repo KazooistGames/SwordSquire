@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://c5ptqvcmqo30x"]
+
+[ext_resource type="Script" uid="uid://cjmb2t8shvcb0" path="res://Scenes/Guy/FrameRig/frameSheet.gd" id="1_7nhok"]
+[ext_resource type="Texture2D" uid="uid://btj04rftk5twr" path="res://Scenes/Guy/Archetypes/Swordsman/Sheets/swordsman_hanging-Sheet.png" id="2_1qgae"]
+[ext_resource type="Script" uid="uid://ybahaesvpiuc" path="res://Scenes/Guy/FrameRig/boxSheet.gd" id="2_c1dda"]
+
+[node name="hanging" type="Node" unique_id=220245694]
+script = ExtResource("1_7nhok")
+texture = ExtResource("2_1qgae")
+fps = 1
+
+[node name="hurt" type="Node" parent="." unique_id=2076973515]
+script = ExtResource("2_c1dda")
+offset = Array[Vector2i]([Vector2i(-2, 0)])

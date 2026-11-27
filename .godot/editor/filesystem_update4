@@ -8,3 +8,4 @@ res://Scenes/Guy/Guy.gd
 res://Scenes/Guy/Archetypes/Swordsman/Swordsman.tscn
 res://Scenes/Guy/FrameRig/States/aerial.tscn
 res://Scenes/Guy/GameplayHarness.gd
+res://Scenes/Guy/FrameRig/States/hanging.tscn

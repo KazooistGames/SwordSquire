@@ -182,7 +182,9 @@ func _state_transitions():
 		return	
 	match(stance):
 		Stance.ready:
-			if not is_on_floor():
+			if is_wallhanging():
+				frame_rig.set_state('hanging')
+			elif not is_on_floor():
 				frame_rig.set_state('aerial')
 			elif velocity.x == 0:
 				frame_rig.set_state('ready')
